@@ -52,7 +52,7 @@ for v in range(len(varnames)):
     lat,lon,time,lev,tasfit = MO.readExperiAll('%s' % varnames[v],'FIT',
                                                'profile')
     lat,lon,time,lev,tasfict = MO.readExperiAll('%s' % varnames[v],'FICT',
-                                                'profile')
+                                                'profile')z
     
     ### Create 2d array of latitude and longitude
     lon2,lat2 = np.meshgrid(lon,lat)
