@@ -14,14 +14,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import nclcmaps as ncm
 import datetime
-import read_MonthlyOutput as MO
+import read_MonthlyOutput_AllMembers as MO
+import read_MonthlyOutput_AllRegional as MOR
 import calc_Utilities as UT
 import cmocean
 
 ### Define directories
+directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_DJF_2/'
-#directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
+directoryfigure = '/home/zlabe/Desktop/QBO_DJF_2/Regional2/'
+#directoryfigure = '/home/zlabe/Documents/Research/SeaIceQBO/Figures/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -45,38 +47,56 @@ experiments = [r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}'
 qbophase = ['pos','non','neg']
 period = 'DJF'
 for v in range(len(varnames)):
-    ### Call function for surface temperature data from reach run
-    lat,lon,time,lev,tascit = MO.readExperi(directorydata2,
-                                            '%s' % varnames[v],'CIT','profile')
-    lat,lon,time,lev,tasfsub = MO.readExperi(directorydata2,
-                                            '%s' % varnames[v],'FSUB','profile')
-    lat,lon,time,lev,tasfpol = MO.readExperi(directorydata2,
-                                             '%s' % varnames[v],'FPOL','profile')
+    ### Call function for data from reach run
+    lat,lon,time,lev,tascit = MO.readExperiAll('%s' % varnames[v],
+                                                         'CIT','profile')
+    lat,lon,time,lev,tasfsub = MOR.readExperiAllRegional('%s' % varnames[v],
+                                                         'FSUB','profile')
+    lat,lon,time,lev,tasfpol = MOR.readExperiAllRegional('%s' % varnames[v],
+                                                         'FPOL','profile')
     
     ### Create 2d array of latitude and longitude
     lon2,lat2 = np.meshgrid(lon,lat)
     
     ### Read in QBO phases 
+    filenamecitp = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[0]
+    filenamecitno = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[1]
+    filenamecitn = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[2]
+    filenamecitp2 = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[0]
+    filenamecitno2 = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[1]
+    filenamecitn2 = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[2]
+    pos_cit = np.append(np.genfromtxt(filenamecitp,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamecitp2,unpack=True,usecols=[0],dtype='int')+101)
+    non_cit = np.append(np.genfromtxt(filenamecitno,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamecitno2,unpack=True,usecols=[0],dtype='int')+101)
+    neg_cit = np.append(np.genfromtxt(filenamecitn,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamecitn2,unpack=True,usecols=[0],dtype='int')+101)    
+
     filenamefsubp = directorydata2 + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[0]
     filenamefsubno = directorydata2 + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[1]
     filenamefsubn = directorydata2 + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[2]
-    pos_fsub = np.genfromtxt(filenamefsubp,unpack=True,usecols=[0],dtype='int')
-    non_fsub = np.genfromtxt(filenamefsubno,unpack=True,usecols=[0],dtype='int')
-    neg_fsub = np.genfromtxt(filenamefsubn,unpack=True,usecols=[0],dtype='int')
-    
-    filenamecitp = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[0]
-    filenamecitno = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[1]
-    filenamecitn = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[2]
-    pos_cit = np.genfromtxt(filenamecitp,unpack=True,usecols=[0],dtype='int')
-    non_cit = np.genfromtxt(filenamecitno,unpack=True,usecols=[0],dtype='int')
-    neg_cit = np.genfromtxt(filenamecitn,unpack=True,usecols=[0],dtype='int')
+    filenamefsubp2 = directorydata + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[0]
+    filenamefsubno2 = directorydata + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[1]
+    filenamefsubn2 = directorydata + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[2]
+    pos_fsub = np.append(np.genfromtxt(filenamefsubp,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefsubp2,unpack=True,usecols=[0],dtype='int')+101)
+    non_fsub = np.append(np.genfromtxt(filenamefsubno,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefsubno2,unpack=True,usecols=[0],dtype='int')+101)
+    neg_fsub = np.append(np.genfromtxt(filenamefsubn,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefsubn2,unpack=True,usecols=[0],dtype='int')+101)
     
     filenamefpolp = directorydata2 + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[0]
     filenamefpolno = directorydata2 + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[1]
     filenamefpoln = directorydata2 + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[2]
-    pos_fpol = np.genfromtxt(filenamefpolp,unpack=True,usecols=[0],dtype='int')
-    non_fpol = np.genfromtxt(filenamefpolno,unpack=True,usecols=[0],dtype='int')
-    neg_fpol = np.genfromtxt(filenamefpoln,unpack=True,usecols=[0],dtype='int')
+    filenamefpolp2 = directorydata + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[0]
+    filenamefpolno2 = directorydata + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[1]
+    filenamefpoln2 = directorydata + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[2]
+    pos_fpol = np.append(np.genfromtxt(filenamefpolp,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefpolp2,unpack=True,usecols=[0],dtype='int')+101)
+    non_fpol = np.append(np.genfromtxt(filenamefpolno,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefpolno2,unpack=True,usecols=[0],dtype='int')+101)
+    neg_fpol = np.append(np.genfromtxt(filenamefpoln,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefpoln2,unpack=True,usecols=[0],dtype='int')+101)    
     
     ### Concatonate runs
     runs = [tascit,tasfsub,tasfpol]
@@ -290,5 +310,5 @@ for v in range(len(varnames)):
     plt.subplots_adjust(wspace=0.5)
     plt.subplots_adjust(bottom=0.21)
     
-    plt.savefig(directoryfigure + 'Regional/DJF_vertical_%s_QBO.png' % varnames[v],dpi=300)
+    plt.savefig(directoryfigure + 'DJF_vertical_%s_QBO.png' % varnames[v],dpi=300)
     print('Completed: Script done!')

@@ -1,12 +1,12 @@
 """
 Plot comparisons between SIT and SIC modeling experiments using 
 WACCM4. Subplot includes FIT, HIT, FICT. Profiles are 
-organized by QBO phase (positive, neutral, negative)
+organized by QBO phase (positive, neutral, negative) using indices from CTLQ
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 26 March 2018
+    Date   : 2 May 2018
 """
 
 ### Import modules
@@ -21,7 +21,7 @@ import cmocean
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_DJF_2/'
+directoryfigure = '/home/zlabe/Desktop/QBO_DJF_2_CTLQ/'
 #directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
 
 ### Define time           
@@ -58,44 +58,39 @@ for v in range(len(varnames)):
     lon2,lat2 = np.meshgrid(lon,lat)
     
     ### Read in QBO phases 
-    filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-    filenamehitno = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
-    filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-    filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-    filenamehitno2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
-    filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-    pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+101)
-    non_hit = np.append(np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamehitno2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+101)    
-
-    filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-    filenamefitno = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
-    filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-    filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-    filenamefitno2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
-    filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-    pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+101)
-    non_fit = np.append(np.genfromtxt(filenamefitno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefitno2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+101)
+    filenamehitp = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[0]
+    filenamehitno = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[1]
+    filenamehitn = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[2]
+    pos_hit = np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int')
+    non_hit = np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int')
+    neg_hit = np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int')  
     
-    filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-    filenamefictno = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-    filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-    filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-    filenamefictno2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-    filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-    pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+101)
-    non_fict = np.append(np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictno2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+101)    
+    pos_hit[pos_hit>99] = pos_hit[pos_hit>99] + 1
+    non_hit[non_hit>99] = non_hit[non_hit>99] + 1
+    neg_hit[neg_hit>99] = neg_hit[neg_hit>99] + 1
+
+    filenamefitp = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[0]
+    filenamefitno = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[1]
+    filenamefitn = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[2]
+    pos_fit = np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int')
+    non_fit = np.genfromtxt(filenamefitno,unpack=True,usecols=[0],dtype='int')
+    neg_fit = np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int')
+    
+    pos_fit[pos_fit>99] = pos_fit[pos_fit>99] + 1
+    non_fit[non_fit>99] = non_fit[non_fit>99] + 1
+    neg_fit[neg_fit>99] = neg_fit[neg_fit>99] + 1
+    
+    filenamefictp = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[0]
+    filenamefictno = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[1]
+    filenamefictn = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[2]
+    pos_fict = np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int')
+    non_fict = np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int')
+    neg_fict = np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int')
+    
+    pos_fict[pos_fict>99] = pos_fict[pos_fict>99] + 1
+    non_fict[non_fict>99] = non_fict[non_fict>99] + 1
+    neg_fict[neg_fict>99] = neg_fict[neg_fict>99] + 1
+    
     ### Concatonate runs
     runs = [tashit,tasfit,tasfict]
     

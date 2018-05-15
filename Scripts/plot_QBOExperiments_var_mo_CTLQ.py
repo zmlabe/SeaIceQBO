@@ -1,12 +1,12 @@
 """
 Plot comparisons between SIT and SIC modeling experiments using 
-WACCM4. Subplot includes fsub, cit, fpol. Composites are 
-organized by QBO phase (positive, neutral, negative)
+WACCM4. Subplot includes FIT, HIT, CIT, FIC, FICT. Composites are 
+organized by QBO phase (positive, neutral, negative) using indices from CTLQ
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 26 March 2018
+    Date   : 2 May 2018
 """
 
 ### Import modules
@@ -16,7 +16,6 @@ from mpl_toolkits.basemap import Basemap, addcyclic, shiftgrid
 import nclcmaps as ncm
 import datetime
 import read_MonthlyOutput_AllMembers as MO
-import read_MonthlyOutput_AllRegional as MOR
 import calc_Utilities as UT
 import cmocean
 
@@ -24,7 +23,7 @@ import cmocean
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
 directoryfigure = '/home/zlabe/Desktop/'
-#directoryfigure = '/home/zlabe/Documents/Research/SeaIceQBO/Figures/'
+#directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
 
 ### Define time           
 now = datetime.datetime.now()
@@ -42,146 +41,140 @@ years = np.arange(year1,year2+1,1)
 
 ### Call arguments
 varnames = ['Z500','Z30','SLP','T2M','U10','U500','U300','SWE','THICK','P','EGR']
-runnames = [r'CIT',r'FSUB',r'FPOL']
-experiments = [r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',r'\textbf{FSUB-CIT}',
-               r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}']
+runnames = [r'HIT',r'FIT',r'FICT']
+experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
+               r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
 qbophase = ['pos','non','neg']
 period = 'DJF'
 for v in range(len(varnames)):
-    ### Call function for data from reach run
-    lat,lon,time,lev,tascit = MO.readExperiAll('%s' % varnames[v],
-                                                         'CIT','surface')
-    lat,lon,time,lev,tasfsub = MOR.readExperiAllRegional('%s' % varnames[v],
-                                                         'FSUB','surface')
-    lat,lon,time,lev,tasfpol = MOR.readExperiAllRegional('%s' % varnames[v],
-                                                         'FPOL','surface')
+    ### Call function for surface temperature data from reach run
+    lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
+                                               'surface')
+    lat,lon,time,lev,tasfit = MO.readExperiAll('%s' % varnames[v],'FIT',
+                                               'surface')
+    lat,lon,time,lev,tasfict = MO.readExperiAll('%s' % varnames[v],'FICT',
+                                                'surface')
     
     ### Create 2d array of latitude and longitude
     lon2,lat2 = np.meshgrid(lon,lat)
     
     ### Read in QBO phases 
-    filenamecitp = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[0]
-    filenamecitno = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[1]
-    filenamecitn = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[2]
-    filenamecitp2 = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[0]
-    filenamecitno2 = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[1]
-    filenamecitn2 = directorydata2 + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[2]
-    pos_cit = np.append(np.genfromtxt(filenamecitp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamecitp2,unpack=True,usecols=[0],dtype='int')+101)
-    non_cit = np.append(np.genfromtxt(filenamecitno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamecitno2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_cit = np.append(np.genfromtxt(filenamecitn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamecitn2,unpack=True,usecols=[0],dtype='int')+101)    
-
-    filenamefsubp = directorydata2 + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[0]
-    filenamefsubno = directorydata2 + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[1]
-    filenamefsubn = directorydata2 + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[2]
-    filenamefsubp2 = directorydata + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[0]
-    filenamefsubno2 = directorydata + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[1]
-    filenamefsubn2 = directorydata + 'FSUB/monthly/QBO_%s_FSUB.txt' % qbophase[2]
-    pos_fsub = np.append(np.genfromtxt(filenamefsubp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefsubp2,unpack=True,usecols=[0],dtype='int')+101)
-    non_fsub = np.append(np.genfromtxt(filenamefsubno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefsubno2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_fsub = np.append(np.genfromtxt(filenamefsubn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefsubn2,unpack=True,usecols=[0],dtype='int')+101)
+    filenamehitp = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[0]
+    filenamehitno = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[1]
+    filenamehitn = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[2]
+    pos_hit = np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int')
+    non_hit = np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int')
+    neg_hit = np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int')  
     
-    filenamefpolp = directorydata2 + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[0]
-    filenamefpolno = directorydata2 + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[1]
-    filenamefpoln = directorydata2 + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[2]
-    filenamefpolp2 = directorydata + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[0]
-    filenamefpolno2 = directorydata + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[1]
-    filenamefpoln2 = directorydata + 'FPOL/monthly/QBO_%s_FPOL.txt' % qbophase[2]
-    pos_fpol = np.append(np.genfromtxt(filenamefpolp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefpolp2,unpack=True,usecols=[0],dtype='int')+101)
-    non_fpol = np.append(np.genfromtxt(filenamefpolno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefpolno2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_fpol = np.append(np.genfromtxt(filenamefpoln,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefpoln2,unpack=True,usecols=[0],dtype='int')+101)
+    pos_hit[pos_hit>99] = pos_hit[pos_hit>99] + 1
+    non_hit[non_hit>99] = non_hit[non_hit>99] + 1
+    neg_hit[neg_hit>99] = neg_hit[neg_hit>99] + 1
+
+    filenamefitp = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[0]
+    filenamefitno = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[1]
+    filenamefitn = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[2]
+    pos_fit = np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int')
+    non_fit = np.genfromtxt(filenamefitno,unpack=True,usecols=[0],dtype='int')
+    neg_fit = np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int')
+    
+    pos_fit[pos_fit>99] = pos_fit[pos_fit>99] + 1
+    non_fit[non_fit>99] = non_fit[non_fit>99] + 1
+    neg_fit[neg_fit>99] = neg_fit[neg_fit>99] + 1
+    
+    filenamefictp = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[0]
+    filenamefictno = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[1]
+    filenamefictn = directorydata + 'CTLQ/monthly/QBO_%s_CTLQ.txt' % qbophase[2]
+    pos_fict = np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int')
+    non_fict = np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int')
+    neg_fict = np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int')
+    
+    pos_fict[pos_fict>99] = pos_fict[pos_fict>99] + 1
+    non_fict[non_fict>99] = non_fict[non_fict>99] + 1
+    neg_fict[neg_fict>99] = neg_fict[neg_fict>99] + 1
     
     ### Concatonate runs
-    runs = [tascit,tasfsub,tasfpol]
+    runs = [tashit,tasfit,tasfict]
     
     ### Separate per periods (ON,DJ,FM)
     if period == 'ON': 
-        tas_mo = np.empty((3,tascit.shape[0],tascit.shape[2],tascit.shape[3]))
+        tas_mo = np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i] = np.nanmean(runs[i][:,9:11,:,:],axis=1) 
     elif period == 'DJ':     
-        tas_mo = np.empty((3,tascit.shape[0]-1,tascit.shape[2],tascit.shape[3]))
+        tas_mo = np.empty((3,tashit.shape[0]-1,tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i],tas_mo[i] = UT.calcDecJan(runs[i],runs[i],lat,
                                                 lon,'surface',1) 
     elif period == 'FM':
-        tas_mo= np.empty((3,tascit.shape[0],tascit.shape[2],tascit.shape[3]))
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i] = np.nanmean(runs[i][:,1:3,:,:],axis=1)
     elif period == 'DJF':
-        tas_mo= np.empty((3,tascit.shape[0]-1,tascit.shape[2],tascit.shape[3]))
+        tas_mo= np.empty((3,tashit.shape[0]-1,tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i],tas_mo[i] = UT.calcDecJanFeb(runs[i],runs[i],lat,
                                                   lon,'surface',1)   
     elif period == 'M':
-        tas_mo= np.empty((3,tascit.shape[0],tascit.shape[2],tascit.shape[3]))
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i] = runs[i][:,2,:,:]
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         
     ### Composite by QBO phase    
-    tas_mofsubpos = tas_mo[1][pos_fsub,:,:]
-    tas_mocitpos = tas_mo[0][pos_cit,:,:]
-    tas_mofpolpos = tas_mo[2][pos_fpol,:,:]
+    tas_mohitpos = tas_mo[0][pos_hit,:,:]
+    tas_mofitpos = tas_mo[1][pos_fit,:,:]
+    tas_mofictpos = tas_mo[2][pos_fict,:,:]
     
-    tas_mofsubnon = tas_mo[1][non_fsub,:,:]
-    tas_mocitnon = tas_mo[0][non_cit,:,:]
-    tas_mofpolnon = tas_mo[2][non_fpol,:,:]
+    tas_mohitnon = tas_mo[0][non_hit,:,:]
+    tas_mofitnon = tas_mo[1][non_fit,:,:]
+    tas_mofictnon = tas_mo[2][non_fict,:,:]
     
-    tas_mofsubneg = tas_mo[1][neg_fsub,:,:]
-    tas_mocitneg = tas_mo[0][neg_cit,:,:]
-    tas_mofpolneg = tas_mo[2][neg_fpol,:,:]
+    tas_mohitneg = tas_mo[0][neg_hit,:,:]
+    tas_mofitneg = tas_mo[1][neg_fit,:,:]
+    tas_mofictneg = tas_mo[2][neg_fict,:,:]
 
     ### Compute climatology    
-    climofsubpos = np.nanmean(tas_mofsubpos,axis=0)
-    climocitpos = np.nanmean(tas_mocitpos,axis=0)
-    climofpolpos = np.nanmean(tas_mofpolpos,axis=0)
-    climofsubnon = np.nanmean(tas_mofsubnon,axis=0)
-    climocitnon = np.nanmean(tas_mocitnon,axis=0)
-    climofpolnon = np.nanmean(tas_mofpolnon,axis=0)
-    climofsubneg = np.nanmean(tas_mofsubneg,axis=0)
-    climocitneg = np.nanmean(tas_mocitneg,axis=0)
-    climofpolneg = np.nanmean(tas_mofpolneg,axis=0)
-    climo = [climocitpos,climocitnon,climocitneg,
-             climocitpos,climocitnon,climocitneg]
+    climofitpos = np.nanmean(tas_mofitpos,axis=0)
+    climohitpos = np.nanmean(tas_mohitpos,axis=0)
+    climofictpos = np.nanmean(tas_mofictpos,axis=0)
+    climofitnon = np.nanmean(tas_mofitnon,axis=0)
+    climohitnon = np.nanmean(tas_mohitnon,axis=0)
+    climofictnon = np.nanmean(tas_mofictnon,axis=0)
+    climofitneg = np.nanmean(tas_mofitneg,axis=0)
+    climohitneg = np.nanmean(tas_mohitneg,axis=0)
+    climofictneg = np.nanmean(tas_mofictneg,axis=0)
+    climo = [climohitpos,climohitnon,climohitneg,
+             climohitpos,climohitnon,climohitneg]
     
     ### Compute comparisons for months - taken ensemble average
-    fsubcitpos = np.nanmean(tas_mofsubpos - tas_mocitpos,axis=0)
-    fsubcitnon = np.nanmean(tas_mofsubnon - tas_mocitnon,axis=0)
-    fsubcitneg = np.nanmean(tas_mofsubneg - tas_mocitneg,axis=0)
+    fithitpos = np.nanmean(tas_mofitpos - tas_mohitpos,axis=0)
+    fithitnon = np.nanmean(tas_mofitnon - tas_mohitnon,axis=0)
+    fithitneg = np.nanmean(tas_mofitneg - tas_mohitneg,axis=0)
     
-    fpolcitpos = np.nanmean(tas_mofpolpos - tas_mocitpos,axis=0)
-    fpolcitnon = np.nanmean(tas_mofpolnon - tas_mocitnon,axis=0)
-    fpolcitneg = np.nanmean(tas_mofpolneg - tas_mocitneg,axis=0)
-    diffruns_mo = [fsubcitpos,fsubcitnon,fsubcitneg,
-                   fpolcitpos,fpolcitnon,fpolcitneg]
+    ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)
+    ficthitnon = np.nanmean(tas_mofictnon - tas_mohitnon,axis=0)
+    ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)
+    diffruns_mo = [fithitpos,fithitnon,fithitneg,
+                   ficthitpos,ficthitnon,ficthitneg]
     
     ### Calculate significance for FM
-    stat_fsubcitpos,pvalue_fsubcitpos = UT.calc_indttest(tas_mo[1][pos_fsub,:,:],
-                                                       tas_mo[0][pos_cit,:,:])
-    stat_fsubcitnon,pvalue_fsubcitnon = UT.calc_indttest(tas_mo[1][non_fsub,:,:],
-                                                   tas_mo[0][non_cit,:,:])
-    stat_fsubcitneg,pvalue_fsubcitneg = UT.calc_indttest(tas_mo[1][neg_fsub,:,:],
-                                               tas_mo[0][neg_cit,:,:])
+    stat_FITHITpos,pvalue_FITHITpos = UT.calc_indttest(tas_mo[1][pos_fit,:,:],
+                                                       tas_mo[0][pos_hit,:,:])
+    stat_FITHITnon,pvalue_FITHITnon = UT.calc_indttest(tas_mo[1][non_fit,:,:],
+                                                   tas_mo[0][non_hit,:,:])
+    stat_FITHITneg,pvalue_FITHITneg = UT.calc_indttest(tas_mo[1][neg_fit,:,:],
+                                               tas_mo[0][neg_hit,:,:])
     
-    stat_fpolcitpos,pvalue_fpolcitpos = UT.calc_indttest(tas_mo[2][pos_fpol,:,:],
-                                                       tas_mo[0][pos_cit,:,:])
-    stat_fpolcitnon,pvalue_fpolcitnon = UT.calc_indttest(tas_mo[2][non_fpol,:,:],
-                                                   tas_mo[0][non_cit,:,:])
-    stat_fpolcitneg,pvalue_fpolcitneg = UT.calc_indttest(tas_mo[2][neg_fpol,:,:],
-                                               tas_mo[0][neg_cit,:,:])
+    stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(tas_mo[2][pos_fict,:,:],
+                                                       tas_mo[0][pos_hit,:,:])
+    stat_FICTHITnon,pvalue_FICTHITnon = UT.calc_indttest(tas_mo[2][non_fict,:,:],
+                                                   tas_mo[0][non_hit,:,:])
+    stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(tas_mo[2][neg_fict,:,:],
+                                               tas_mo[0][neg_hit,:,:])
 
-    pruns_mo = [pvalue_fsubcitpos,pvalue_fsubcitnon,pvalue_fsubcitneg,
-                pvalue_fpolcitpos,pvalue_fpolcitnon,pvalue_fpolcitneg]
+    pruns_mo = [pvalue_FITHITpos,pvalue_FITHITnon,pvalue_FITHITneg,
+                pvalue_FICTHITpos,pvalue_FICTHITnon,pvalue_FICTHITneg]
     
     ###########################################################################
     ###########################################################################
@@ -238,7 +231,7 @@ for v in range(len(varnames)):
         climoq,lons_cyclic = addcyclic(climo[i], lon)
         climoq,lons_cyclic = shiftgrid(180.,climoq,lons_cyclic,start=False)
                   
-        m.drawmapboundary(fill_color='w',color='dimgray',linewidth=0.7)
+        m.drawmapboundary(fill_color='white',color='dimgray',linewidth=0.7)
         
         cs = m.contourf(x,y,var,limit,extend='both')
         cs1 = m.contourf(x,y,pvar,colors='None',hatches=['....'],
@@ -263,7 +256,7 @@ for v in range(len(varnames)):
             cs.set_cmap(cmap)  
         elif varnames[v] == 'U10' or varnames[v] == 'U300' or varnames[v] == 'U500':
             cmap = ncm.cmap('NCV_blu_red')            
-            cs.set_cmap(cmap)           
+            cs.set_cmap(cmap)  
         elif varnames[v] == 'SWE':
             cmap = cmap = cmocean.cm.balance
             cs.set_cmap(cmap)
@@ -321,7 +314,7 @@ for v in range(len(varnames)):
     plt.subplots_adjust(hspace=0.01)
     plt.subplots_adjust(bottom=0.15)
     
-    plt.savefig(directoryfigure + '/QBO_%s_2/Regional2/QBOExperiments_%s_%s.png' % (period,
+    plt.savefig(directoryfigure + '/QBO_%s_2_CTLQ/QBOExperiments_%s_%s.png' % (period,
                                                                         period,
                                                                   varnames[v]),
                                                                   dpi=300)
