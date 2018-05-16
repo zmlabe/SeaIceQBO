@@ -1,22 +1,21 @@
 """
-Script reads in DAILY data from WACCM4 experiments (HIT2,HIT,FIT,FICT2,FICT)
+Script reads in DAILY data from WACCM4 regional experiments (FSUB,FPOL)
 for all 200 ensemble members! This data has already been averaged over 
-latitude and longitude. Note that HIT2=CIT and FICT2=FIC for the file
-naming conventions in the filename and function.
+latitude and longitude.
  
 Notes
 -----
     Author : Zachary Labe
-    Date   : 15 March 2018
+    Date   : 16 May 2018
     
 Usage
 -----
-    readMeanExperiAll(varid,experi,level)
+    readMeanExperiAllRegional(varid,experi,level)
 """
 
-def readMeanExperiAll(varid,experi,level):
+def readMeanExperiAllRegional(varid,experi,level):
     """
-    Function reads daily data from WACCM4 simulations that are 
+    Function reads daily data from WACCM4 regional simulations that are 
     already averaged over latitude/longitude (See script called
     calc_global_ave.proc)
 
@@ -51,29 +50,29 @@ def readMeanExperiAll(varid,experi,level):
     import numpy as np
     from netCDF4 import Dataset
     
-    ### Directory 1 for ensemble members 1-100 (remote server - Surtsey)
-    directorydata1 = '/surtsey/zlabe/simu/'
+    ### Directory 1 for ensemble members 1-100 (mounted server - GreenPlanet)
+    directorydata1 = '/home/zlabe/green/simu/'
     
-    ### Directory 2 for ensemble members 101-200 (mounted server - GreenPlanet)
-    directorydata2 = '/home/zlabe/green/simu/'
+    ### Directory 2 for ensemble members 101-200 (remote server - Surtsey)
+    directorydata2 = '/surtsey/zlabe/simu/'
     
     ### Number of ensembles (years)
-    ENS = 100
+    ENS1 = 100
     
     ### Call files
     if level == 'surface': # 1d variable
-        var = np.empty((ENS,212,96,144))
-        var2 = np.empty((ENS,212,96,144))
+        var = np.empty((ENS1,212,96,144))
+        var2 = np.empty((ENS1,212,96,144))
     elif level == 'profile': # 2d variable
-        var = np.empty((ENS,212,17))
-        var2 = np.empty((ENS,212,17))
+        var = np.empty((ENS1,212,17))
+        var2 = np.empty((ENS1,212,17))
 
     ###########################################################################
     ###########################################################################
     ###########################################################################
     
     ### Call files for directory 1 (1-100 members)       
-    for i in range(0,ENS,1):
+    for i in range(0,ENS1,1):
         
         totaldirectory = directorydata1 + experi + '/daily/' + experi + \
                         '%s/' % (i+1)
@@ -101,15 +100,15 @@ def readMeanExperiAll(varid,experi,level):
             data.close()
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
-        print('Completed: Read data for *%s%s* : %s!' % (experi[:4],
+        print('Completed: Read data for *%s%s* : %s!' % (experi[:3],
                                                          i+1,varid))
     print('Completed: Read members 1-200!')    
     ###########################################################################
     ###########################################################################
     ###########################################################################
     
-    ### Call files for directory 1 (101-200 members)       
-    for i in range(0,ENS,1):
+    ### Call files for directory 2 (101-200 members)       
+    for i in range(0,ENS1,1):
         
         totaldirectory2 = directorydata2 + experi + '/daily/' + experi + \
                         '%s/' % (i+101)
@@ -137,7 +136,7 @@ def readMeanExperiAll(varid,experi,level):
             data2.close()
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
-        print('Completed: Read data for *%s%s* : %s!' % (experi[:4],
+        print('Completed: Read data for *%s%s* : %s!' % (experi[:3],
                                                          i+101,varid))
         
     print('Completed: Read members 101-200!')    
@@ -147,11 +146,11 @@ def readMeanExperiAll(varid,experi,level):
     ### Concatenate 1-200 members
     varall = np.append(var,var2,axis=0)
         
-    print('\n*Completed: Finished readExperiAll function!')
+    print('\n*Completed: Finished readExperiAllRegional function!')
     return lat,lon,time,lev,varall
         
-#### Test function -- no need to use    
+### Test function -- no need to use    
 #varid = 'GEOP'
-#experi = 'FICT'
+#experi = 'FSUB'
 #level = 'profile'  
-#lat,lon,time,lev,var = readMeanExperiAll(varid,experi,level)
+#lat,lon,time,lev,var = readMeanExperiAllRegional(varid,experi,level)
