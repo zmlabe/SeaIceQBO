@@ -80,6 +80,8 @@ def readMeanExperiAllRegional(varid,experi,level):
         
         if varid == 'Z500':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
+        elif varid == 'T1000':
+            filename = totaldirectory + varid + '_%s.nc' % (i+1)
         
         ### Read in Data
         if level == 'surface': # 3d variables
@@ -116,6 +118,8 @@ def readMeanExperiAllRegional(varid,experi,level):
         
         if varid == 'Z500':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
+        elif varid == 'T1000':
+            filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
         
         ### Read in Data
         if level == 'surface': # 3d variables
@@ -125,7 +129,7 @@ def readMeanExperiAllRegional(varid,experi,level):
             lat2 = data.variables['latitude'][:]
             lon2 = data.variables['longitude'][:]
             var2[i,:,:,:] = data.variables['%s' % varid][:].squeeze()
-            data.close()
+            data2.close()
         elif level == 'profile': # 4d variables
             data2 = Dataset(filename2,'r')
             time2 = data.variables['time'][:]
