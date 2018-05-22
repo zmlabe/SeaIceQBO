@@ -6,7 +6,7 @@
 Zachary Labe - [Research Website](http://sites.uci.edu/zlabe/) - [@ZLabe](https://twitter.com/ZLabe)
 
 ## Description
-
+Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates the atmospheric response to Arctic sea ice loss. We conducted idealized experiments using WACCM4 to composite the phases of the QBO (westerly, easterly, and neutral) and assess the importance (mechanisms) of the stratosphere-troposphere pathway. The QBO in WACCM4 is prescribed by relaxing equatorial zonal winds between 86 and 4 hPa to observed radiosonde data (28-month period). We conduct a series of large ensemble simulations (7 experiments at 200 years each) to increase the signal-to-noise ratio in the stratosphere.
 
 + ```Literature/```: Associated documents and research notes for current project
 + ```Scripts/```: Main [Python](https://www.python.org/) scripts/functions used in data analysis and plotting
