@@ -14,6 +14,7 @@ Usage
     [4] calc_weightedAve(var,lats)
     [5] calc_spatialCorr(varx,vary,lats,lons,weight)
     [6] calc_RMSE(varx,vary,lats,lons,weight)
+    [7] calc_spatialCorrHeight(varx,vary,lats,lons,weight)
 """
 
 def calcDecJan(varx,vary,lat,lon,level,levsq):
@@ -458,3 +459,77 @@ def calc_RMSE(varx,vary,lats,lons,weight):
         
         print('*Completed: Finished calc_RMSE function!')
         return rmse
+    
+###############################################################################
+###############################################################################
+###############################################################################
+    
+def calc_spatialCorrHeight(varx,vary,levs,lons,weight):
+    """
+    Calculates spatial correlation from pearson correlation coefficient for
+    grids over vertical height (17 pressure coordinate levels)
+    
+    Parameters
+    ----------
+    varx : 2d array
+    vary : 2d array
+    levs : 1d array of levels
+    lons : 1d array of latitude
+    weight : string (yes or no)
+    
+    Returns
+    -------
+    corrcoef : 1d array of correlation coefficient (pearson r)
+    
+    Usage
+    -----
+    corrcoef = calc_spatialCorrHeight(varx,vary,lats,lons)
+    """
+    
+    print('\n>>> Using calc_spatialCorrHeight function!')
+    ### Import modules
+    import numpy as np
+    
+    if weight == 'yes': # Computed weighted correlation coefficient   
+        
+        ### Create 2d meshgrid for weights 
+        lon2,lev2 = np.meshgrid(lons,levs)
+        
+        ### Create 2d array of weights based on latitude
+        gwq = np.array([0.25,0.25,0.25,0.25,0.25,0.25,0.4,0.5,0.5,0.5,
+              0.5,0.5,0.5,0.7,0.7,0.7,1.])
+        gw,gw2 = np.meshgrid(lons,gwq)
+        
+        def m(x, w):
+            """Weighted Mean"""
+    
+            wave = np.sum(x * w) / np.sum(w)
+            print('Completed: Computed weighted average (17 P Levels)!') 
+            return wave
+        
+        def cov(x, y, w):
+            """Weighted Covariance"""
+            
+            wcov = np.sum(w * (x - m(x, w)) * (y - m(y, w))) / np.sum(w)
+            print('Completed: Computed weighted covariance (17 P Levels)!')
+            return wcov
+        
+        def corr(x, y, w):
+            """Weighted Correlation"""
+            
+            wcor = cov(x, y, w) / np.sqrt(cov(x, x, w) * cov(y, y, w))
+            print('Completed: Computed weighted correlation (17 P Levels)!')
+            return wcor
+        
+        corrcoef = corr(varx,vary,gw)
+        
+    elif weight == 'no':   
+        ### Correlation coefficient from numpy function (not weighted)
+        corrcoef= np.corrcoef(varx.ravel(),vary.ravel())[0][1]
+        print('Completed: Computed NON-weighted correlation!')
+        
+    else:
+        ValueError('Wrong weighted argument in function!')
+    
+    print('*Completed: Finished calc_SpatialCorrHeight function!')
+    return corrcoef
