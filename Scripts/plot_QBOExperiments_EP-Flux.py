@@ -12,10 +12,8 @@ Notes
 ### Import modules
 import numpy as np
 import matplotlib.pyplot as plt
-import nclcmaps as ncm
 import datetime
 import read_MonthlyOutput_AllMembers as MO
-import calc_Utilities as UT
 import cmocean
 
 ### Define directories
@@ -44,18 +42,18 @@ experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
 qbophase = ['pos','non','neg']
 period = 'D'
 
-#### Call function for vertical temperature data
-#lat,lon,time,lev,epy_h = MO.readExperiAll('EPY','HIT','profile')
-#lat,lon,time,lev,epz_h = MO.readExperiAll('EPZ','HIT','profile')
-#lat,lon,time,lev,div_h = MO.readExperiAll('DEPF','HIT','profile')
-#
-#lat,lon,time,lev,epy_f = MO.readExperiAll('EPY','FIT','profile')
-#lat,lon,time,lev,epz_f = MO.readExperiAll('EPZ','FIT','profile')
-#lat,lon,time,lev,div_f = MO.readExperiAll('DEPF','FIT','profile')
-#
-#lat,lon,time,lev,epy_fict = MO.readExperiAll('EPY','FICT','profile')
-#lat,lon,time,lev,epz_fict = MO.readExperiAll('EPZ','FICT','profile')
-#lat,lon,time,lev,div_fict = MO.readExperiAll('DEPF','FICT','profile')
+### Call function for vertical temperature data
+lat,lon,time,lev,epy_h = MO.readExperiAll('EPY','HIT','profile')
+lat,lon,time,lev,epz_h = MO.readExperiAll('EPZ','HIT','profile')
+lat,lon,time,lev,div_h = MO.readExperiAll('DEPF','HIT','profile')
+
+lat,lon,time,lev,epy_f = MO.readExperiAll('EPY','FIT','profile')
+lat,lon,time,lev,epz_f = MO.readExperiAll('EPZ','FIT','profile')
+lat,lon,time,lev,div_f = MO.readExperiAll('DEPF','FIT','profile')
+
+lat,lon,time,lev,epy_fict = MO.readExperiAll('EPY','FICT','profile')
+lat,lon,time,lev,epz_fict = MO.readExperiAll('EPZ','FICT','profile')
+lat,lon,time,lev,div_fict = MO.readExperiAll('DEPF','FICT','profile')
 
 ### Separate per month
 epy_moh = epy_h[:,-1,:,:] 
@@ -121,13 +119,13 @@ diff_epzp_fict = np.nanmean(epz_mofict[pos_fict] - epz_moh[pos_hit],axis=0)/30.
 diff_divp_fict = np.nanmean(div_mofict[pos_fict] - div_moh[pos_hit],axis=0)/30.
 
 # Difference (QBO-E minus QBO-W)
-diff_epyno = np.nanmean(epy_mof[neg_fit] - epy_mof[pos_hit][:-4],axis=0)/30.
-diff_epzno = np.nanmean(epz_mof[neg_fit] - epz_mof[pos_hit][:-4],axis=0)/30.
-diff_divno = np.nanmean(div_mof[neg_fit] - div_mof[pos_hit][:-4],axis=0)/30.
+diff_epyno = np.nanmean(epy_mof[neg_fit] - epy_mof[pos_fit][:-4],axis=0)/30.
+diff_epzno = np.nanmean(epz_mof[neg_fit] - epz_mof[pos_fit][:-4],axis=0)/30.
+diff_divno = np.nanmean(div_mof[neg_fit] - div_mof[pos_fit][:-4],axis=0)/30.
 
-diff_epyno_fict = np.nanmean(epy_mofict[neg_fict] - epy_mofict[pos_hit][:-4],axis=0)/30.
-diff_epzno_fict = np.nanmean(epz_mofict[neg_fict] - epz_mofict[pos_hit][:-4],axis=0)/30.
-diff_divno_fict = np.nanmean(div_mofict[neg_fict] - div_mofict[pos_hit][:-4],axis=0)/30.
+diff_epyno_fict = np.nanmean(epy_mofict[neg_fict] - epy_mofict[pos_fict][:-4],axis=0)/30.
+diff_epzno_fict = np.nanmean(epz_mofict[neg_fict] - epz_mofict[pos_fict][:-4],axis=0)/30.
+diff_divno_fict = np.nanmean(div_mofict[neg_fict] - div_mofict[pos_fict][:-4],axis=0)/30.
     
 # Negative
 diff_epyn = np.nanmean(epy_mof[neg_fit] - epy_moh[neg_hit],axis=0)/30.
@@ -185,7 +183,7 @@ for i in range(6):
 #                     pivot='mid',color='k',units='width',
 #                     scale=0.8e7,width=0.007)
     cs1 = plt.quiver(lat[::5],lev,epy[:,::5],epz[:,::5],
-                     pivot='mid',color='k',width=0.01,
+                     pivot='mid',color='k',width=0.011,
                      headwidth=5,headlength=6,headaxislength=4)
 #    if i == 5:
 #        plt.quiverkey(cs1,0.34,-0.3,0.8e7,r'\textbf{0.8$\times$10$^{6}$}',

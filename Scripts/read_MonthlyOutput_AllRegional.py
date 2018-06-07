@@ -64,38 +64,79 @@ def readExperiAllRegional(varid,experi,level):
     if varid == 'EGR' and level == 'surface':
         filename = totaldirectory + varid + '_500_850.nc'
     
-    ### Read in Data
-    if level == 'surface': # 3d variables
-        data = Dataset(filename,'r')
-        time = data.variables['time'][:]
-        lev = 'surface'
-        lat = data.variables['latitude'][:]
-        lon = data.variables['longitude'][:]
-        varq = data.variables['%s' % varid][:]
-        data.close()
-    elif level == 'profile': # 4d variables
-        data = Dataset(filename,'r')
-        time = data.variables['time'][:]
-        lev = data.variables['level'][:]
-        lat = data.variables['latitude'][:]
-        lon = data.variables['longitude'][:]
-        varq = data.variables['%s' % varid][:]
-        data.close()
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ']):
+        ### Read in Data
+        if level == 'surface': # 3d variables
+            data = Dataset(filename,'r')
+            varq = data.variables['%s' % varid][:,:,:,0]
+            data.close()
+            
+            dataq = Dataset(totaldirectory + 'T2M_1900-2000.nc')
+            time = dataq.variables['time'][:]
+            lev = 'surface'
+            lat = dataq.variables['latitude'][:]
+            lon = dataq.variables['longitude'][:]
+            dataq.close()
+        elif level == 'profile': # 4d variables
+            data = Dataset(filename,'r')
+            varq = data.variables['%s' % varid][:,:,:,0]
+            data.close()
+
+            dataq = Dataset(totaldirectory + 'TEMP_1900-2000.nc')
+            time = dataq.variables['time'][:]
+            lev = dataq.variables['level'][:]
+            lat = dataq.variables['latitude'][:]
+            lon = dataq.variables['longitude'][:]
+            dataq.close()
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!'))    
+        print('Completed: Read data for *%s* : %s!' % (experi[:4],varid))
     else:
-        print(ValueError('Selected wrong height - (surface or profile!)!'))    
-    print('Completed: Read data for *%s* : %s!' % (experi[:4],varid))
+        ### Read in Data
+        if level == 'surface': # 3d variables
+            data = Dataset(filename,'r')
+            time = data.variables['time'][:]
+            lev = 'surface'
+            lat = data.variables['latitude'][:]
+            lon = data.variables['longitude'][:]
+            varq = data.variables['%s' % varid][:]
+            data.close()
+        elif level == 'profile': # 4d variables
+            data = Dataset(filename,'r')
+            time = data.variables['time'][:]
+            lev = data.variables['level'][:]
+            lat = data.variables['latitude'][:]
+            lon = data.variables['longitude'][:]
+            varq = data.variables['%s' % varid][:]
+            data.close()
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!'))    
+        print('Completed: Read data for *%s* : %s!' % (experi[:4],varid))
     
-    ### Reshape to split years and months
-    months = 12
-    if level == 'surface': # 3d variables
-        var = np.reshape(varq,(int(varq.shape[0]/12),months,
-                              int(lat.shape[0]),int(lon.shape[0])))
-    elif level == 'profile': # 4d variables
-        var = np.reshape(varq,(int(varq.shape[0]/12),months,int(lev.shape[0]),
-                      int(lat.shape[0]),int(lon.shape[0])))
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ']):
+        ### Reshape to split years and months
+        months = 12
+        if level == 'surface': # 3d variables
+            var = np.reshape(varq,(int(varq.shape[0]/12),months,
+                                  int(lat.shape[0])))
+        elif level == 'profile': # 4d variables
+            var = np.reshape(varq,(int(varq.shape[0]/12),months,int(lev.shape[0]),
+                          int(lat.shape[0])))
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!')) 
+        print('Completed: Reshaped %s array!' % (varid))
     else:
-        print(ValueError('Selected wrong height - (surface or profile!)!')) 
-    print('Completed: Reshaped %s array!' % (varid))
+        ### Reshape to split years and months
+        months = 12
+        if level == 'surface': # 3d variables
+            var = np.reshape(varq,(int(varq.shape[0]/12),months,
+                                  int(lat.shape[0]),int(lon.shape[0])))
+        elif level == 'profile': # 4d variables
+            var = np.reshape(varq,(int(varq.shape[0]/12),months,int(lev.shape[0]),
+                          int(lat.shape[0]),int(lon.shape[0])))
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!')) 
+        print('Completed: Reshaped %s array!' % (varid))
     
     ### Convert units
     if varid in ('TEMP','T2M'):
@@ -118,38 +159,79 @@ def readExperiAllRegional(varid,experi,level):
     if varid == 'EGR' and level == 'surface':
         filename2 = totaldirectory2 + varid + '_500_850.nc'
 
-    ### Read in Data
-    if level == 'surface': # 3d variables
-        data2 = Dataset(filename2,'r')
-        time2 = data.variables['time'][:]
-        lev2 = 'surface'
-        lat2 = data.variables['latitude'][:]
-        lon2 = data.variables['longitude'][:]
-        varq2 = data.variables['%s' % varid][:]
-        data2.close()
-    elif level == 'profile': # 4d variables
-        data2 = Dataset(filename2,'r')
-        time2 = data.variables['time'][:]
-        lev2 = data.variables['level'][:]
-        lat2 = data.variables['latitude'][:]
-        lon2 = data.variables['longitude'][:]
-        varq2 = data.variables['%s' % varid][:]
-        data2.close()
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ']):
+        ### Read in Data
+        if level == 'surface': # 3d variables
+            data2 = Dataset(filename2,'r')
+            varq2 = data2.variables['%s' % varid][:,:,:,0]
+            data2.close()
+            
+            dataq2 = Dataset(totaldirectory2 + 'T2M_1900-2000.nc')
+            time2 = dataq2.variables['time'][:]
+            lev2 = 'surface'
+            lat2 = dataq2.variables['latitude'][:]
+            lon2 = dataq2.variables['longitude'][:]
+            dataq2.close()
+        elif level == 'profile': # 4d variables
+            data2 = Dataset(filename2,'r')
+            varq2 = data2.variables['%s' % varid][:,:,:,0]
+            data2.close()
+            
+            dataq2 = Dataset(totaldirectory2 + 'TEMP_1900-2000.nc')
+            time2 = dataq2.variables['time'][:]
+            lev2 = dataq2.variables['level'][:]
+            lat2 = dataq2.variables['latitude'][:]
+            lon2 = dataq2.variables['longitude'][:]
+            dataq2.close()
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!'))    
+        print('Completed: Read data for *%s* : %s!' % (experi[:4],varid))
     else:
-        print(ValueError('Selected wrong height - (surface or profile!)!'))    
-    print('Completed: Read data for *%s* : %s!' % (experi[:4],varid))
+        ### Read in Data
+        if level == 'surface': # 3d variables
+            data2 = Dataset(filename2,'r')
+            time2 = data2.variables['time'][:]
+            lev2 = 'surface'
+            lat2 = data2.variables['latitude'][:]
+            lon2 = data2.variables['longitude'][:]
+            varq2 = data2.variables['%s' % varid][:]
+            data2.close()
+        elif level == 'profile': # 4d variables
+            data2 = Dataset(filename2,'r')
+            time2 = data2.variables['time'][:]
+            lev2 = data2.variables['level'][:]
+            lat2 = data2.variables['latitude'][:]
+            lon2 = data2.variables['longitude'][:]
+            varq2 = data2.variables['%s' % varid][:]
+            data2.close()
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!'))    
+        print('Completed: Read data for *%s* : %s!' % (experi[:4],varid))
     
-    ### Reshape to split years and months
-    months = 12
-    if level == 'surface': # 3d variables
-        var2 = np.reshape(varq2,(int(varq2.shape[0]/12),months,
-                              int(lat2.shape[0]),int(lon2.shape[0])))
-    elif level == 'profile': # 4d variables
-        var2 = np.reshape(varq2,(int(varq2.shape[0]/12),months,int(lev2.shape[0]),
-                      int(lat2.shape[0]),int(lon2.shape[0])))
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ']):
+        ### Reshape to split years and months
+        months = 12
+        if level == 'surface': # 3d variables
+            var2 = np.reshape(varq2,(int(varq2.shape[0]/12),months,
+                                  int(lat2.shape[0])))
+        elif level == 'profile': # 4d variables
+            var2 = np.reshape(varq2,(int(varq2.shape[0]/12),months,
+                                     int(lev2.shape[0]),int(lat2.shape[0])))
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!')) 
+        print('Completed: Reshaped %s array!' % (varid))
     else:
-        print(ValueError('Selected wrong height - (surface or profile!)!')) 
-    print('Completed: Reshaped %s array!' % (varid))
+        ### Reshape to split years and months
+        months = 12
+        if level == 'surface': # 3d variables
+            var2 = np.reshape(varq2,(int(varq2.shape[0]/12),months,
+                                  int(lat2.shape[0]),int(lon2.shape[0])))
+        elif level == 'profile': # 4d variables
+            var2 = np.reshape(varq2,(int(varq2.shape[0]/12),months,int(lev2.shape[0]),
+                          int(lat2.shape[0]),int(lon2.shape[0])))
+        else:
+            print(ValueError('Selected wrong height - (surface or profile!)!')) 
+        print('Completed: Reshaped %s array!' % (varid))
     
     ### Convert units
     if varid in ('TEMP','T2M'):
