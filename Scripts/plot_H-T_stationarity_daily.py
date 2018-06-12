@@ -42,7 +42,7 @@ years = np.arange(year1,year2+1,1)
 
 ### Add parameters
 varnames = 'U'
-runnames = [r'\textbf{HIT}',r'\textbf{FIT}',r'\textbf{FICT}',
+runnames = [r'\textbf{FIT}',r'\textbf{HIT}',r'\textbf{FICT}',
             r'\textbf{FIC}',r'\textbf{CIT}',r'\textbf{FSUB}',
             r'\textbf{FPOL}',r'\textbf{CTLQ}']
 qbophase = ['pos','non','neg']
@@ -263,7 +263,7 @@ var_wficneg = var_moficneg[:,timeq]
 var_wcitneg = var_mocitneg[:,timeq]
 var_wfsubneg = var_mofsubneg[:,timeq]
 var_wfpolneg = var_mofpolneg[:,timeq]
-var_wfctqneg = var_moctlqneg[:,:]
+var_wfctlqneg = var_moctlqneg[:,:]
 
 ### Calculate difference over time average
 difffit = np.nanmean(var_wfitneg - var_wfitpos,axis=1).squeeze()
@@ -273,7 +273,7 @@ difffic = np.nanmean(var_wficneg - var_wficpos,axis=1).squeeze()
 diffcit = np.nanmean(var_wcitneg - var_wcitpos,axis=1).squeeze()
 difffsub = np.nanmean(var_wfsubneg - var_wfsubpos,axis=1).squeeze()
 difffpol = np.nanmean(var_wfpolneg - var_wfpolpos,axis=1).squeeze()
-diffctlq = np.nanmean(var_wctlqneg - var_wctlqpos,axis=1).squeeze()
+diffctlq = np.nanmean(var_wfctlqneg - var_wctlqpos,axis=1).squeeze()
 
 dataq = [difffit,diffhit,difffict,difffic,diffcit,difffsub,difffpol,diffctlq]
 
@@ -312,7 +312,7 @@ def calcLinearTrend(data,length):
     return ave
 
 ### Enter number of ensembles
-N = 30
+N = 40
 ensmovfit = calcLinearTrend(difffit,N)
 ensmovhit = calcLinearTrend(diffhit,N)
 ensmovfict = calcLinearTrend(difffict,N)
@@ -379,7 +379,7 @@ plt.axhline(0,color='dimgrey',linestyle='--',dashes=(0.9,1),linewidth=2)
 
 plt.ylabel(r'\textbf{U30 [m/s]}',color='k',fontsize=12)
 plt.yticks(np.arange(-8,9,4),list(map(str,np.arange(-8,9,4))))
-plt.ylim([-4,4])
+plt.ylim([-5,5])
 
 l = plt.legend(shadow=False,fontsize=7.5,loc='upper center',
            bbox_to_anchor=(0.5, 1.03),fancybox=True,ncol=8,

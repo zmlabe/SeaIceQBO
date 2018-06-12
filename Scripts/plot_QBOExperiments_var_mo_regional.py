@@ -41,12 +41,13 @@ year2 = 2000
 years = np.arange(year1,year2+1,1)
 
 ### Call arguments
-varnames = ['Z500','Z30','SLP','T2M','U10','U500','U300','SWE','THICK','P','EGR']
+varnames = ['Z500','Z30','SLP','T2M','U10','U500','U300','SWE','THICK','P',
+            'EGR','WAFZ850','WAFZ150']
 runnames = [r'CIT',r'FSUB',r'FPOL']
 experiments = [r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',r'\textbf{FSUB-CIT}',
                r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}']
 qbophase = ['pos','non','neg']
-period = 'D'
+period = 'DJF'
 for v in range(len(varnames)):
     ### Call function for data from reach run
     lat,lon,time,lev,tascit = MO.readExperiAll('%s' % varnames[v],
@@ -222,6 +223,12 @@ for v in range(len(varnames)):
     elif varnames[v] == 'EGR':
         limit = np.arange(-0.2,0.21,0.02)
         barlim = np.arange(-0.2,0.3,0.2)
+    elif varnames[v] == 'WAFZ850':
+        limit = np.arange(-0.1,0.101,0.001)
+        barlim = np.arange(-0.1,0.11,0.1)
+    elif varnames[v] == 'WAFZ150':
+        limit = np.arange(-0.01,0.0101,0.0001)
+        barlim = np.arange(-0.01,0.011,0.01)
     
     fig = plt.figure()
     for i in range(len(diffruns_mo)):
@@ -280,6 +287,9 @@ for v in range(len(varnames)):
         elif varnames[v] == 'EGR':
             cmap = cmocean.cm.curl
             cs.set_cmap(cmap)
+        elif varnames[v] == 'WAFZ850' or varnames[v] == 'WAFZ150':
+            cmap = cmocean.cm.curl
+            cs.set_cmap(cmap)
                     
         ### Add experiment text to subplot
         if i < 3:
@@ -315,6 +325,8 @@ for v in range(len(varnames)):
         cbar.set_label(r'\textbf{m}',fontsize=11,color='dimgray') 
     elif varnames[v] == 'EGR':
         cbar.set_label(r'\textbf{1/day}',fontsize=11,color='dimgray')
+    elif varnames[v] == 'WAFZ850' or varnames[v] == 'WAFZ150':
+        cbar.set_label(r'\textbf{m/s/day}',fontsize=11,color='dimgray')
 
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim)))

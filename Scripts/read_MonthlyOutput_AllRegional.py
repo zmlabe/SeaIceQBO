@@ -64,11 +64,11 @@ def readExperiAllRegional(varid,experi,level):
     if varid == 'EGR' and level == 'surface':
         filename = totaldirectory + varid + '_500_850.nc'
     
-    if any([varid=='DEPF',varid=='EPY',varid=='EPZ']):
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ',varid=='WAFZ850',varid=='WAFZ150']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data = Dataset(filename,'r')
-            varq = data.variables['%s' % varid][:,:,:,0]
+            varq = data.variables['%s' % varid][:]
             data.close()
             
             dataq = Dataset(totaldirectory + 'T2M_1900-2000.nc')
@@ -159,11 +159,11 @@ def readExperiAllRegional(varid,experi,level):
     if varid == 'EGR' and level == 'surface':
         filename2 = totaldirectory2 + varid + '_500_850.nc'
 
-    if any([varid=='DEPF',varid=='EPY',varid=='EPZ']):
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ',varid=='WAFZ850',varid=='WAFZ150']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data2 = Dataset(filename2,'r')
-            varq2 = data2.variables['%s' % varid][:,:,:,0]
+            varq2 = data2.variables['%s' % varid][:]
             data2.close()
             
             dataq2 = Dataset(totaldirectory2 + 'T2M_1900-2000.nc')
