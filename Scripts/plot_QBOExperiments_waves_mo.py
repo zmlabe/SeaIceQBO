@@ -41,13 +41,13 @@ year2 = 2000
 years = np.arange(year1,year2+1,1)
 
 ### Call arguments
-varnames = ['Z300xwave2']
+varnames = ['Z300xwave1']
 runnames = [r'HIT',r'FIT',r'FICT']
 experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
                r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
 qbophase = ['pos','non','neg']
-period = 'D'
-wv = 'Z300xwave2'
+period = 'N'
+wv = 'Z300xwave1'
 MASK = False
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
@@ -131,6 +131,10 @@ for v in range(len(varnames)):
         tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i] = runs[i][:,-1,:,:]
+    elif period == 'N':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,-1,:,:]
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         
@@ -181,6 +185,8 @@ for v in range(len(varnames)):
     
     if period == 'D':
         climowavehmo = waveh[:,-1,:,:]
+    elif period == 'N':
+        climowavehmo = waveh[:,-2,:,:]
         
     wavehitpos = np.nanmean(climowavehmo[pos_hit,:,:],axis=0)
     wavehitnon = np.nanmean(climowavehmo[non_hit,:,:],axis=0)

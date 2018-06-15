@@ -19,7 +19,7 @@ import calc_Utilities as UT
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_D_2/Regional2/'
+directoryfigure = '/home/zlabe/Desktop/QBO_N_2/Regional2/'
 #directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
 
 ### Define time           
@@ -91,6 +91,11 @@ for v in range(len(varnames)):
     
     ### Separate per periods (December)
     if period == 'D':
+        tas_mo= np.empty((2,tascit.shape[0],tascit.shape[2],tascit.shape[3],
+                          tascit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,-1,:,:,:]
+    elif period == 'N':
         tas_mo= np.empty((2,tascit.shape[0],tascit.shape[2],tascit.shape[3],
                           tascit.shape[4]))
         for i in range(len(runs)):
@@ -246,7 +251,7 @@ for i in range(9):
     
     plt.subplots_adjust(wspace=0.25)
     
-plt.savefig(directoryfigure + 'linearInterference_December_FSUBCIT.png',dpi=300)
+plt.savefig(directoryfigure + 'linearInterference_November_FSUBCIT.png',dpi=300)
 print('Completed: Script done!')
 
 

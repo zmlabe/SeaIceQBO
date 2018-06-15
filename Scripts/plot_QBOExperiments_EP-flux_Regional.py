@@ -20,7 +20,7 @@ import cmocean
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_D_2/Regional2/'
+directoryfigure = '/home/zlabe/Desktop/QBO_N_2/Regional2/'
 #directoryfigure = '/home/zlabe/Documents/Research/SeaIceQBO/Figures/'
 
 ### Define time           
@@ -41,7 +41,7 @@ runnames = [r'CIT',r'FSUB',r'FPOL']
 experiments = [r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',
                r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}']
 qbophase = ['pos','non','neg']
-period = 'D'
+period = 'N'
 
 ### Call function for vertical temperature data
 lat,lon,time,lev,epy_h = MO.readExperiAll('EPY','CIT','profile')
@@ -57,17 +57,30 @@ lat,lon,time,lev,epz_fpol = MOR.readExperiAllRegional('EPZ','FPOL','profile')
 lat,lon,time,lev,div_fpol = MOR.readExperiAllRegional('DEPF','FPOL','profile')
 
 ### Separate per month
-epy_moh = epy_h[:,-1,:,:] 
-epz_moh = epz_h[:,-1,:,:] 
-div_moh = div_h[:,-1,:,:]
-
-epy_mof = epy_f[:,-1,:,:] 
-epz_mof = epz_f[:,-1,:,:] 
-div_mof = div_f[:,-1,:,:]
-
-epy_mofpol = epy_fpol[:,-1,:,:] 
-epz_mofpol = epz_fpol[:,-1,:,:] 
-div_mofpol = div_fpol[:,-1,:,:]
+if period == 'N':
+    epy_moh = epy_h[:,-2,:,:] 
+    epz_moh = epz_h[:,-2,:,:] 
+    div_moh = div_h[:,-2,:,:]
+    
+    epy_mof = epy_f[:,-2,:,:] 
+    epz_mof = epz_f[:,-2,:,:] 
+    div_mof = div_f[:,-2,:,:]
+    
+    epy_mofpol = epy_fpol[:,-2,:,:] 
+    epz_mofpol = epz_fpol[:,-2,:,:] 
+    div_mofpol = div_fpol[:,-2,:,:]
+elif period == 'D':
+    epy_moh = epy_h[:,-1,:,:] 
+    epz_moh = epz_h[:,-1,:,:] 
+    div_moh = div_h[:,-1,:,:]
+    
+    epy_mof = epy_f[:,-1,:,:] 
+    epz_mof = epz_f[:,-1,:,:] 
+    div_mof = div_f[:,-1,:,:]
+    
+    epy_mofpol= epy_fpol[:,-1,:,:] 
+    epz_mofpol = epz_fpol[:,-1,:,:] 
+    div_mofpol = div_fpol[:,-1,:,:]
 
 ### Read in QBO phases 
 filenamecitp = directorydata + 'CIT/monthly/QBO_%s_CIT.txt' % qbophase[0]
@@ -133,9 +146,9 @@ diff_epyn = np.nanmean(epy_mof[neg_fsub] - epy_moh[neg_cit],axis=0)/30.
 diff_epzn = np.nanmean(epz_mof[neg_fsub] - epz_moh[neg_cit],axis=0)/30.
 diff_divn = np.nanmean(div_mof[neg_fsub] - div_moh[neg_cit],axis=0)/30.
 
-diff_epyn_fpol = np.nanmean(epy_mofpol[neg_fsub] - epy_moh[pos_fsub],axis=0)/30.
-diff_epzn_fpol = np.nanmean(epz_mofpol[neg_fsub] - epz_moh[pos_fsub],axis=0)/30.
-diff_divn_fpol = np.nanmean(div_mofpol[neg_fsub] - div_moh[pos_fsub],axis=0)/30.
+diff_epyn_fpol = np.nanmean(epy_mofpol[neg_fsub] - epy_moh[neg_fsub],axis=0)/30.
+diff_epzn_fpol = np.nanmean(epz_mofpol[neg_fsub] - epz_moh[neg_fsub],axis=0)/30.
+diff_divn_fpol = np.nanmean(div_mofpol[neg_fsub] - div_moh[neg_fsub],axis=0)/30.
 
 diff_div = [diff_divn,diff_divp,diff_divno,diff_divn_fpol,diff_divp_fpol,diff_divno_fpol]
 diff_epy = [diff_epyn,diff_epyp,diff_epyno,diff_epyn_fpol,diff_epyp_fpol,diff_epyno_fpol]

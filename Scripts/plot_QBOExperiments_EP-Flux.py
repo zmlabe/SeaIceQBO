@@ -19,7 +19,7 @@ import cmocean
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_D_2/'
+directoryfigure = '/home/zlabe/Desktop/QBO_N_2/'
 #directoryfigure = '/home/zlabe/Documents/Research/SeaIceQBO/Figures/'
 
 ### Define time           
@@ -40,7 +40,7 @@ runnames = [r'HIT',r'FIT',r'FICT']
 experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
                r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
 qbophase = ['pos','non','neg']
-period = 'D'
+period = 'N'
 
 ### Call function for vertical temperature data
 lat,lon,time,lev,epy_h = MO.readExperiAll('EPY','HIT','profile')
@@ -56,17 +56,30 @@ lat,lon,time,lev,epz_fict = MO.readExperiAll('EPZ','FICT','profile')
 lat,lon,time,lev,div_fict = MO.readExperiAll('DEPF','FICT','profile')
 
 ### Separate per month
-epy_moh = epy_h[:,-1,:,:] 
-epz_moh = epz_h[:,-1,:,:] 
-div_moh = div_h[:,-1,:,:]
-
-epy_mof = epy_f[:,-1,:,:] 
-epz_mof = epz_f[:,-1,:,:] 
-div_mof = div_f[:,-1,:,:]
-
-epy_mofict = epy_fict[:,-1,:,:] 
-epz_mofict = epz_fict[:,-1,:,:] 
-div_mofict = div_fict[:,-1,:,:]
+if period == 'N':
+    epy_moh = epy_h[:,-2,:,:] 
+    epz_moh = epz_h[:,-2,:,:] 
+    div_moh = div_h[:,-2,:,:]
+    
+    epy_mof = epy_f[:,-2,:,:] 
+    epz_mof = epz_f[:,-2,:,:] 
+    div_mof = div_f[:,-2,:,:]
+    
+    epy_mofict = epy_fict[:,-2,:,:] 
+    epz_mofict = epz_fict[:,-2,:,:] 
+    div_mofict = div_fict[:,-2,:,:]
+elif period == 'D':
+    epy_moh = epy_h[:,-1,:,:] 
+    epz_moh = epz_h[:,-1,:,:] 
+    div_moh = div_h[:,-1,:,:]
+    
+    epy_mof = epy_f[:,-1,:,:] 
+    epz_mof = epz_f[:,-1,:,:] 
+    div_mof = div_f[:,-1,:,:]
+    
+    epy_mofict = epy_fict[:,-1,:,:] 
+    epz_mofict = epz_fict[:,-1,:,:] 
+    div_mofict = div_fict[:,-1,:,:]
 
 ### Read in QBO phases 
 filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]

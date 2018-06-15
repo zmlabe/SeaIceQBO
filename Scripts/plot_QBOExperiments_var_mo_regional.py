@@ -47,7 +47,7 @@ runnames = [r'CIT',r'FSUB',r'FPOL']
 experiments = [r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',r'\textbf{FSUB-CIT}',
                r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}']
 qbophase = ['pos','non','neg']
-period = 'DJF'
+period = 'N'
 for v in range(len(varnames)):
     ### Call function for data from reach run
     lat,lon,time,lev,tascit = MO.readExperiAll('%s' % varnames[v],
@@ -129,7 +129,11 @@ for v in range(len(varnames)):
     elif period == 'D':
         tas_mo= np.empty((3,tascit.shape[0],tascit.shape[2],tascit.shape[3]))
         for i in range(len(runs)):
-            tas_mo[i] = runs[i][:,-1,:,:]           
+            tas_mo[i] = runs[i][:,-1,:,:]        
+    elif period == 'N':
+        tas_mo= np.empty((3,tascit.shape[0],tascit.shape[2],tascit.shape[3]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,-2,:,:]   
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         

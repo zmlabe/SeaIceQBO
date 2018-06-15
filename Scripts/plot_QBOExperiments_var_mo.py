@@ -46,7 +46,7 @@ runnames = [r'HIT',r'FIT',r'FICT']
 experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
                r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
 qbophase = ['pos','non','neg']
-period = 'DJF'
+period = 'N'
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
     lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
@@ -129,6 +129,10 @@ for v in range(len(varnames)):
         tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
             tas_mo[i] = runs[i][:,-1,:,:]
+    elif period == 'N':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,-2,:,:]
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         
