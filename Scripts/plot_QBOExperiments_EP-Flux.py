@@ -130,15 +130,6 @@ diff_divp = np.nanmean(div_mof[pos_fit] - div_moh[pos_hit],axis=0)/30.
 diff_epyp_fict = np.nanmean(epy_mofict[pos_fict] - epy_moh[pos_hit],axis=0)/30.
 diff_epzp_fict = np.nanmean(epz_mofict[pos_fict] - epz_moh[pos_hit],axis=0)/30.
 diff_divp_fict = np.nanmean(div_mofict[pos_fict] - div_moh[pos_hit],axis=0)/30.
-
-# Difference (QBO-E minus QBO-W)
-diff_epyno = np.nanmean(epy_mof[neg_fit] - epy_mof[pos_fit][:-4],axis=0)/30.
-diff_epzno = np.nanmean(epz_mof[neg_fit] - epz_mof[pos_fit][:-4],axis=0)/30.
-diff_divno = np.nanmean(div_mof[neg_fit] - div_mof[pos_fit][:-4],axis=0)/30.
-
-diff_epyno_fict = np.nanmean(epy_mofict[neg_fict] - epy_mofict[pos_fict][:-4],axis=0)/30.
-diff_epzno_fict = np.nanmean(epz_mofict[neg_fict] - epz_mofict[pos_fict][:-4],axis=0)/30.
-diff_divno_fict = np.nanmean(div_mofict[neg_fict] - div_mofict[pos_fict][:-4],axis=0)/30.
     
 # Negative
 diff_epyn = np.nanmean(epy_mof[neg_fit] - epy_moh[neg_hit],axis=0)/30.
@@ -148,6 +139,15 @@ diff_divn = np.nanmean(div_mof[neg_fit] - div_moh[neg_hit],axis=0)/30.
 diff_epyn_fict = np.nanmean(epy_mofict[neg_fit] - epy_moh[neg_hit],axis=0)/30.
 diff_epzn_fict = np.nanmean(epz_mofict[neg_fit] - epz_moh[neg_hit],axis=0)/30.
 diff_divn_fict = np.nanmean(div_mofict[neg_fit] - div_moh[neg_hit],axis=0)/30.
+
+# Difference (QBO-E minus QBO-W)
+diff_epyno = diff_epyn - diff_epyp
+diff_epzno = diff_epzn - diff_epzp
+diff_divno = diff_divn - diff_divp
+
+diff_epyno_fict = diff_epyn_fict - diff_epyp_fict
+diff_epzno_fict = diff_epzn_fict - diff_epzp_fict
+diff_divno_fict = diff_divn_fict - diff_divp_fict
 
 diff_div = [diff_divn,diff_divp,diff_divno,diff_divn_fict,diff_divp_fict,diff_divno_fict]
 diff_epy = [diff_epyn,diff_epyp,diff_epyno,diff_epyn_fict,diff_epyp_fict,diff_epyno_fict]

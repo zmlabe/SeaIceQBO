@@ -131,15 +131,6 @@ diff_divp = np.nanmean(div_mof[pos_fsub] - div_moh[pos_cit],axis=0)/30.
 diff_epyp_fpol = np.nanmean(epy_mofpol[pos_fpol] - epy_moh[pos_cit],axis=0)/30.
 diff_epzp_fpol = np.nanmean(epz_mofpol[pos_fpol] - epz_moh[pos_cit],axis=0)/30.
 diff_divp_fpol = np.nanmean(div_mofpol[pos_fpol] - div_moh[pos_cit],axis=0)/30.
-
-# Difference (QBO-E minus QBO-W)
-diff_epyno = np.nanmean(epy_mof[neg_fsub] - epy_mof[pos_cit][:-4],axis=0)/30.
-diff_epzno = np.nanmean(epz_mof[neg_fsub] - epz_mof[pos_cit][:-4],axis=0)/30.
-diff_divno = np.nanmean(div_mof[neg_fsub] - div_mof[pos_cit][:-4],axis=0)/30.
-
-diff_epyno_fpol = np.nanmean(epy_mofpol[neg_fpol] - epy_mofpol[pos_fpol][:-4],axis=0)/30.
-diff_epzno_fpol = np.nanmean(epz_mofpol[neg_fpol] - epz_mofpol[pos_fpol][:-4],axis=0)/30.
-diff_divno_fpol = np.nanmean(div_mofpol[neg_fpol] - div_mofpol[pos_fpol][:-4],axis=0)/30.
     
 # Negative
 diff_epyn = np.nanmean(epy_mof[neg_fsub] - epy_moh[neg_cit],axis=0)/30.
@@ -149,6 +140,15 @@ diff_divn = np.nanmean(div_mof[neg_fsub] - div_moh[neg_cit],axis=0)/30.
 diff_epyn_fpol = np.nanmean(epy_mofpol[neg_fsub] - epy_moh[neg_fsub],axis=0)/30.
 diff_epzn_fpol = np.nanmean(epz_mofpol[neg_fsub] - epz_moh[neg_fsub],axis=0)/30.
 diff_divn_fpol = np.nanmean(div_mofpol[neg_fsub] - div_moh[neg_fsub],axis=0)/30.
+
+# Difference (QBO-E minus QBO-W)
+diff_epyno = diff_epyn - diff_epyp
+diff_epzno = diff_epzn - diff_epzp
+diff_divno = diff_divn - diff_divp
+
+diff_epyno_fpol = diff_epyn_fpol - diff_epyp_fpol 
+diff_epzno_fpol = diff_epzn_fpol - diff_epzp_fpol 
+diff_divno_fpol = diff_divn_fpol - diff_divp_fpol 
 
 diff_div = [diff_divn,diff_divp,diff_divno,diff_divn_fpol,diff_divp_fpol,diff_divno_fpol]
 diff_epy = [diff_epyn,diff_epyp,diff_epyno,diff_epyn_fpol,diff_epyp_fpol,diff_epyno_fpol]
