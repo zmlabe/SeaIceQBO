@@ -45,46 +45,46 @@ varnames = 'U'
 runnames = [r'\textbf{FIT}',r'\textbf{HIT}',r'\textbf{FICT}']
 qbophase = ['pos','non','neg']
 
-### Call functions for variable profile data for polar cap
-lat,lon,time,lev,tashit = DO.readMeanExperiAll('%s' % varnames,'HIT',
-                                           'profile')
-lat,lon,time,lev,tasfit = DO.readMeanExperiAll('%s' % varnames,'FIT',
-                                           'profile')
-lat,lon,time,lev,tasfict = DO.readMeanExperiAll('%s' % varnames,'FICT',
-                                            'profile')
+#### Call functions for variable profile data for polar cap
+#lat,lon,time,lev,tashit = DO.readMeanExperiAll('%s' % varnames,'HIT',
+#                                           'profile')
+#lat,lon,time,lev,tasfit = DO.readMeanExperiAll('%s' % varnames,'FIT',
+#                                           'profile')
+#lat,lon,time,lev,tasfict = DO.readMeanExperiAll('%s' % varnames,'FICT',
+#                                            'profile')
+#
+#### Create 2d array of latitude and longitude
+#lon2,lat2 = np.meshgrid(lon,lat)
+#
+##### Read in QBO phases 
+#filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+#filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+#filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+#filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+#pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
+#                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
+#neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
+#                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)    
+#
+#filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+#filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+#filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+#filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+#pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
+#                    np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+100)
+#neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
+#                    np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+100)
+#
+#filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+#filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+#filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+#filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+#pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
+#                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
+#neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
+#                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)  
 
-### Create 2d array of latitude and longitude
-lon2,lat2 = np.meshgrid(lon,lat)
-
-### Read in QBO phases 
-filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
-                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
-neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
-                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)    
-
-filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
-                    np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+100)
-neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
-                    np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+100)
-
-filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
-neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)  
-
-### Concatonate runs with selected level
+#### Concatonate runs with selected level
 levq = np.where(lev == 10)[0] # selected at 10 hPa
 var_mo = [tashit[:,:,levq],tasfit[:,:,levq],tasfict[:,:,levq]]
 
@@ -98,22 +98,25 @@ var_mohitneg = var_mo[0][neg_hit,:]
 var_mofictneg = var_mo[2][neg_fict,:]
 
 ### Calculate over DJF (90-180)
-timeq = np.arange(90,120)
+timeq = np.arange(90,121)
 monthqq = 'D'
-var_wfitpos = var_mofitpos[:,timeq]
-var_whitpos = var_mohitpos[:,timeq]
-var_wfictpos = var_mofictpos[:,timeq]
+var_wfitpos = var_mofitpos[:,timeq].squeeze()
+var_whitpos = var_mohitpos[:,timeq].squeeze()
+var_wfictpos = var_mofictpos[:,timeq].squeeze()
 
-var_wfitneg = var_mofitneg[:,timeq]
-var_whitneg = var_mohitneg[:,timeq]
-var_wfictneg = var_mofictneg[:,timeq]
+var_wfitneg = var_mofitneg[:,timeq].squeeze()
+var_whitneg = var_mohitneg[:,timeq].squeeze()
+var_wfictneg = var_mofictneg[:,timeq].squeeze()
 
-### Calculate difference over time average
-difffit = np.nanmean(var_wfitneg - var_whitneg,axis=1).squeeze()
-difffict = np.nanmean(var_wfictneg - var_whitneg,axis=1).squeeze()
+### PDF of stratospheric winds
+ficteast = np.ravel(var_wfictneg)
+fictwest = np.ravel(var_wfictpos)
 
-difffit = np.nanmean(var_wfitpos - var_whitpos,axis=1).squeeze()
-difffict = np.nanmean(var_wfictpos - var_whitpos,axis=1).squeeze()
+fiteast = np.ravel(var_wfitneg)
+fitwest = np.ravel(var_wfitpos)
+
+hiteast = np.ravel(var_whitneg)
+hitwest = np.ravel(var_whitpos)
  
 ###############################################################################
 ###############################################################################
@@ -139,44 +142,153 @@ def adjust_spines(ax, spines):
     else:
         ax.xaxis.set_ticks([])
         
-fig = plt.figure()
-ax = plt.subplot(111) 
+num_bins = np.arange(-20,60,2)
+
+fig = plt.figure(figsize=(7,7))
+ax = fig.add_subplot(221)
+#ax = plt.subplot(221) 
 
 adjust_spines(ax, ['left', 'bottom'])
 ax.spines['top'].set_color('none')
 ax.spines['right'].set_color('none')
 ax.spines['left'].set_color('dimgrey')
-ax.spines['bottom'].set_color('w')
+ax.spines['bottom'].set_color('dimgrey')
 ax.spines['left'].set_linewidth(2)
 ax.spines['bottom'].set_linewidth(2)
 ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
-ax.tick_params(axis='x',which='both',bottom=False)
+#ax.tick_params(axis='x',which='both',bottom=False)
 
-#plt.axhline(0,color='dimgrey',linestyle='--',dashes=(0.9,1),linewidth=2)
-#bx = plt.boxplot(dataq,0,'',patch_artist=True,showmeans=True,meanline=True,
-#                 whis=[5,95])
-#
-#for i in bx['caps']:
-#    i.set(color='k',linewidth=0)
-#for whisker in bx['whiskers']:
-#    whisker.set(color='dimgrey',linestyle='-',linewidth=2)
-#for box in bx['boxes']: 
-#    box.set(color='deepskyblue')
-#for box in bx['means']:
-#    box.set(color='r',linewidth=2,linestyle='-')
-#for box in bx['medians']:
-#    box.set(linewidth=0)
-#    
-#for i in range(len(dataq)):
-#    y = dataq[i]
-#    x = np.random.normal(1+i,0.04,size=len(y))
-#    plt.plot(x,y,'r.',alpha=0.3,zorder=5)
-#
-#plt.ylabel(r'\textbf{U30 [m/s]}',color='k',fontsize=12)
-#
-#plt.yticks(np.arange(-20,21,5),list(map(str,np.arange(-20,21,5))))
-#plt.xticks(np.arange(1,9,1),runnames) 
-#plt.ylim([-18,18])
+ne,binse,patchese = plt.hist(ficteast,num_bins,density=1,alpha=0.7,
+                          facecolor='deepskyblue',edgecolor='deepskyblue',
+                          range=(-20,50),label=r'\textbf{QBO-E}')
+nw,binsw,patchesw = plt.hist(fictwest,num_bins,density=1,alpha=0.5,
+                          facecolor='crimson',edgecolor='crimson',
+                          range=(-20,50),label=r'\textbf{QBO-W}')
 
-plt.savefig(directoryfigure + 'stratosphereDistribution_NET_%s.png' % monthqq,
+plt.yticks(np.arange(0,0.09,0.01),list(map(str,np.arange(0,0.09,0.01))),
+           fontsize=10)
+plt.xticks(np.arange(-20,60,10),list(map(str,np.arange(-20,60,10))),
+           fontsize=10) 
+plt.xlim([-20,50])
+plt.ylim([0,0.07])
+
+plt.legend(shadow=False,fontsize=12,loc='upper left',
+           fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
+           labelspacing=0.2,columnspacing=1,handletextpad=0.4)
+
+plt.title(r'\textbf{FICT',color='dimgrey',
+                    fontsize=30)
+plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+
+###############################################################################
+
+ax = fig.add_subplot(222)
+
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
+#ax.tick_params(axis='x',which='both',bottom=False)
+
+ne,binse,patchese = plt.hist(fiteast,num_bins,density=1,alpha=0.7,
+                          facecolor='deepskyblue',edgecolor='deepskyblue',
+                          range=(-20,50),label=r'\textbf{QBO-E}')
+nw,binsw,patchesw = plt.hist(fitwest,num_bins,density=1,alpha=0.5,
+                          facecolor='crimson',edgecolor='crimson',
+                          range=(-20,50),label=r'\textbf{QBO-W}')
+
+plt.yticks(np.arange(0,0.09,0.01),list(map(str,np.arange(0,0.09,0.01))),
+           fontsize=10)
+plt.xticks(np.arange(-20,60,10),list(map(str,np.arange(-20,60,10))),
+           fontsize=10) 
+plt.xlim([-20,50])
+plt.ylim([0,0.07])
+
+plt.title(r'\textbf{FIT',color='dimgrey',
+                    fontsize=30)
+plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+
+plt.legend(shadow=False,fontsize=12,loc='upper left',
+           fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
+           labelspacing=0.2,columnspacing=1,handletextpad=0.4)
+
+###############################################################################
+
+ax = fig.add_subplot(223)
+
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
+#ax.tick_params(axis='x',which='both',bottom=False)
+
+ne,binse,patchese = plt.hist(ficteast,num_bins,density=1,alpha=0.7,
+                          facecolor='mediumseagreen',edgecolor='mediumseagreen',
+                          range=(-20,50),label=r'\textbf{FICT}')
+nw,binsw,patchesw = plt.hist(hiteast,num_bins,density=1,alpha=0.4,
+                          facecolor='indigo',edgecolor='indigo',
+                          range=(-20,50),label=r'\textbf{HIT}')
+
+plt.yticks(np.arange(0,0.09,0.01),list(map(str,np.arange(0,0.09,0.01))),
+           fontsize=10)
+plt.xticks(np.arange(-20,60,10),list(map(str,np.arange(-20,60,10))),
+           fontsize=10) 
+plt.xlim([-20,50])
+plt.ylim([0,0.07])
+
+plt.title(r'\textbf{QBO-E',color='dimgrey',
+                    fontsize=30)
+plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+
+plt.legend(shadow=False,fontsize=12,loc='upper left',
+           fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
+           labelspacing=0.2,columnspacing=1,handletextpad=0.4)
+
+###############################################################################
+
+ax = fig.add_subplot(224)
+
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
+#ax.tick_params(axis='x',which='both',bottom=False)
+
+ne,binse,patchese = plt.hist(fictwest,num_bins,density=1,alpha=0.7,
+                          facecolor='mediumseagreen',edgecolor='mediumseagreen',
+                          range=(-20,50),label=r'\textbf{FICT}')
+nw,binsw,patchesw = plt.hist(hitwest,num_bins,density=1,alpha=0.4,
+                          facecolor='indigo',edgecolor='indigo',
+                          range=(-20,50),label=r'\textbf{HIT}')
+
+plt.yticks(np.arange(0,0.09,0.01),list(map(str,np.arange(0,0.09,0.01))),
+           fontsize=10)
+plt.xticks(np.arange(-20,60,10),list(map(str,np.arange(-20,60,10))),
+           fontsize=10) 
+plt.xlim([-20,50])
+plt.ylim([0,0.07])
+
+plt.title(r'\textbf{QBO-W}',color='dimgrey',
+                    fontsize=30)
+plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+
+plt.legend(shadow=False,fontsize=12,loc='upper left',
+           fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
+           labelspacing=0.2,columnspacing=1,handletextpad=0.4)
+
+plt.tight_layout()
+
+plt.savefig(directoryfigure + 'stratosphereDistribution_U10_%s.png' % monthqq,
             dpi=300)
