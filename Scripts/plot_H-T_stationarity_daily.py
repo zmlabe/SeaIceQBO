@@ -452,4 +452,4 @@ plt.yticks(np.arange(-20,21,5),list(map(str,np.arange(-20,21,5))))
 plt.xticks(np.arange(1,9,1),runnames) 
 plt.ylim([-18,18])
 
-plt.savefig(directoryfigure + 'distributions_H-Teffect.png.png',dpi=300)
+plt.savefig(directoryfigure + 'distributions_H-Teffect_%s.png' % monthqq,dpi=300)

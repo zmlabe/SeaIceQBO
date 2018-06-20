@@ -117,8 +117,8 @@ for v in range(len(varnames)):
     var_mofictneg = var_mo[2][neg_fict,:,:]
     
     ### Calculate over DJF (90-180)
-    timeq = np.arange(180,212)
-    monthqq = 'Mar'
+    timeq = np.arange(90,120)
+    monthqq = 'Dec'
     var_wfitpos = var_mofitpos[:,timeq,:,:]
     var_whitpos = var_mohitpos[:,timeq,:,:]
     var_wfictpos = var_mofictpos[:,timeq,:,:]

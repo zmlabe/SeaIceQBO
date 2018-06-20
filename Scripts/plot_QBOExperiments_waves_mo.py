@@ -134,7 +134,11 @@ for v in range(len(varnames)):
     elif period == 'N':
         tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
         for i in range(len(runs)):
-            tas_mo[i] = runs[i][:,-1,:,:]
+            tas_mo[i] = runs[i][:,-2,:,:]
+    elif period == 'ND':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3]))
+        for i in range(len(runs)):
+            tas_mo[i] = np.nanmean(runs[i][:,-2:,:,:],axis=1)
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         
@@ -187,6 +191,8 @@ for v in range(len(varnames)):
         climowavehmo = waveh[:,-1,:,:]
     elif period == 'N':
         climowavehmo = waveh[:,-2,:,:]
+    elif period == 'ND':
+        climowavehmo = np.nanmean(waveh[:,-2:,:,:],axis=1)
         
     wavehitpos = np.nanmean(climowavehmo[pos_hit,:,:],axis=0)
     wavehitnon = np.nanmean(climowavehmo[non_hit,:,:],axis=0)

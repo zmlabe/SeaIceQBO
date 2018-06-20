@@ -18,7 +18,7 @@ import calc_Utilities as UT
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_N_2/'
+directoryfigure = '/home/zlabe/Desktop/QBO_ND_2/'
 #directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
 
 ### Define time           
@@ -44,7 +44,7 @@ futureforcedneg = []
 lonssq = []
 varnames = ['GEOPxwave_all','GEOPxwave1','GEOPxwave2']
 qbophase = ['pos','non','neg']
-period = 'N'
+period = 'ND'
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
     lat,lon1,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
@@ -99,6 +99,11 @@ for v in range(len(varnames)):
                           tashit.shape[4]))
         for i in range(len(runs)):
             tas_mo[i] = runs[i][:,-2,:,:,:]
+    elif period == 'ND':
+        tas_mo= np.empty((2,tashit.shape[0],tashit.shape[2],tashit.shape[3],
+                          tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = np.nanmean(runs[i][:,-2:,:,:,:],axis=1)
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         

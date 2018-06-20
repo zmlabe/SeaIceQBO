@@ -42,7 +42,7 @@ years = np.arange(year1,year2+1,1)
 
 ### Call arguments
 varnames = ['Z500','Z30','SLP','T2M','U10','U500','U300','SWE','THICK','P',
-            'EGR','WAFZ850','WAFZ150']
+            'EGR','WAFZ850','WAFZ150','WAFY850','WAFY150']
 runnames = [r'CIT',r'FSUB',r'FPOL']
 experiments = [r'\textbf{FSUB--CIT}',r'\textbf{FSUB--CIT}',r'\textbf{FSUB-CIT}',
                r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}',r'\textbf{FPOL--CIT}']
@@ -233,6 +233,12 @@ for v in range(len(varnames)):
     elif varnames[v] == 'WAFZ150':
         limit = np.arange(-0.01,0.0101,0.0001)
         barlim = np.arange(-0.01,0.011,0.01)
+    elif varnames[v] == 'WAFY850':
+        limit = np.arange(-5,5.1,0.1)
+        barlim = np.arange(-5,6,5)
+    elif varnames[v] == 'WAFY150':
+        limit = np.arange(-2,2.01,0.05)
+        barlim = np.arange(-2,3,2)
     
     fig = plt.figure()
     for i in range(len(diffruns_mo)):
@@ -294,6 +300,9 @@ for v in range(len(varnames)):
         elif varnames[v] == 'WAFZ850' or varnames[v] == 'WAFZ150':
             cmap = cmocean.cm.curl
             cs.set_cmap(cmap)
+        elif varnames[v] == 'WAFY850' or varnames[v] == 'WAFY150':
+            cmap = cmocean.cm.curl
+            cs.set_cmap(cmap)
                     
         ### Add experiment text to subplot
         if i < 3:
@@ -330,6 +339,8 @@ for v in range(len(varnames)):
     elif varnames[v] == 'EGR':
         cbar.set_label(r'\textbf{1/day}',fontsize=11,color='dimgray')
     elif varnames[v] == 'WAFZ850' or varnames[v] == 'WAFZ150':
+        cbar.set_label(r'\textbf{m/s/day}',fontsize=11,color='dimgray')
+    elif varnames[v] == 'WAFY850' or varnames[v] == 'WAFY150':
         cbar.set_label(r'\textbf{m/s/day}',fontsize=11,color='dimgray')
 
     cbar.set_ticks(barlim)

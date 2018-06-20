@@ -65,7 +65,9 @@ def readExperiAll(varid,experi,level):
     if varid == 'EGR' and level == 'surface':
         filename = totaldirectory + varid + '_500_850.nc'
     
-    if any([varid=='DEPF',varid=='EPY',varid=='EPZ',varid=='WAFZ850',varid=='WAFZ150']):
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
+            varid=='WAFZ850',varid=='WAFZ150',
+            varid=='WAFY850',varid=='WAFY150']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data = Dataset(filename,'r')
@@ -160,7 +162,9 @@ def readExperiAll(varid,experi,level):
     if varid == 'EGR' and level == 'surface':
         filename2 = totaldirectory2 + varid + '_500_850.nc'
 
-    if any([varid=='DEPF',varid=='EPY',varid=='EPZ',varid=='WAFZ850',varid=='WAFZ150']):
+    if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
+            varid=='WAFZ850',varid=='WAFZ150',
+            varid=='WAFY850',varid=='WAFY150']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data2 = Dataset(filename2,'r')

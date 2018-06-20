@@ -99,6 +99,11 @@ for v in range(len(varnames)):
                           tashit.shape[4]))
         for i in range(len(runs)):
             tas_mo[i] = runs[i][:,-2,:,:,:]
+    elif period == 'ND':
+        tas_mo= np.empty((2,tashit.shape[0],tashit.shape[2],tashit.shape[3],
+                          tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = np.nanmean(runs[i][:,-2:,:,:,:],axis=1)
     else:
         ValueError('Wrong period selected! (ON,DJ,FM)')
         
