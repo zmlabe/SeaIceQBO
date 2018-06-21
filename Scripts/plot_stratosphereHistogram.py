@@ -45,46 +45,46 @@ varnames = 'U'
 runnames = [r'\textbf{FIT}',r'\textbf{HIT}',r'\textbf{FICT}']
 qbophase = ['pos','non','neg']
 
-#### Call functions for variable profile data for polar cap
-#lat,lon,time,lev,tashit = DO.readMeanExperiAll('%s' % varnames,'HIT',
-#                                           'profile')
-#lat,lon,time,lev,tasfit = DO.readMeanExperiAll('%s' % varnames,'FIT',
-#                                           'profile')
-#lat,lon,time,lev,tasfict = DO.readMeanExperiAll('%s' % varnames,'FICT',
-#                                            'profile')
-#
-#### Create 2d array of latitude and longitude
-#lon2,lat2 = np.meshgrid(lon,lat)
-#
-##### Read in QBO phases 
-#filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-#filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-#filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-#filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-#pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)    
-#
-#filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-#filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-#filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-#filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-#pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+100)
-#
-#filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-#filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-#filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-#filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-#pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)  
+### Call functions for variable profile data for polar cap
+lat,lon,time,lev,tashit = DO.readMeanExperiAll('%s' % varnames,'HIT',
+                                           'profile')
+lat,lon,time,lev,tasfit = DO.readMeanExperiAll('%s' % varnames,'FIT',
+                                           'profile')
+lat,lon,time,lev,tasfict = DO.readMeanExperiAll('%s' % varnames,'FICT',
+                                            'profile')
 
-#### Concatonate runs with selected level
+### Create 2d array of latitude and longitude
+lon2,lat2 = np.meshgrid(lon,lat)
+
+#### Read in QBO phases 
+filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
+neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)    
+
+filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+100)
+neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+100)
+
+filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
+neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)  
+
+### Concatonate runs with selected level
 levq = np.where(lev == 10)[0] # selected at 10 hPa
 var_mo = [tashit[:,:,levq],tasfit[:,:,levq],tasfict[:,:,levq]]
 
@@ -178,7 +178,8 @@ plt.legend(shadow=False,fontsize=12,loc='upper left',
 
 plt.title(r'\textbf{FICT',color='dimgrey',
                     fontsize=30)
-plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+plt.ylabel(r'\textbf{Density}',color='dimgrey',fontsize=12)  
+plt.xlabel(r'\textbf{U10 [m/s]}',color='dimgrey',fontsize=12)
 
 ###############################################################################
 
@@ -210,7 +211,7 @@ plt.ylim([0,0.07])
 
 plt.title(r'\textbf{FIT',color='dimgrey',
                     fontsize=30)
-plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+plt.xlabel(r'\textbf{U10 [m/s]}',color='dimgrey',fontsize=12)
 
 plt.legend(shadow=False,fontsize=12,loc='upper left',
            fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
@@ -246,7 +247,8 @@ plt.ylim([0,0.07])
 
 plt.title(r'\textbf{QBO-E',color='dimgrey',
                     fontsize=30)
-plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+plt.ylabel(r'\textbf{Density}',color='dimgrey',fontsize=12)    
+plt.xlabel(r'\textbf{U10 [m/s]}',color='dimgrey',fontsize=12)
 
 plt.legend(shadow=False,fontsize=12,loc='upper left',
            fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
@@ -282,7 +284,7 @@ plt.ylim([0,0.07])
 
 plt.title(r'\textbf{QBO-W}',color='dimgrey',
                     fontsize=30)
-plt.xlabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+plt.xlabel(r'\textbf{U10 [m/s]}',color='dimgrey',fontsize=12)
 
 plt.legend(shadow=False,fontsize=12,loc='upper left',
            fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(-0.02, 1.015),
