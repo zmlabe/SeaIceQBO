@@ -6,7 +6,7 @@ for DAILY data for all wave activity flux (WAFz and WAFy).
 Notes
 -----
     Author : Zachary Labe
-    Date   : 26 June 2018
+    Date   : 2 July 2018
 """
 
 ### Import modules
@@ -40,7 +40,7 @@ years = np.arange(year1,year2+1,1)
 ### Add parameters
 MASK = False
 varnames = ['WAFZ','WAFZ','WAFZ','WAFY','WAFY','WAFY']
-runnames = [r'HIT',r'FICT']
+runnames = [r'HIT',r'FIT']
 qbophase = ['pos','non','neg']
 experiments = [r'\textbf{WAFz}',r'\textbf{WAFz}',r'\textbf{WAFz}',
                r'\textbf{WAFy}',r'\textbf{WAFy}',r'\textbf{WAFy}']
@@ -78,8 +78,8 @@ def readWAF(varnames,runnames,experiments,qbophase):
     ### Call functions for variable profile data for polar cap
     lat,lon,time,lev,varhit = DO.readMeanExperiAll('%s' % varnames,
                                                 'HIT','profile')
-    lat,lon,time,lev,varfict = DO.readMeanExperiAll('%s' % varnames,
-                                                'FICT','profile')
+    lat,lon,time,lev,varfit = DO.readMeanExperiAll('%s' % varnames,
+                                                'FIT','profile')
     
     ### Create 2d array of latitude and longitude
     lon2,lat2 = np.meshgrid(lon,lat)
@@ -101,51 +101,51 @@ def readWAF(varnames,runnames,experiments,qbophase):
                         np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],
                                       dtype='int')+100)    
     
-    filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-    filenamefictno = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-    filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-    filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-    filenamefictno2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-    filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-    pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],
+    filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+    filenamefitno = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
+    filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+    filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+    filenamefitno2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
+    filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+    pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],
                                       dtype='int')+100)
-    non_fict = np.append(np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictno2,unpack=True,usecols=[0],
+    non_fit = np.append(np.genfromtxt(filenamefitno,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefitno2,unpack=True,usecols=[0],
                                       dtype='int')+100)
-    neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],
+    neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],
                                       dtype='int')+100)   
     
     ### Concatonate runs
-    var_mo = [varhit,varfict]
+    var_mo = [varhit,varfit]
     
     ### Composite by QBO phase    
     var_mohitpos = var_mo[0][pos_hit,:]
-    var_mofictpos = var_mo[1][pos_fict,:]
+    var_mofitpos = var_mo[1][pos_fit,:]
     
     var_mohitnon = var_mo[0][non_hit,:]
-    var_mofictnon = var_mo[1][non_fict,:]
+    var_mofitnon = var_mo[1][non_fit,:]
     
     var_mohitneg = var_mo[0][neg_hit,:]
-    var_mofictneg = var_mo[1][neg_fict,:]
+    var_mofitneg = var_mo[1][neg_fit,:]
     
     ### Compute comparisons for months - taken ensemble average
-    ficthitpos = np.nanmean(var_mofictpos - var_mohitpos,axis=0)
-    ficthitnon = np.nanmean(var_mofictnon - var_mohitnon,axis=0)
-    ficthitneg = np.nanmean(var_mofictneg - var_mohitneg,axis=0)
+    fithitpos = np.nanmean(var_mofitpos - var_mohitpos,axis=0)
+    fithitnon = np.nanmean(var_mofitnon - var_mohitnon,axis=0)
+    fithitneg = np.nanmean(var_mofitneg - var_mohitneg,axis=0)
     
-    diffruns = [ficthitpos,ficthitnon,ficthitneg]
+    diffruns = [fithitpos,fithitnon,fithitneg]
     
     ### Calculate significance for days
-    stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(var_mo[1][pos_fict,:],
+    stat_fitHITpos,pvalue_fitHITpos = UT.calc_indttest(var_mo[1][pos_fit,:],
                                                          var_mo[0][pos_hit,:])
-    stat_FICTHITnon,pvalue_FICTHITnon = UT.calc_indttest(var_mo[1][non_fict,:],
+    stat_fitHITnon,pvalue_fitHITnon = UT.calc_indttest(var_mo[1][non_fit,:],
                                                          var_mo[0][non_hit,:])
-    stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(var_mo[1][neg_fict,:],
+    stat_fitHITneg,pvalue_fitHITneg = UT.calc_indttest(var_mo[1][neg_fit,:],
                                                          var_mo[0][neg_hit,:])
 
-    pruns = [pvalue_FICTHITpos,pvalue_FICTHITnon,pvalue_FICTHITneg]
+    pruns = [pvalue_fitHITpos,pvalue_fitHITnon,pvalue_fitHITneg]
     
     print('\n*Completed: Finished readWAF function!')
     return diffruns,pruns,lev
@@ -284,9 +284,9 @@ plt.subplots_adjust(wspace=0.22)
 plt.subplots_adjust(bottom=0.21)
 
 if MASK == True:
-    plt.savefig(directoryfigure + 'allExperiments_WAF_MASK_daily_FICTHIT.png',
+    plt.savefig(directoryfigure + 'allExperiments_WAF_MASK_daily_FITHIT.png',
                 dpi=300)
 else:
-    plt.savefig(directoryfigure + 'allExperiments_WAF_daily_FICTHIT.png',
+    plt.savefig(directoryfigure + 'allExperiments_WAF_daily_FITHIT.png',
         dpi=300)
 print('Completed: Script done!')                                
