@@ -153,13 +153,13 @@ def readDailySSW_CTLQ(vari,experi):
             ### Read in file
             sswc[i] = np.genfromtxt(filename,dtype='float',unpack=True)
         
-        print('Completed: Read %s ensemble members 1-100!' % experi)
+        print('Completed: Read %s ensemble members 1-200!' % experi)
         
     print('\n*Completed: Finished readDailySSW_CTLQ function!')
     return sswc
         
 ### Test function -- no need to use    
 #vari = 'count'
-#experi = 'FPOL'
-#ssw = readDailySSW(vari,experi)
-#sswc = readDailySSW_CTLQ(vari,experi)
+#experi = 'CTLQ'
+##ssw = readDailySSW(vari,experi)
+##sswc = readDailySSW_CTLQ(vari,experi)
