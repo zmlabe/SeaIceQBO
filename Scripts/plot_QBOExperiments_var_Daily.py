@@ -39,7 +39,7 @@ year2 = 2000
 years = np.arange(year1,year2+1,1)
 
 ### Add parameters
-MASK = True
+MASK = False
 varnames = ['GEOP','TEMP','U','V']
 runnames = [r'HIT',r'FIT',r'FICT']
 qbophase = ['pos','non','neg']

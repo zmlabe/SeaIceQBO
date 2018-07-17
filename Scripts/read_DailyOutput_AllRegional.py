@@ -124,19 +124,19 @@ def readMeanExperiAllRegional(varid,experi,level):
         ### Read in Data
         if level == 'surface': # 3d variables
             data2 = Dataset(filename2,'r')
-            time2 = data.variables['time'][:]
+            time2 = data2.variables['time'][:]
             lev2 = 'surface'
-            lat2 = data.variables['latitude'][:]
-            lon2 = data.variables['longitude'][:]
-            var2[i,:,:,:] = data.variables['%s' % varid][:].squeeze()
+            lat2 = data2.variables['latitude'][:]
+            lon2 = data2.variables['longitude'][:]
+            var2[i,:,:,:] = data2.variables['%s' % varid][:].squeeze()
             data2.close()
         elif level == 'profile': # 4d variables
             data2 = Dataset(filename2,'r')
-            time2 = data.variables['time'][:]
-            lev2 = data.variables['level'][:]
-            lat2 = data.variables['latitude'][:]
-            lon2 = data.variables['longitude'][:]
-            var2[i,:,:] = data.variables['%s' % varid][:]
+            time2 = data2.variables['time'][:]
+            lev2 = data2.variables['level'][:]
+            lat2 = data2.variables['latitude'][:]
+            lon2 = data2.variables['longitude'][:]
+            var2[i,:,:] = data2.variables['%s' % varid][:]
             data2.close()
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
