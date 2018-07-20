@@ -40,170 +40,170 @@ year2 = 2000
 years = np.arange(year1,year2+1,1)
 
 ### Add parameters
-#MASK = False
-#varnames = ['MHF100']
-#runnames = [r'HIT',r'FIT',r'FICT']
-#qbophase = ['pos','non','neg']
-#phases = ['QBO-W','QBO-N','QBO-W']
-#experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
-#               r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
-#
-#### Call functions for MHF data at 100 hPa
-#lat,lon,time,lev,varhit = DO.readMeanExperiAll('MHF100','HIT','profile')
-#lat,lon,time,lev,varfit = DO.readMeanExperiAll('MHF100','FIT','profile')
-#lat,lon,time,lev,varfict = DO.readMeanExperiAll('MHF100','FICT','profile')
-#
-#### Create 2d array of latitude and longitude
-#lon2,lat2 = np.meshgrid(lon,lat)
-#
-#### Read in QBO phases 
-#filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-#filenamehitno = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
-#filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-#filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-#filenamehitno2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
-#filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-#pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
-#non_hit = np.append(np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitno2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)    
-#
-#filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-#filenamefitno = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
-#filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-#filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
-#filenamefitno2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
-#filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
-#pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+100)
-#non_fit = np.append(np.genfromtxt(filenamefitno,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefitno2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+100)
-#
-#filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-#filenamefictno = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-#filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-#filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-#filenamefictno2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-#filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-#pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
-#non_fict = np.append(np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictno2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)    
-#### Concatonate runs
-#var_mo = [varhit,varfit,varfict]
-#
-#### Composite by QBO phase    
-#var_mofitpos = var_mo[1][pos_fit,:]
-#var_mohitpos = var_mo[0][pos_hit,:]
-#var_mofictpos = var_mo[2][pos_fict,:]
-#
-#var_mofitnon = var_mo[1][non_fit,:]
-#var_mohitnon = var_mo[0][non_hit,:]
-#var_mofictnon = var_mo[2][non_fict,:]
-#
-#var_mofitneg = var_mo[1][neg_fit,:]
-#var_mohitneg = var_mo[0][neg_hit,:]
-#var_mofictneg = var_mo[2][neg_fict,:]
-#
-#### Compute comparisons for months - taken ensemble average
-#fithitpos = np.nanmean(var_mofitpos - var_mohitpos,axis=0).squeeze()
-#fithitnon = np.nanmean(var_mofitnon - var_mohitnon,axis=0).squeeze()
-#fithitneg = np.nanmean(var_mofitneg - var_mohitneg,axis=0).squeeze()
-#
-#ficthitpos = np.nanmean(var_mofictpos - var_mohitpos,axis=0).squeeze()
-#ficthitnon = np.nanmean(var_mofictnon - var_mohitnon,axis=0).squeeze()
-#ficthitneg = np.nanmean(var_mofictneg - var_mohitneg,axis=0).squeeze()
-#
-#diffruns = np.array([fithitpos,fithitnon,fithitneg,ficthitpos,ficthitnon,ficthitneg])
-#
-#### Compute zonal average
-#diffrunsz = np.nanmean(diffruns,axis=2)
-#
-##############################################################################
-##############################################################################
-##############################################################################
-#### Plot daily MHF anomalies
-#plt.rc('text',usetex=True)
-#plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
-#
-#def adjust_spines(ax, spines):
-#    for loc, spine in ax.spines.items():
-#        if loc in spines:
-#            spine.set_position(('outward', 2))
-#        else:
-#            spine.set_color('none')  
-#    if 'left' in spines:
-#        ax.yaxis.set_ticks_position('left')
-#    else:
-#        ax.yaxis.set_ticks([])
-#
-#    if 'bottom' in spines:
-#        ax.xaxis.set_ticks_position('bottom')
-#    else:
-#        ax.xaxis.set_ticks([]) 
-#        
-#fig = plt.figure()
-#ax = plt.subplot(2,1,1) 
-#       
-#adjust_spines(ax, ['left', 'bottom'])
-#ax.spines['top'].set_color('none')
-#ax.spines['right'].set_color('none')
-#ax.spines['left'].set_color('dimgrey')
-#ax.spines['bottom'].set_color('dimgrey')
-#ax.spines['left'].set_linewidth(2)
-#ax.spines['bottom'].set_linewidth(2)
-#ax.tick_params('both',length=4,width=2,which='major',color='dimgrey',pad=1)
-#
-#color=iter(cmocean.cm.phase(np.linspace(0.1,0.9,3)))
-#for i in range(3):
-#    c=next(color)
-#    plt.plot(diffrunsz[i],linewidth=2,color=c,alpha=1,
-#             label = r'\textbf{%s}' % phases[i],linestyle='-')
-#    
-#xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
-#plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
-#plt.yticks(np.arange(-10,11,2),map(str,np.arange(-10,11,2)),fontsize=8)
-#plt.ylim([-4,7])
-#plt.xlim([30,210])
-#
-#plt.ylabel(r'\textbf{K m/s}',color='k',fontsize=11)
-#
-#ax = plt.subplot(2,1,2) 
-#       
-#adjust_spines(ax, ['left', 'bottom'])
-#ax.spines['top'].set_color('none')
-#ax.spines['right'].set_color('none')
-#ax.spines['left'].set_color('dimgrey')
-#ax.spines['bottom'].set_color('dimgrey')
-#ax.spines['left'].set_linewidth(2)
-#ax.spines['bottom'].set_linewidth(2)
-#ax.tick_params('both',length=4,width=2,which='major',color='dimgrey',pad=1)
-#
-#color=iter(cmocean.cm.phase(np.linspace(0.1,0.9,3)))
-#for i in range(3):
-#    c=next(color)
-#    plt.plot(diffrunsz[i+3],linewidth=2,color=c,alpha=1,
-#             label = r'\textbf{%s}' % phases[i],linestyle='-')
-#    
-#plt.legend(shadow=False,fontsize=9,loc='upper center',
-#           fancybox=True,frameon=False,ncol=3,bbox_to_anchor=(0.5,-0.13))
-#    
-#xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
-#plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
-#plt.yticks(np.arange(-10,11,2),map(str,np.arange(-10,11,2)),fontsize=8)
-#plt.ylim([-4,7])
-#plt.xlim([30,210])
-#
-#plt.ylabel(r'\textbf{K m/s}',color='k',fontsize=11)
-#    
-#plt.savefig(directoryfigure + '/QBO_Daily_2/QBOExperiments_MHF100_All.png',
-#            dpi=300)
+MASK = False
+varnames = ['MHF100']
+runnames = [r'HIT',r'FIT',r'FICT']
+qbophase = ['pos','non','neg']
+phases = ['QBO-W','QBO-N','QBO-E']
+experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
+               r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
+
+### Call functions for MHF data at 100 hPa
+lat,lon,time,lev,varhit = DO.readMeanExperiAll('MHF100','HIT','profile')
+lat,lon,time,lev,varfit = DO.readMeanExperiAll('MHF100','FIT','profile')
+lat,lon,time,lev,varfict = DO.readMeanExperiAll('MHF100','FICT','profile')
+
+### Create 2d array of latitude and longitude
+lon2,lat2 = np.meshgrid(lon,lat)
+
+### Read in QBO phases 
+filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+filenamehitno = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
+filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+filenamehitno2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
+filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
+non_hit = np.append(np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitno2,unpack=True,usecols=[0],dtype='int')+100)
+neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)    
+
+filenamefitp = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+filenamefitno = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
+filenamefitn = directorydata + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+filenamefitp2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[0]
+filenamefitno2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[1]
+filenamefitn2 = directorydata2 + 'FIT/monthly/QBO_%s_FIT.txt' % qbophase[2]
+pos_fit = np.append(np.genfromtxt(filenamefitp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefitp2,unpack=True,usecols=[0],dtype='int')+100)
+non_fit = np.append(np.genfromtxt(filenamefitno,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefitno2,unpack=True,usecols=[0],dtype='int')+100)
+neg_fit = np.append(np.genfromtxt(filenamefitn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefitn2,unpack=True,usecols=[0],dtype='int')+100)
+
+filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+filenamefictno = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
+filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+filenamefictno2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
+filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
+non_fict = np.append(np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictno2,unpack=True,usecols=[0],dtype='int')+100)
+neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)    
+### Concatonate runs
+var_mo = [varhit,varfit,varfict]
+
+### Composite by QBO phase    
+var_mofitpos = var_mo[1][pos_fit,:]
+var_mohitpos = var_mo[0][pos_hit,:]
+var_mofictpos = var_mo[2][pos_fict,:]
+
+var_mofitnon = var_mo[1][non_fit,:]
+var_mohitnon = var_mo[0][non_hit,:]
+var_mofictnon = var_mo[2][non_fict,:]
+
+var_mofitneg = var_mo[1][neg_fit,:]
+var_mohitneg = var_mo[0][neg_hit,:]
+var_mofictneg = var_mo[2][neg_fict,:]
+
+### Compute comparisons for months - taken ensemble average
+fithitpos = np.nanmean(var_mofitpos - var_mohitpos,axis=0).squeeze()
+fithitnon = np.nanmean(var_mofitnon - var_mohitnon,axis=0).squeeze()
+fithitneg = np.nanmean(var_mofitneg - var_mohitneg,axis=0).squeeze()
+
+ficthitpos = np.nanmean(var_mofictpos - var_mohitpos,axis=0).squeeze()
+ficthitnon = np.nanmean(var_mofictnon - var_mohitnon,axis=0).squeeze()
+ficthitneg = np.nanmean(var_mofictneg - var_mohitneg,axis=0).squeeze()
+
+diffruns = np.array([fithitpos,fithitnon,fithitneg,ficthitpos,ficthitnon,ficthitneg])
+
+### Compute zonal average
+diffrunsz = np.nanmean(diffruns,axis=2)
+
+#############################################################################
+#############################################################################
+#############################################################################
+### Plot daily MHF anomalies
+plt.rc('text',usetex=True)
+plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
+
+def adjust_spines(ax, spines):
+    for loc, spine in ax.spines.items():
+        if loc in spines:
+            spine.set_position(('outward', 2))
+        else:
+            spine.set_color('none')  
+    if 'left' in spines:
+        ax.yaxis.set_ticks_position('left')
+    else:
+        ax.yaxis.set_ticks([])
+
+    if 'bottom' in spines:
+        ax.xaxis.set_ticks_position('bottom')
+    else:
+        ax.xaxis.set_ticks([]) 
+        
+fig = plt.figure()
+ax = plt.subplot(2,1,1) 
+       
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey',pad=1)
+
+color=iter(cmocean.cm.phase(np.linspace(0.1,0.9,3)))
+for i in range(3):
+    c=next(color)
+    plt.plot(diffrunsz[i],linewidth=2,color=c,alpha=1,
+             label = r'\textbf{%s}' % phases[i],linestyle='-')
+    
+xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
+plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
+plt.yticks(np.arange(-10,11,2),map(str,np.arange(-10,11,2)),fontsize=8)
+plt.ylim([-4,7])
+plt.xlim([30,150])
+
+plt.ylabel(r'\textbf{K m/s}',color='k',fontsize=11)
+
+ax = plt.subplot(2,1,2) 
+       
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey',pad=1)
+
+color=iter(cmocean.cm.phase(np.linspace(0.1,0.9,3)))
+for i in range(3):
+    c=next(color)
+    plt.plot(diffrunsz[i+3],linewidth=2,color=c,alpha=1,
+             label = r'\textbf{%s}' % phases[i],linestyle='-')
+    
+plt.legend(shadow=False,fontsize=9,loc='upper center',
+           fancybox=True,frameon=False,ncol=3,bbox_to_anchor=(0.5,-0.13))
+    
+xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
+plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
+plt.yticks(np.arange(-10,11,2),map(str,np.arange(-10,11,2)),fontsize=8)
+plt.ylim([-4,7])
+plt.xlim([30,150])
+
+plt.ylabel(r'\textbf{K m/s}',color='k',fontsize=11)
+    
+plt.savefig(directoryfigure + '/QBO_Daily_2/QBOExperiments_MHF100_All.png',
+            dpi=300)
 
 ###############################################################################
 ###############################################################################
@@ -252,7 +252,7 @@ xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr']
 plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
 plt.yticks(np.arange(-10,11,1),map(str,np.arange(-10,11,1)),fontsize=8)
 plt.ylim([-3,4])
-plt.xlim([30,210])
+plt.xlim([30,150])
 
 plt.legend(shadow=False,fontsize=9,loc='upper center',
            fancybox=True,frameon=False,ncol=2,bbox_to_anchor=(0.5,1.1))
@@ -309,7 +309,7 @@ xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr']
 plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
 plt.yticks(np.arange(-10,11,1),map(str,np.arange(-10,11,1)),fontsize=8)
 plt.ylim([-3,4])
-plt.xlim([30,210])
+plt.xlim([30,150])
 
 plt.legend(shadow=False,fontsize=9,loc='upper center',
            fancybox=True,frameon=False,ncol=2,bbox_to_anchor=(0.5,1.1))
@@ -366,7 +366,7 @@ xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr']
 plt.xticks(np.arange(0,212,30),xlabels,fontsize=8)
 plt.yticks(np.arange(-10,11,1),map(str,np.arange(-10,11,1)),fontsize=8)
 plt.ylim([-3,4])
-plt.xlim([30,210])
+plt.xlim([30,150])
 
 plt.legend(shadow=False,fontsize=9,loc='upper center',
            fancybox=True,frameon=False,ncol=2,bbox_to_anchor=(0.5,1.1))
@@ -375,8 +375,5 @@ plt.ylabel(r'\textbf{K m/s}',color='k',fontsize=11)
     
 plt.savefig(directoryfigure + '/QBO_Daily_2/QBOExperiments_MHF100_HIT.png',
             dpi=300)
-
-
-
 
 print('Completed: Script done!')

@@ -18,7 +18,7 @@ import calc_Utilities as UT
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_ND_2/'
+directoryfigure = '/home/zlabe/Desktop/QBO_D_2/'
 #directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
 
 ### Define time           
@@ -44,7 +44,7 @@ futureforcedneg = []
 lonssq = []
 varnames = ['GEOPxwave_all','GEOPxwave1','GEOPxwave2']
 qbophase = ['pos','non','neg']
-period = 'ND'
+period = 'D'
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
     lat,lon1,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
@@ -255,7 +255,7 @@ for i in range(9):
     
     plt.subplots_adjust(wspace=0.05)
     
-plt.savefig(directoryfigure + 'linearInterference_November_FITHIT.png',dpi=300)
+plt.savefig(directoryfigure + 'linearInterference_December_FITHIT.png',dpi=300)
 print('Completed: Script done!')
 
 
