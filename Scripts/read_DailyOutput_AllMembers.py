@@ -126,7 +126,7 @@ def readMeanExperiAll(varid,experi,level):
             lev = data.variables['level'][:]
             lat = data.variables['latitude'][:]
             lon = data.variables['longitude'][:]
-            var[i,:,:] = data.variables['%s' % varid][:,14,:,:]
+            var[i,:,:] = data.variables['%s' % varid][:,7,:,:]
             data.close()   
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
@@ -184,7 +184,7 @@ def readMeanExperiAll(varid,experi,level):
             lev2 = data2.variables['level'][:]
             lat2 = data2.variables['latitude'][:]
             lon2 = data2.variables['longitude'][:]
-            var2[i,:,:] = data2.variables['%s' % varid][:,14,:,:]
+            var2[i,:,:] = data2.variables['%s' % varid][:,7,:,:]
             data2.close() 
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
