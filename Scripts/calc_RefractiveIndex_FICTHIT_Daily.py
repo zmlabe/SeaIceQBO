@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import calendar
 
 # Wave Information #
-zonal_wave_number = 1
-meridional_wave_number = 1
+zonal_wave_number = 2
+meridional_wave_number = 2
 
 # Degrees/radians Conversion #
 deg_2_rad = math.pi/180.0
@@ -25,9 +25,9 @@ day_num = np.linspace(1,nday,num=nday)
 ilats = np.linspace(1,nlat,num=nlat)
 
 # Load in all of the data #
-for tt in range(35,101,1):
-    directory = '/surtsey/zlabe/simu/HIT/daily/HIT%s/' % tt
-#    directory = '/home/zlabe/green/simu/HIT/daily/HIT%s/' % tt
+for tt in range(1,101,1):
+    directory = '/surtsey/zlabe/simu/FICT/daily/FICT%s/' % tt
+#    directory = '/home/zlabe/green/simu/FICT/daily/FICT%s/' % tt
     
     U = Dataset(directory + 'U_%s.nc' % tt)
     U_data = U['U']
@@ -612,7 +612,7 @@ for tt in range(35,101,1):
     ####################
     
     # Create new file #
-    new_file = Dataset(directory + 'wave1prob_%s.nc' % tt,'w',format='NETCDF3_CLASSIC')
+    new_file = Dataset(directory + 'wave2prob_%s.nc' % tt,'w',format='NETCDF3_CLASSIC')
     
     # Create dimensions #
     time = new_file.createDimension('time',7)

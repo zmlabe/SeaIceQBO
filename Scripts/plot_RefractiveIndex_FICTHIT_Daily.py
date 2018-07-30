@@ -29,7 +29,7 @@ currentdy = str(now.day)
 currentyr = str(now.year)
 currenttime = currentmn + '_' + currentdy + '_' + currentyr
 titletime = currentmn + '/' + currentdy + '/' + currentyr
-print('\n' '----Calculating Vorticity for SeaIceQBO - %s----' % titletime)
+print('\n' '----Plotting Refractive Index - %s----' % titletime)
 
 #### Alott time series
 year1 = 1800
@@ -120,41 +120,41 @@ def readProb(file,varid,experi):
     print('\n*Completed: Finished readProb function!')
     return lat,lev,var
 
-#lat,lev,varfict = readProb('wave1prob','REFRACTIVE_PROB_MONTHLY','FICT')
-#lat,lev,varhit = readProb('wave1prob','REFRACTIVE_PROB_MONTHLY','HIT')
-#
-#### Create 2d array of latitude and longitude
-#lev2,lat2 = np.meshgrid(lev,lat)
-#
-#### Read in QBO phases  
-#filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-#filenamehitno = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
-#filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-#filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-#filenamehitno2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
-#filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-#pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
-#non_hit = np.append(np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitno2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)   
-#  
-#filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-#filenamefictno = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-#filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-#filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-#filenamefictno2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
-#filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-#pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
-#non_fict = np.append(np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictno2,unpack=True,usecols=[0],dtype='int')+100)
-#neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-#                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)
-#
-#### Concatonate runs
-#var_mo = [varhit,varfict]
+lat,lev,varfict = readProb('wave2prob','REFRACTIVE_PROB_MONTHLY','FICT')
+lat,lev,varhit = readProb('wave2prob','REFRACTIVE_PROB_MONTHLY','HIT')
+
+### Create 2d array of latitude and longitude
+lev2,lat2 = np.meshgrid(lev,lat)
+
+### Read in QBO phases  
+filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+filenamehitno = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
+filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+filenamehitno2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[1]
+filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+100)
+non_hit = np.append(np.genfromtxt(filenamehitno,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitno2,unpack=True,usecols=[0],dtype='int')+100)
+neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+100)   
+  
+filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+filenamefictno = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
+filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+filenamefictno2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[1]
+filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+100)
+non_fict = np.append(np.genfromtxt(filenamefictno,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictno2,unpack=True,usecols=[0],dtype='int')+100)
+neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
+                    np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+100)
+
+### Concatonate runs
+var_mo = [varhit,varfict]
 
 ### Composite by QBO phase    
 var_mohitpos = var_mo[0][pos_hit].squeeze()
@@ -164,7 +164,7 @@ var_mofictpos = var_mo[1][pos_fict].squeeze()
 var_mofictnon = var_mo[1][non_fict].squeeze()
 var_mofictneg = var_mo[1][neg_fict].squeeze()
 
-vardiff = np.nanmean(var_mohitneg[:,3,:,:] - var_mohitpos[:-4,3,:,:],axis=0)
+vardiff = np.nanmean(var_mofictneg[:,3,:,:] - var_mohitpos[:-4,3,:,:],axis=0)
 var = np.nanmean(var_mofictneg[:,3,:,:],axis=0)
 
 ############################################################################
@@ -258,5 +258,5 @@ plt.xticks(np.arange(0,91,15),map(str,np.arange(0,91,15)),fontsize=6)
 plt.xlim([0,90])
 plt.ylim([1000,10])
 
-plt.savefig(directoryfigure + 'refractiveIndexTest_diff_HITHIT_NEG-POSpng',dpi=300)
+plt.savefig(directoryfigure + 'refractiveIndexTest_Wave2_diff_FICTHIT_NEGPOS.png',dpi=300)
 print('Completed: Script done!')    
