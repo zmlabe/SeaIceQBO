@@ -18,7 +18,7 @@ import calc_Utilities as UT
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
 directorydata2 = '/home/zlabe/green/simu/'
-directoryfigure = '/home/zlabe/Desktop/QBO_N_2/'
+directoryfigure = '/home/zlabe/Desktop/'
 #directoryfigure = '/home/zlabe/Documents/Research/SITperturb/Figures/'
 
 ### Define time           
@@ -122,24 +122,24 @@ for v in range(len(varnames)):
     
     ### Compute comparisons for fictHIT - taken ensemble average at 60N (index 79)
     ### +QBO
-    diff_FICTHITpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)
-    diffrunspos = diff_FICTHITpos[:,latq,:].squeeze() 
+    diff_FICTHITpos = tas_mofictpos - np.nanmean(tas_mohitpos,axis=0)
+    diffrunspos = diff_FICTHITpos[:,:,latq,:].squeeze() 
     historicalforcedqpos = np.nanmean(tas_mohitpos[:,:,latq,:].squeeze(),axis=0)
     
     historicalforcedpos.append(historicalforcedqpos)
     futureforcedpos.append(diffrunspos)
     
     ### Neutral QBO
-    diff_FICTHITnon = np.nanmean(tas_mofictnon - tas_mohitnon,axis=0)
-    diffrunsnon = diff_FICTHITnon[:,latq,:].squeeze() 
+    diff_FICTHITnon = tas_mofictnon - np.nanmean(tas_mohitnon,axis=0)
+    diffrunsnon = diff_FICTHITnon[:,:,latq,:].squeeze() 
     historicalforcedqnon = np.nanmean(tas_mohitnon[:,:,latq,:].squeeze(),axis=0)
     
     historicalforcednon.append(historicalforcedqnon)
     futureforcednon.append(diffrunsnon)
     
     ### -QBO
-    diff_FICTHITneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)
-    diffrunsneg = diff_FICTHITneg[:,latq,:].squeeze() 
+    diff_FICTHITneg = tas_mofictneg - np.nanmean(tas_mohitneg,axis=0)
+    diffrunsneg = diff_FICTHITneg[:,:,latq,:].squeeze() 
     historicalforcedqneg = np.nanmean(tas_mohitneg[:,:,latq,:].squeeze(),axis=0)
     
     historicalforcedneg.append(historicalforcedqneg)
@@ -148,116 +148,104 @@ for v in range(len(varnames)):
     ### Latitudes append
     lonssq.append(lon1)
     
-###########################################################################
-###########################################################################
-###########################################################################
-#### Plot climatological waves
+### Calculate correlations
+def corrCalc(his,fut,wavenumber,lev,lons):
+    """
+    Calculate correlations for each ensemble member to understand the spread
+    in linear interference for each wave during the set month
+    """
+    if wavenumber == 'all':
+        hisw = his[0]
+        futw = fut[0]
+        lon = lons[0]
+    elif wavenumber == '1':
+        hisw = his[1]
+        futw = fut[1]
+        lon = lons[1]
+    elif wavenumber == '2':
+        hisw = his[2]
+        futw = fut[2]
+        lon = lons[2]
+    else:
+        print(ValueError('WRONG WAVE NUMBER!'))
+    
+    corrs = np.empty((futw.shape[0]))
+    for i in range(futw.shape[0]):
+        corrs[i] = UT.calc_spatialCorrHeight(hisw,futw[i],lev,lon[i],'yes')
+    
+    return corrs
+
+#corrsa = corrCalc(historicalforcedneg,futureforcedneg,'all',lev,lonssq)
+#corrs1 = corrCalc(historicalforcedneg,futureforcedneg,'1',lev,lonssq)
+#corrs2 = corrCalc(historicalforcedneg,futureforcedneg,'2',lev,lonssq)
+
+corrsa = corrCalc(historicalforcedpos,futureforcedpos,'all',lev,lonssq)
+corrs1 = corrCalc(historicalforcedpos,futureforcedpos,'1',lev,lonssq)
+corrs2 = corrCalc(historicalforcedpos,futureforcedpos,'2',lev,lonssq)
+    
+###############################################################################
+###############################################################################
+###############################################################################    
+### Plot box plot distributions
 plt.rc('text',usetex=True)
-plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
+plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']})
 
-### Append all data
-historicalforced = historicalforcedpos + historicalforcednon + historicalforcedneg
-futureforced = futureforcedpos + futureforcednon + futureforcedneg
-lonss = lonssq + lonssq + lonssq
+### Adjust axes in time series plots 
+def adjust_spines(ax, spines):
+    for loc, spine in ax.spines.items():
+        if loc in spines:
+            spine.set_position(('outward', 5))
+        else:
+            spine.set_color('none')  
+    if 'left' in spines:
+        ax.yaxis.set_ticks_position('left')
+    else:
+        ax.yaxis.set_ticks([])
 
-### Set limits for contours and colorbars
-zscale = np.array([1000,700,500,300,200,
-                    100,50,30,10])
-
+    if 'bottom' in spines:
+        ax.xaxis.set_ticks_position('bottom')
+    else:
+        ax.xaxis.set_ticks([])
+        
+dataq = [corrsa,corrs1,corrs2]
+wavenames = [r'\textbf{All Waves}',r'\textbf{Wave 1}', r'\textbf{Wave 2}']
+        
 fig = plt.figure()
-for i in range(9):
-    ax1 = plt.subplot(3,3,i+1)
-    
-    ### Calculate correlations
-    corrpos = UT.calc_spatialCorrHeight(historicalforced[i],futureforced[i],
-                                lev,lonss[i],'yes')
-    
-    lonq,levq = np.meshgrid(lonss[i],lev)
-    
-    ax1.spines['top'].set_color('dimgrey')
-    ax1.spines['right'].set_color('dimgrey')
-    ax1.spines['bottom'].set_color('dimgrey')
-    ax1.spines['left'].set_color('dimgrey')
-    ax1.spines['left'].set_linewidth(2)
-    ax1.spines['bottom'].set_linewidth(2)
-    ax1.spines['right'].set_linewidth(2)
-    ax1.spines['top'].set_linewidth(2)
-    ax1.tick_params(axis='y',direction='out',which='major',pad=3,
-                    width=2,color='dimgrey')
-    ax1.tick_params(axis='x',direction='out',which='major',pad=3,
-                    width=2,color='dimgrey')    
-    ax1.xaxis.set_ticks_position('bottom')
-    ax1.yaxis.set_ticks_position('left')
-            
-    cs = plt.contourf(lonq,levq,futureforced[i],np.arange(-35,35.1,0.1),
-                      extend='both') 
-    if i==2 or i==5 or i==8:
-        cs1 = plt.contour(lonq,levq,historicalforced[i],5,
-                          colors='k',linewidths=1) 
-    else:
-        cs1 = plt.contour(lonq,levq,historicalforced[i],20,
-                  colors='k',linewidths=1) 
-    
-    if i==0 or i==3 or i==6:
-        qbophaseq = [r'QBO-W',r'QBO-W',r'QBO-W',r'QBO-N',r'QBO-N',r'QBO-N',
-                     r'QBO-E',r'QBO-E',r'QBO-E']
-        ax1.text(-0.28,0.5,r'\textbf{%s}' % qbophaseq[i],
-                 ha='center',va='center',color='dimgray',fontsize=13,
-                 transform=ax1.transAxes,rotation=90)
-    if i < 3:
-        wavephaseq = ['Total Wave','Wave 1','Wave 2']
-        ax1.text(0.5,1.2,r'\textbf{%s}' % wavephaseq[i],
-                 ha='center',va='center',color='dimgray',fontsize=13,
-                 transform=ax1.transAxes)
-    ax1.text(0.9,1.06,r'\textbf{R=%s}' % str(corrpos)[:4],color='k',
-         fontsize=8,rotation=0,ha='center',va='center',
-         transform=ax1.transAxes)
-    
-    plt.gca().invert_yaxis()
-    plt.yscale('log',nonposy='clip')
-    
-    xxlabels = ['0','60E','120E','180','120W','60W','0']
-    
-    if i==6:
-        plt.ylim([1000,10])
-        plt.xticks(np.arange(0,361,60),xxlabels,fontsize=6)
-        plt.xlim([0,360])
-        plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
-        plt.minorticks_off()
-    elif i==7:
-        plt.ylim([1000,10])
-        plt.xticks(np.arange(0,361,60),xxlabels,fontsize=6)
-        plt.xlim([0,360])
-        plt.yticks([])
-        plt.minorticks_off()
-        plt.xlabel(r'\textbf{Longitude ($^\circ$)}',color='k',fontsize=8)
-    elif i==8:
-        plt.ylim([1000,10])
-        plt.xticks(np.arange(0,361,60),xxlabels,fontsize=6)
-        plt.xlim([0,360])
-        plt.yticks([])
-        plt.minorticks_off()
-    elif i==0 or i==3 or i==6:
-        plt.ylim([1000,10])
-        plt.xticks([])
-        plt.xlim([0,360])
-        plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
-        plt.minorticks_off()
-    else:
-        plt.ylim([1000,10])
-        plt.xticks([])
-        plt.xlim([0,360])
-        plt.yticks([])
-        plt.minorticks_off()
-    
-    cmap = cmocean.cm.balance            
-    cs.set_cmap(cmap) 
-    
-    plt.subplots_adjust(wspace=0.05)
-    
-plt.savefig(directoryfigure + 'linearInterference_ND_FICTHIT.png',dpi=300)
-print('Completed: Script done!')
+ax = plt.subplot(111) 
 
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('w')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
+ax.tick_params(axis='x',which='both',bottom=False)
 
-print('Completed: Script done!')
+plt.axhline(0,color='dimgrey',linestyle='--',dashes=(0.9,1),linewidth=2)
+bx = plt.boxplot(dataq,0,'',patch_artist=True,whis=[5,95])
 
+for i in bx['caps']:
+    i.set(color='k',linewidth=0)
+for whisker in bx['whiskers']:
+    whisker.set(color='dimgrey',linestyle='-',linewidth=2)
+for box in bx['boxes']: 
+    box.set(color='deepskyblue')
+for box in bx['means']:
+    box.set(linewidth=0)
+for box in bx['medians']:
+    box.set(color='r',linewidth=2,linestyle='-')
+    
+for i in range(len(dataq)):
+    y = dataq[i]
+    x = np.random.normal(1+i,0.04,size=len(y))
+    plt.plot(x,y,'r.',alpha=0.3,zorder=5)
+
+plt.ylabel(r'\textbf{Correlation (R)}',color='k',fontsize=12)
+
+plt.yticks(np.arange(-1,2,1),list(map(str,np.arange(-1,2,1))))
+plt.xticks(np.arange(1,4,1),wavenames) 
+plt.ylim([-1,1])
+
+plt.savefig(directoryfigure + 'LinearInterferenceSpread_FICTHITpos_%s.png' % period,dpi=300)
