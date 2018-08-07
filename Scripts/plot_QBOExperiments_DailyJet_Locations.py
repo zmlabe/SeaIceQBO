@@ -40,7 +40,7 @@ years = np.arange(year1,year2+1,1)
 
 ### Add parameters
 MASK = False
-N=30 # days
+N=21 # days
 varnames = ['U200']
 runnames = [r'HIT',r'FIT',r'FICT']
 qbophase = ['pos','non','neg']
@@ -115,18 +115,40 @@ for v in range(len(varnames)):
     var_mofictneg = var_mo[2][neg_fict,:]
     
     ### Average over longitude
-    var_mofitposz = np.nanmean(var_mofitpos,axis=3)
-    var_mohitposz = np.nanmean(var_mohitpos,axis=3)
-    var_mofictposz = np.nanmean(var_mofictpos,axis=3)
-    
-    var_mofitnonz = np.nanmean(var_mofitnon,axis=3)
-    var_mohitnonz = np.nanmean(var_mohitnon,axis=3)
-    var_mofictnonz = np.nanmean(var_mofictnon,axis=3)
-    
-    var_mofitnegz = np.nanmean(var_mofitneg,axis=3)
-    var_mohitnegz = np.nanmean(var_mohitneg,axis=3)
-    var_mofictnegz = np.nanmean(var_mofictneg,axis=3)
-    
+    region = 'Regional'
+    if region == 'Regional':
+        location = 'Atlantic'
+        if location == 'Atlantic':
+            lonq = np.append(np.where((lon >=310) & (lon <=360))[0],
+                             np.where((lon >=0) & (lon <=20))[0],axis=0)
+        if location == 'Pacific':
+            lonq = np.where((lon >= 120) & (lon <= 170))[0]
+        var_mofitposz = np.nanmean(var_mofitpos[:,:,:,lonq],axis=3)
+        var_mohitposz = np.nanmean(var_mohitpos[:,:,:,lonq],axis=3)
+        var_mofictposz = np.nanmean(var_mofictpos[:,:,:,lonq],axis=3)
+        
+        var_mofitnonz = np.nanmean(var_mofitnon[:,:,:,lonq],axis=3)
+        var_mohitnonz = np.nanmean(var_mohitnon[:,:,:,lonq],axis=3)
+        var_mofictnonz = np.nanmean(var_mofictnon[:,:,:,lonq],axis=3)
+        
+        var_mofitnegz = np.nanmean(var_mofitneg[:,:,:,lonq],axis=3)
+        var_mohitnegz = np.nanmean(var_mohitneg[:,:,:,lonq],axis=3)
+        var_mofictnegz = np.nanmean(var_mofictneg[:,:,:,lonq],axis=3)
+        
+    elif region == 'Global':
+        location = 'Global'
+        var_mofitposz = np.nanmean(var_mofitpos,axis=3)
+        var_mohitposz = np.nanmean(var_mohitpos,axis=3)
+        var_mofictposz = np.nanmean(var_mofictpos,axis=3)
+        
+        var_mofitnonz = np.nanmean(var_mofitnon,axis=3)
+        var_mohitnonz = np.nanmean(var_mohitnon,axis=3)
+        var_mofictnonz = np.nanmean(var_mofictnon,axis=3)
+        
+        var_mofitnegz = np.nanmean(var_mofitneg,axis=3)
+        var_mohitnegz = np.nanmean(var_mohitneg,axis=3)
+        var_mofictnegz = np.nanmean(var_mofictneg,axis=3)
+        
     climo = [var_mohitnegz,var_mohitposz,var_mofictnegz,
              var_mohitnegz,var_mohitposz,var_mofictnegz]
     
@@ -140,24 +162,25 @@ for v in range(len(varnames)):
     ficthitneg = np.nanmean(var_mofictnegz - var_mohitnegz,axis=0)
     
     diffruns = [fithitneg,fithitpos,fithitneg-fithitpos,ficthitneg,ficthitpos,ficthitneg-ficthitpos]
+        
+    ### Smoothing for statistics
+    varstat = [var_mohitnegz,var_mohitposz,var_mofictnegz,var_mofictposz]
+    stats = []
+    for yr in range(len(varstat)):
+        varqstat = np.empty((varstat[yr].shape[0],212-(N-1),96))
+        for ph in range(var_mohitnegz.shape[0]):
+            for s in range(var_mohitnegz.shape[2]):
+                varqstat[ph,:,s] = np.convolve(varstat[yr][ph,:,s], np.ones((N,))/N, mode='valid') 
+        empty = np.empty((varstat[yr].shape[0],N-1,varstat[yr].shape[2]))
+        empty[:] = np.nan
+        varnstat = np.append(np.asarray(varqstat),empty,axis=1)   
+        stats.append(varnstat)
     
-    ### Calculate significance for FM
-    stat_FITHITpos,pvalue_FITHITpos = UT.calc_indttest(var_mo[1][pos_fit],
-                                                       var_mo[0][pos_hit,])
-    stat_FITHITnon,pvalue_FITHITnon = UT.calc_indttest(var_mo[1][non_fit],
-                                                       var_mo[0][non_hit])
-    stat_FITHITneg,pvalue_FITHITneg = UT.calc_indttest(var_mo[1][neg_fit],
-                                                       var_mo[0][neg_hit])
-    
-    stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(var_mo[2][pos_fict],
-                                                         var_mo[0][pos_hit])
-    stat_FICTHITnon,pvalue_FICTHITnon = UT.calc_indttest(var_mo[2][non_fict],
-                                                         var_mo[0][non_hit])
-    stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(var_mo[2][neg_fict],
-                                                         var_mo[0][neg_hit])
+    ### Calculate significance
+    stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(stats[3],stats[1])
+    stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(stats[2],stats[0])
 
-    pruns = [pvalue_FITHITpos,pvalue_FITHITnon,pvalue_FITHITneg,
-#                pvalue_FICTHITpos,pvalue_FICTHITnon,pvalue_FICTHITneg]
+    pruns = [pvalue_FICTHITneg,pvalue_FICTHITpos,np.zeros(pvalue_FICTHITneg.shape)]
     
 ###########################################################################
 ###########################################################################
@@ -172,7 +195,7 @@ for i in range(3,len(diffruns)):
     
     var = diffruns[i]
     var2 = np.nanmean(var_mofictnegz,axis=0)
-    pvar = np.nanmean(pruns[i],axis=2)
+    pvar = pruns[i-3].transpose()
     climovar = np.nanmean(climo[i],axis=0)
     
     ### Begin smoothing of N days
@@ -182,7 +205,7 @@ for i in range(3,len(diffruns)):
         varq.append(varqq)
         empty = np.empty((96,N-1))
         empty[:] = np.nan
-    varn = np.append(empty,np.asarray(varq),axis=1)
+    varn = np.append(np.asarray(varq),empty,axis=1)
     
     ### Begin smoothing of N days
     varq2 = []
@@ -191,7 +214,7 @@ for i in range(3,len(diffruns)):
         varq2.append(varqq2)
         empty = np.empty((96,N-1))
         empty[:] = np.nan
-    varn2 = np.append(empty,np.asarray(varq2),axis=1)
+    varn2 = np.append(np.asarray(varq2),empty,axis=1)
     
     ### Begin smoothing of N days
     climovarq = []
@@ -218,16 +241,20 @@ for i in range(3,len(diffruns)):
     ax1.yaxis.set_ticks_position('left')
     
     ### Set limits
-    limit = np.arange(-1.5,1.6,0.1)
-    barlim = np.arange(-1.5,1.6,0.5)
+    limit = np.arange(-4,4.1,0.1)
+    barlim = np.arange(-4,4.1,2)
     time = np.arange(212)
+    if location == 'Pacific':
+        climlimit = np.arange(-80,81,10)
+    elif location == 'Atlantic':
+        climlimit = np.arange(-80,81,8)
     
     cs = plt.contourf(time,lat,varn,limit,extend='both')
     if i == 3 or i==4:
-        cs1 = plt.contour(time,lat,climovarn,np.arange(-80,81,2),linewidths=1,colors='k')
-        cs1 = plt.contour(time,lat,varn2,np.arange(-80,81,2),linewidths=1,colors='dimgrey',linestyles='--',
-                          dashes=(1,0.3))
-#    cs2 = plt.contourf(time,lat,pvarn,colors='None',hatches=['////'])     
+        cs1 = plt.contour(time,lat,climovarn,climlimit,linewidths=2,colors='k')
+#        cs1 = plt.contour(time,lat,varn2,np.arange(-80,81,2),linewidths=1,colors='dimgrey',linestyles='--',
+#                          dashes=(1,0.3))
+        cs2 = plt.contourf(time,lat,pvar,colors='None',hatches=['////'])     
     cs.set_cmap(cmocean.cm.balance)
     
     if i >= 3:
@@ -253,5 +280,5 @@ for i in range(3,len(diffruns)):
     
     plt.subplots_adjust(bottom=0.21)
     
-    plt.savefig(directoryfigure + 'Daily_Jet.png',dpi=300)
+    plt.savefig(directoryfigure + 'Daily_Jet_%s.png' % location,dpi=300)
     print('Completed: Script done!')
