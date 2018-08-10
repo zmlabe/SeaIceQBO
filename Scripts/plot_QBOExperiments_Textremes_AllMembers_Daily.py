@@ -125,7 +125,7 @@ for v in range(len(varnames)):
     
     var_wfitnon = var_mofitnon[:,timeq,:,:]
     var_whitnon = var_mohitnon[:,timeq,:,:]
-    var_wfictnon = var_mofictpos[:,timeq,:,:]
+    var_wfictnon = var_mofictnon[:,timeq,:,:]
     
     var_wfitneg = var_mofitneg[:,timeq,:,:]
     var_whitneg = var_mohitneg[:,timeq,:,:]
