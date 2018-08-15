@@ -127,51 +127,70 @@ for v in range(len(varnames)):
     var_whitneg = var_mohitneg[:,timeq,:,:]
     var_wfictneg = var_mofictneg[:,timeq,:,:]
     
-    ### Compute 10th percentile temperature at each grid point
-    ten_wfitpos = np.empty((var_wfitpos.shape[0],lat.shape[0],lon.shape[0]))
-    ten_whitpos = np.empty((var_whitpos.shape[0],lat.shape[0],lon.shape[0]))
-    ten_wfictpos = np.empty((var_wfictpos.shape[0],lat.shape[0],lon.shape[0]))
-    for ens in range(var_wfitpos.shape[0]):
+    ## Compute 10th percentile temperature at each grid point
+    ten_wfitpos = np.empty((var_wfitpos.shape[1],lat.shape[0],lon.shape[0]))
+    ten_whitpos = np.empty((var_whitpos.shape[1],lat.shape[0],lon.shape[0]))
+    ten_wfictpos = np.empty((var_wfictpos.shape[1],lat.shape[0],lon.shape[0]))
+    for day in range(var_wfitpos.shape[1]):
         for i in range(lat.shape[0]):
             for j in range(lon.shape[0]):
-                ten_wfitpos[ens,i,j] = np.nanpercentile(var_wfitpos[ens,:,i,j],10)
-                ten_whitpos[ens,i,j] = np.nanpercentile(var_whitpos[ens,:,i,j],10)
-                ten_wfictpos[ens,i,j] = np.nanpercentile(var_wfictpos[ens,:,i,j],10)
-        print('Completed: 10th perc of QBO-W for %s member!' % ens)
+                ten_wfitpos[day,i,j] = np.nanpercentile(var_wfitpos[:,day,i,j],10)
+                ten_whitpos[day,i,j] = np.nanpercentile(var_whitpos[:,day,i,j],10)
+                ten_wfictpos[day,i,j] = np.nanpercentile(var_wfictpos[:,day,i,j],10)
+        print('Completed: 10th perc of QBO-W for %s day!' % day)
                 
-    ten_wfitneg = np.empty((var_wfitneg.shape[0],lat.shape[0],lon.shape[0]))
-    ten_whitneg = np.empty((var_whitneg.shape[0],lat.shape[0],lon.shape[0]))
-    ten_wfictneg = np.empty((var_wfictneg.shape[0],lat.shape[0],lon.shape[0]))
+    ten_wfitneg = np.empty((var_wfitneg.shape[1],lat.shape[0],lon.shape[0]))
+    ten_whitneg = np.empty((var_whitneg.shape[1],lat.shape[0],lon.shape[0]))
+    ten_wfictneg = np.empty((var_wfictneg.shape[1],lat.shape[0],lon.shape[0]))
+    for day in range(var_wfitneg.shape[1]):
+        for i in range(lat.shape[0]):
+            for j in range(lon.shape[0]):
+                ten_wfitneg[day,i,j] = np.nanpercentile(var_wfitneg[:,day,i,j],10)
+                ten_whitneg[day,i,j] = np.nanpercentile(var_whitneg[:,day,i,j],10)
+                ten_wfictneg[day,i,j] = np.nanpercentile(var_wfictneg[:,day,i,j],10)
+        print('Completed: 10th perc of QBO-E for %s day!' % day)
+        
+    ten_wfitnegc = np.empty((var_wfitneg.shape[0],var_wfitneg.shape[1],lat.shape[0],lon.shape[0]))
+    ten_whitnegc = np.empty((var_wfitneg.shape[0],var_wfitneg.shape[1],lat.shape[0],lon.shape[0]))
+    ten_wfictnegc = np.empty((var_wfitneg.shape[0],var_wfitneg.shape[1],lat.shape[0],lon.shape[0]))
     for ens in range(var_wfitneg.shape[0]):
         for i in range(lat.shape[0]):
             for j in range(lon.shape[0]):
-                ten_wfitneg[ens,i,j] = np.nanpercentile(var_wfitneg[ens,:,i,j],10)
-                ten_whitneg[ens,i,j] = np.nanpercentile(var_whitneg[ens,:,i,j],10)
-                ten_wfictneg[ens,i,j] = np.nanpercentile(var_wfictneg[ens,:,i,j],10)
-        print('Completed: 10th perc of QBO-E for %s member!' % ens)
+                ten_wfitnegc[ens,:,i,j] = var_wfitneg[ens,:,i,j] - ten_whitneg[:,i,j]
+                ten_whitnegc[ens,:,i,j] = var_whitneg[ens,:,i,j] - ten_whitneg[:,i,j]
+                ten_wfictnegc[ens,:,i,j] = var_wfictneg[ens,:,i,j] - ten_whitneg[:,i,j]
+        print('Completed: Differences QBO-E for %s member!' % ens)
         
-    ten_wfitnegc = np.empty((var_wfitneg.shape[0],lat.shape[0],lon.shape[0]))
-    ten_wfictnegc = np.empty((var_wfictneg.shape[0],lat.shape[0],lon.shape[0]))
-    for ens in range(var_wfitneg.shape[0]):
-        for i in range(lat.shape[0]):
-            for j in range(lon.shape[0]):
-                ten_wfitnegc[ens,i,j] = np.nansum(var_wfitneg[ens,:,i,j] < ten_whitneg[ens,i,j])
-                ten_wfictnegc[ens,i,j] = np.nansum(var_wfictneg[ens,:,i,j] < ten_whitneg[ens,i,j])
-        print('Completed: Day count QBO-E for %s member!' % ens)
-        
-    ten_wfitposc = np.empty((var_wfitpos.shape[0],lat.shape[0],lon.shape[0]))
-    ten_wfictposc = np.empty((var_wfictpos.shape[0],lat.shape[0],lon.shape[0]))
+    ten_wfitposc = np.empty((var_wfitpos.shape[0],var_wfitpos.shape[1],lat.shape[0],lon.shape[0]))
+    ten_whitposc = np.empty((var_whitpos.shape[0],var_wfitpos.shape[1],lat.shape[0],lon.shape[0]))
+    ten_wfictposc = np.empty((var_wfictpos.shape[0],var_wfitpos.shape[1],lat.shape[0],lon.shape[0]))
     for ens in range(var_wfitpos.shape[0]):
         for i in range(lat.shape[0]):
             for j in range(lon.shape[0]):
-                ten_wfitposc[ens,i,j] = np.nansum(var_wfitpos[ens,:,i,j] < ten_whitpos[ens,i,j])
-                ten_wfictposc[ens,i,j] = np.nansum(var_wfictpos[ens,:,i,j] < ten_whitpos[ens,i,j])
-        print('Completed: Day count QBO-W for %s member!' % ens)
+                ten_wfitposc[ens,:,i,j] = var_wfitpos[ens,:,i,j] - ten_whitpos[:,i,j]
+                ten_whitposc[ens,:,i,j] = var_whitpos[ens,:,i,j] - ten_whitpos[:,i,j]
+                ten_wfictposc[ens,:,i,j] = var_wfictpos[ens,:,i,j] - ten_whitpos[:,i,j]
+        print('Completed: Differences QBO-W for %s member!' % ens)
         
-    diffruns = [np.nanmean(ten_wfitposc,axis=0),
-                np.nanmean(ten_wfitnegc,axis=0),
-                np.nanmean(ten_wfictposc,axis=0),
-                np.nanmean(ten_wfictnegc,axis=0)]
+    ### Set positive values to nan
+    ten_wfitnegc[np.where(ten_wfitnegc > 0)] = np.nan
+    ten_whitnegc[np.where(ten_whitnegc > 0)] = np.nan
+    ten_wfictnegc[np.where(ten_wfictnegc > 0)] = np.nan
+    
+    ten_wfitposc[np.where(ten_wfitposc > 0)] = np.nan
+    ten_whitposc[np.where(ten_whitposc > 0)] = np.nan
+    ten_wfictposc[np.where(ten_wfictposc > 0)] = np.nan
+    
+    ### Calculate differences
+    difffitpos = np.nansum(ten_wfitposc,axis=1) - np.nansum(ten_whitposc,axis=1)
+    difffitneg = np.nansum(ten_wfitnegc,axis=1) - np.nansum(ten_whitnegc,axis=1)
+    difffictpos = np.nansum(ten_wfictposc,axis=1) - np.nansum(ten_whitposc,axis=1)
+    difffictneg = np.nansum(ten_wfictnegc,axis=1) - np.nansum(ten_whitnegc,axis=1)
+        
+    diffruns = [np.nanmean(difffitpos,axis=0),
+                np.nanmean(difffitneg,axis=0),
+                np.nanmean(difffictpos,axis=0),
+                np.nanmean(difffictneg,axis=0)]
     
     ### Calculate significance for DJF
     stat_fithitpos,pvalue_fithitpos = UT.calc_indttest(ten_wfitpos,ten_whitpos)
@@ -188,12 +207,12 @@ for v in range(len(varnames)):
     ### Plot variable data for QBO composites
     plt.rc('text',usetex=True)
     plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
-    MASK = True
+    MASK = False
     
     ### Set limits for contours and colorbars
     if varnames[v] == 'T1000':
-        limit = np.arange(0,10,1)
-        barlim = np.arange(0,10,3)
+        limit = np.arange(-20,21,1)
+        barlim = np.arange(-20,21,10)
         
     fig = plt.figure()
     for i in range(len(diffruns)):
@@ -228,9 +247,9 @@ for v in range(len(varnames)):
         
         if varnames[v] == 'T1000':
             cmap = ncm.cmap('NCV_blu_red')           
-            cs.set_cmap(cmocean.cm.thermal)   
+            cs.set_cmap(cmocean.cm.balance)   
             
-        m.drawlsmask(land_color=(0,0,0,0),ocean_color='gainsboro',lakes=True,
+        m.drawlsmask(land_color=(0,0,0,0),ocean_color='dimgrey',lakes=True,
                      resolution='c',zorder=5)
                     
         ### Add experiment text to subplot
@@ -250,7 +269,7 @@ for v in range(len(varnames)):
                         extend='max',extendfrac=0.07,drawedges=False)
     
     if varnames[v] == 'T1000':
-        cbar.set_label(r'\textbf{Days}',fontsize=11,color='dimgray',labelpad=0.2)  
+        cbar.set_label(r'\textbf{CDI}',fontsize=11,color='dimgray',labelpad=0.2)  
 
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim)))
@@ -261,7 +280,7 @@ for v in range(len(varnames)):
     plt.subplots_adjust(hspace=0.01)
     plt.subplots_adjust(bottom=0.15)
     
-    plt.savefig(directoryfigure + 'ColdExtremes_December.png',
+    plt.savefig(directoryfigure + 'ColdIndex_December.png',
                 dpi=300)
 
 print('Completed: Script done!')
