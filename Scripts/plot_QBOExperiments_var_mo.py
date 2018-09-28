@@ -46,7 +46,7 @@ runnames = [r'HIT',r'FIT',r'FICT']
 experiments = [r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',r'\textbf{FIT--HIT}',
                r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
 qbophase = ['pos','non','neg']
-period = 'ND'
+period = 'ON'
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
     lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
@@ -342,9 +342,9 @@ for v in range(len(varnames)):
     elif varnames[v] == 'EGR':
         cbar.set_label(r'\textbf{1/day}',fontsize=11,color='dimgray')
     elif varnames[v] == 'WAFZ850' or varnames[v] == 'WAFZ150':
-        cbar.set_label(r'\textbf{m/s/day}',fontsize=11,color='dimgray')
+        cbar.set_label(r'\textbf{m$^{2}$/s$^{2}$}',fontsize=11,color='dimgray')
     elif varnames[v] == 'WAFY850' or varnames[v] == 'WAFY150':
-        cbar.set_label(r'\textbf{m/s/day}',fontsize=11,color='dimgray')
+        cbar.set_label(r'\textbf{m$^{2}$/s$^{2}$}',fontsize=11,color='dimgray')
 
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim)))

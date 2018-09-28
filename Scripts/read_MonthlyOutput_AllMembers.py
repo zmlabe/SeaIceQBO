@@ -67,7 +67,7 @@ def readExperiAll(varid,experi,level):
     
     if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
             varid=='WAFZ850',varid=='WAFZ150',
-            varid=='WAFY850',varid=='WAFY150']):
+            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data = Dataset(filename,'r')
@@ -81,9 +81,14 @@ def readExperiAll(varid,experi,level):
             lon = dataq.variables['longitude'][:]
             dataq.close()
         elif level == 'profile': # 4d variables
-            data = Dataset(filename,'r')
-            varq = data.variables['%s' % varid][:,:,:,0]
-            data.close()
+            if varid == 'WAFZ':
+                data = Dataset(filename,'r')
+                varq = data.variables['%s' % varid][:,:,:,:]
+                data.close()
+            else:
+                data = Dataset(filename,'r')
+                varq = data.variables['%s' % varid][:,:,:,0]
+                data.close()
 
             dataq = Dataset(totaldirectory + 'TEMP_1900-2000.nc')
             time = dataq.variables['time'][:]
@@ -164,7 +169,7 @@ def readExperiAll(varid,experi,level):
 
     if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
             varid=='WAFZ850',varid=='WAFZ150',
-            varid=='WAFY850',varid=='WAFY150']):
+            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data2 = Dataset(filename2,'r')
@@ -178,9 +183,14 @@ def readExperiAll(varid,experi,level):
             lon2 = dataq2.variables['longitude'][:]
             dataq2.close()
         elif level == 'profile': # 4d variables
-            data2 = Dataset(filename2,'r')
-            varq2 = data2.variables['%s' % varid][:,:,:,0]
-            data2.close()
+            if varid == 'WAFZ':
+                data2 = Dataset(filename2,'r')
+                varq2 = data2.variables['%s' % varid][:,:,:,:]
+                data2.close()
+            else:
+                data2 = Dataset(filename2,'r')
+                varq2 = data2.variables['%s' % varid][:,:,:,0]
+                data2.close()
             
             dataq2 = Dataset(totaldirectory2 + 'TEMP_1900-2000.nc')
             time2 = dataq2.variables['time'][:]

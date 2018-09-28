@@ -120,8 +120,8 @@ def readProb(file,varid,experi):
     print('\n*Completed: Finished readProb function!')
     return lat,lev,var
 
-lat,lev,varfict = readProb('wave2prob','REFRACTIVE_PROB_MONTHLY','FICT')
-lat,lev,varhit = readProb('wave2prob','REFRACTIVE_PROB_MONTHLY','HIT')
+lat,lev,varfict = readProb('wave1prob','REFRACTIVE_PROB_MONTHLY','FICT')
+lat,lev,varhit = readProb('wave1prob','REFRACTIVE_PROB_MONTHLY','HIT')
 
 ### Create 2d array of latitude and longitude
 lev2,lat2 = np.meshgrid(lev,lat)
@@ -214,7 +214,7 @@ plt.xticks(np.arange(0,91,15),map(str,np.arange(0,91,15)),fontsize=6)
 plt.xlim([0,90])
 plt.ylim([1000,10])
 
-plt.savefig(directoryfigure + 'refractiveIndexTest.png',dpi=300)
+plt.savefig(directoryfigure + 'refractiveIndexTest_Wave1_diff_HIT_NEG.png',dpi=300)
 
 ###############################################################################
 
@@ -258,5 +258,5 @@ plt.xticks(np.arange(0,91,15),map(str,np.arange(0,91,15)),fontsize=6)
 plt.xlim([0,90])
 plt.ylim([1000,10])
 
-plt.savefig(directoryfigure + 'refractiveIndexTest_Wave2_diff_FICTHIT_NEGPOS.png',dpi=300)
+plt.savefig(directoryfigure + 'refractiveIndexTest_Wave1_diff_FICTHIT_NEGPOS.png',dpi=300)
 print('Completed: Script done!')    
