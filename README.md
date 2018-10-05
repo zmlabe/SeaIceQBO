@@ -20,8 +20,9 @@ Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates th
 
 
 ## Publications
-+ Labe, Z.M., Y. Peings, and G. Magnusdottir, 2018. Importance of the QBO on the large-scale atmospheric response to loss of Arctic sea ice, *in prep*
++ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2018. Importance of the QBO on the large-scale atmospheric response to loss of Arctic sea ice, *in prep*
 
 
 ## Conferences
-
++ [2] **Labe, Z.M.**, G. Magnusdottir, and Y. Peings. Linking the Quasi-Biennial Oscillation and Projected Arctic Sea-Ice Loss to Stratospheric Variability in Early Winter, *20th Conference on Middle Atmosphere*, Phoenix, AZ (Jan 2019). [[Abstract]](https://ams.confex.com/ams/2019Annual/meetingapp.cgi/Paper/352664)
++ [1] Magnusdottir, G., **Z.M. Labe**, and Y. Peings. The role of the stratosphere, including the QBO, in Arctic to mid-latitude teleconnections associated with sea-ice forcing, *2018 American Geophysical Union Annual Meeting*, Washington, DC (Dec 2018). [[Abstract]](https://agu.confex.com/agu/fm18/meetingapp.cgi/Paper/399117)
