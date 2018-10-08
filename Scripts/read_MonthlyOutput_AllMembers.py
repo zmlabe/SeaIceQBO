@@ -67,7 +67,7 @@ def readExperiAll(varid,experi,level):
     
     if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
             varid=='WAFZ850',varid=='WAFZ150',
-            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ']):
+            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ',varid=='WAFY']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data = Dataset(filename,'r')
@@ -81,7 +81,7 @@ def readExperiAll(varid,experi,level):
             lon = dataq.variables['longitude'][:]
             dataq.close()
         elif level == 'profile': # 4d variables
-            if varid == 'WAFZ':
+            if varid == 'WAFZ' or varid == 'WAFY':
                 data = Dataset(filename,'r')
                 varq = data.variables['%s' % varid][:,:,:,:]
                 data.close()
@@ -169,7 +169,7 @@ def readExperiAll(varid,experi,level):
 
     if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
             varid=='WAFZ850',varid=='WAFZ150',
-            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ']):
+            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ',varid=='WAFY']):
         ### Read in Data
         if level == 'surface': # 3d variables
             data2 = Dataset(filename2,'r')
@@ -183,7 +183,7 @@ def readExperiAll(varid,experi,level):
             lon2 = dataq2.variables['longitude'][:]
             dataq2.close()
         elif level == 'profile': # 4d variables
-            if varid == 'WAFZ':
+            if varid == 'WAFZ' or varid == 'WAFY':
                 data2 = Dataset(filename2,'r')
                 varq2 = data2.variables['%s' % varid][:,:,:,:]
                 data2.close()
