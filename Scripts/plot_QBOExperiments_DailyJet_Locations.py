@@ -117,12 +117,12 @@ for v in range(len(varnames)):
     ### Average over longitude
     region = 'Regional'
     if region == 'Regional':
-        location = 'Atlantic'
+        location = 'Pacific'
         if location == 'Atlantic':
             lonq = np.append(np.where((lon >=310) & (lon <=360))[0],
                              np.where((lon >=0) & (lon <=20))[0],axis=0)
         if location == 'Pacific':
-            lonq = np.where((lon >= 120) & (lon <= 170))[0]
+            lonq = np.where((lon >= 120) & (lon <= 220))[0]
         var_mofitposz = np.nanmean(var_mofitpos[:,:,:,lonq],axis=3)
         var_mohitposz = np.nanmean(var_mohitpos[:,:,:,lonq],axis=3)
         var_mofictposz = np.nanmean(var_mofictpos[:,:,:,lonq],axis=3)

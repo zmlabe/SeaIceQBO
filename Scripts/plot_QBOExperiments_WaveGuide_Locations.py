@@ -1,12 +1,12 @@
 """
 Plot wave guide comparisons between SIT and SIC modeling experiments using 
 WACCM4. Subplot includes HIT, FICT. Profiles are organized by QBO phase 
-(positive, negative)
+(positive, negative) by region.
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 28 September 2018
+    Date   : 9 October 2018
 """
 
 ### Import modules
@@ -42,8 +42,9 @@ years = np.arange(year1,year2+1,1)
 runnames = [r'HIT',r'FICT']
 experiments = [r'\textbf{$\Delta$NET}']
 qbophase = ['pos','non','neg']
-period = 'N'
+period = 'ND'
 varnames = ['WAFZ']
+area = 'Eurasia'
 
 ### Call function for WAFz data for each run
 def readWAFz(varnames,qbophase):
@@ -133,18 +134,25 @@ def readWAFz(varnames,qbophase):
     tas_mofictnegq = tas_mo[1][neg_fict,:,:]
     
     ### Take zonal average
-    tas_mohitpos = np.nanmean(tas_mohitposq,axis=3)
-    tas_mofictpos = np.nanmean(tas_mofictposq,axis=3)
+    if area == 'Atlantic':
+        lonq = np.append(np.where((lon >=310) & (lon <=360))[0],
+                         np.where((lon >=0) & (lon <=20))[0],axis=0)
+    elif area == 'Eurasia':
+        lonq = np.where((lon >= 0) & (lon <= 120))[0]
+    elif area == 'Pacific':
+        lonq = np.where((lon >= 120) & (lon <= 220))[0]
     
-    tas_mohitnon = np.nanmean(tas_mohitnonq,axis=3)
-    tas_mofictnon = np.nanmean(tas_mofictnonq,axis=3)
+    tas_mohitpos = np.nanmean(tas_mohitposq[:,:,:,lonq],axis=3)
+    tas_mofictpos = np.nanmean(tas_mofictposq[:,:,:,lonq],axis=3)
     
-    tas_mohitneg = np.nanmean(tas_mohitnegq,axis=3)
-    tas_mofictneg = np.nanmean(tas_mofictnegq,axis=3)
+    tas_mohitnon = np.nanmean(tas_mohitnonq[:,:,:,lonq],axis=3)
+    tas_mofictnon = np.nanmean(tas_mofictnonq[:,:,:,lonq],axis=3)
+    
+    tas_mohitneg = np.nanmean(tas_mohitnegq[:,:,:,lonq],axis=3)
+    tas_mofictneg = np.nanmean(tas_mofictnegq[:,:,:,lonq],axis=3)
     
     
     ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)/np.nanstd(tas_mofictpos,axis=0)
-    ficthitnon = np.nanmean(tas_mofictnon - tas_mohitnon,axis=0)/np.nanstd(tas_mofictnon,axis=0)
     ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)/np.nanstd(tas_mofictneg,axis=0)
     diffruns_mo = [ficthitneg,ficthitpos,ficthitneg-ficthitpos]
     
@@ -157,10 +165,10 @@ def readWAFz(varnames,qbophase):
                                                          tas_mofictneg)
     
     pruns_mo = [pvalue_FICTHITneg,pvalue_FICTHITpos,pvalue_FICTHITneg]
-    return diffruns_mo,pruns_mo
+    return diffruns_mo,pruns_mo,lat,lon,lev
 
 ### Retrieve WAFz
-diffruns_mo,pruns_mo = readWAFz(varnames,qbophase)
+diffruns_mo,pruns_mo,lat,lon,lev = readWAFz(varnames,qbophase)
 
 ### Retrieve wave indices
 wavehitposq,wavehitnegq,wavefictposq,wavefictnegq = RW.callWaveIndex()
@@ -309,6 +317,6 @@ cbar.outline.set_edgecolor('dimgrey')
 plt.subplots_adjust(wspace=0.24)
 plt.subplots_adjust(bottom=0.21)
 
-plt.savefig(directoryfigure + 'WAFz_QBO_%s_WaveGuide2.png' % period,dpi=300)
+plt.savefig(directoryfigure + 'WAFz_QBO_%s_WaveGuide_%s.png' % (period,area),dpi=300)
 print('Completed: Script done!')
 

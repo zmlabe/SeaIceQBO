@@ -47,7 +47,7 @@ experiments = [r'\textbf{FIT--HIT}',r'\textbf{FICT--HIT}']
 lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames,'HIT',
                                            'surface')
 lat,lon,time,lev,tasfit = MO.readExperiAll('%s' % varnames,'FIT',
-                                           'surface')
+                                           'surface')z
 lat,lon,time,lev,tasfict = MO.readExperiAll('%s' % varnames,'FICT',
                                             'surface')
 
