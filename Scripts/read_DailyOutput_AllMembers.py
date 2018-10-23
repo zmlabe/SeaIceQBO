@@ -95,7 +95,7 @@ def readMeanExperiAll(varid,experi,level):
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
         elif varid == 'MHF100':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
-        elif varid == 'U200':
+        elif varid == 'U200' or varid == 'U300' or varid == 'U700':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
         elif varid == 'SLP':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
@@ -176,7 +176,7 @@ def readMeanExperiAll(varid,experi,level):
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
         elif varid == 'MHF100':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
-        elif varid == 'U200':
+        elif varid == 'U200' or varid == 'U300' or varid == 'U700':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
         elif varid == 'SLP':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)

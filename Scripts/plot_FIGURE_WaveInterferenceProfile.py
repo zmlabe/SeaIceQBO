@@ -44,7 +44,7 @@ futureforcedneg = []
 lonssq = []
 varnames = ['GEOPxwave_all','GEOPxwave1','GEOPxwave2']
 qbophase = ['pos','non','neg']
-period = 'ND'
+period = 'N'
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
     lat,lon1,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
