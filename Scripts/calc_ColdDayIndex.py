@@ -295,7 +295,8 @@ print('Completed: Script done!')
 ###############################################################################
 ###############################################################################
 ### 
-#diffrunsq = np.asarray([difffitpos,difffitneg,difffictpos,difffictneg])
+diffrunsq = np.asarray([difffitpos,difffitneg,difffictpos,difffictneg])
+pvals = np.array([pvalue_ficthitpos,pvalue_ficthitneg])
 
 def netcdf(lats,lons,var):
     print('\n>>> Using netcdf function!')
@@ -342,4 +343,40 @@ def netcdf(lats,lons,var):
     ncfile.close()
     print('*Completed: Created netCDF4 File!')
     
-#netcdf(lat,lon,diffrunsq)
+def netcdfPValues(lats,lons,var):
+    print('\n>>> Using netcdf function!')
+    
+    directory = '/home/zlabe/Documents/Research/SeaIceQBO/Data/'
+    name = 'ColdDayIndex_pvals_December.nc'
+    filename = directory + name
+    ncfile = Dataset(filename,'w',format='NETCDF4')
+    ncfile.description = 'p-values of Cold Days Index from WACCM4 FICT, HIT' \
+                            'QBO-W,QBO-E'
+    
+    ### Dimensions
+    ncfile.createDimension('lat',lat.shape[0])
+    ncfile.createDimension('lon',lon.shape[0])
+    
+    ### Variables
+    latitude = ncfile.createVariable('lat','f4',('lat'))
+    longitude = ncfile.createVariable('lon','f4',('lon'))
+    fictpos = ncfile.createVariable('p_W','f4',('lat','lon'))
+    fictneg = ncfile.createVariable('p_E','f4',('lat','lon'))
+    
+    ### Units
+    ncfile.title = 'WACCM4 QBO simulations for CDI'
+    ncfile.instituion = 'Dept. ESS at University of California, Irvine'
+    ncfile.source = 'CESM WACCM4'
+    ncfile.references = 'none'
+    
+    ### Data
+    latitude[:] = lats
+    longitude[:] = lons
+    fictpos[:] = pvals[0]
+    fictneg[:] = pvals[1]
+    
+    ncfile.close()
+    print('*Completed: Created netCDF4 File!')
+    
+netcdf(lat,lon,diffrunsq)
+netcdfPValues(lat,lon,pvals)

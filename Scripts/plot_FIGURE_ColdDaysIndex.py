@@ -49,8 +49,14 @@ fictneg = data1.variables['cdi_fictneg'][:]
 lat = data1.variables['lat'][:]
 lon = data1.variables['lon'][:]
 data1.close()
+
+data2 = Dataset(directorydata3 + 'ColdDayIndex_pvals_December.nc')
+pvalpos = data2.variables['p_W'][:]
+pvalneg = data2.variables['p_E'][:]
+data2.close()
     
 diffruns = [np.nanmean(fictpos,axis=0),np.nanmean(fictneg,axis=0)]
+pvarn = [pvalpos,pvalneg]
     
 ###########################################################################
 ###########################################################################
@@ -68,6 +74,7 @@ if varnames[0] == 'T1000':
 fig = plt.figure()
 for i in range(len(diffruns)):
     var = diffruns[i]
+    p = pvarn[i]
     
     ax1 = plt.subplot(1,2,i+1)
     m = Basemap(projection='ortho',lon_0=0,lat_0=89,resolution='l',
@@ -75,6 +82,8 @@ for i in range(len(diffruns)):
     
     var, lons_cyclic = addcyclic(var, lon)
     var, lons_cyclic = shiftgrid(180., var, lons_cyclic, start=False)
+    pvar,lons_cyclic = addcyclic(p, lon)
+    pvar,lons_cyclic = shiftgrid(180.,pvar,lons_cyclic,start=False)
     lon2d, lat2d = np.meshgrid(lons_cyclic, lat)
     x, y = m(lon2d, lat2d)
               
@@ -82,6 +91,11 @@ for i in range(len(diffruns)):
     m.fillcontinents(color='dimgrey',zorder=3)
     
     cs = m.contourf(x,y,var,limit,extend='both',zorder=4)
+    cs1 = m.contourf(x,y,pvar,colors='None',hatches=['....'],
+                     linewidths=0.4,zorder=5)
+              
+    m.drawmapboundary(fill_color='white',color='dimgray',linewidth=0.7)
+    m.fillcontinents(color='dimgrey',zorder=3)
 
     m.drawcoastlines(color='dimgray',linewidth=0.8)
             

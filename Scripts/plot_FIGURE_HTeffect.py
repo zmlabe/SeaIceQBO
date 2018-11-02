@@ -379,4 +379,4 @@ plt.annotate(r'$\bf{\bullet\bullet}$',xy=(3,0),xytext=(0.842,0.03),
              textcoords='figure fraction',color='k',
              fontsize=14,rotation=0,ha='center',va='center')
 
-plt.savefig(directoryfigure + 'distributions_H-Teffect.png',dpi=300)
+plt.savefig(directoryfigure + 'distributions_H-Teffect.png',dpi=900)
