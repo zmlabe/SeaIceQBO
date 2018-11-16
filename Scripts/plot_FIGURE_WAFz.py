@@ -221,7 +221,7 @@ for i in range(len(diffruns_mo)):
     if i == 0:
         plt.ylabel(r'\textbf{Pressure (hPa)}',color='k',fontsize=8,
                      labelpad=1)
-    if i == 1:
+    if i == 0 or i==1 or i==2:
         plt.xlabel(r'\textbf{Latitude ($^\circ$N)}',color='k',fontsize=8,
                              labelpad=1)
 

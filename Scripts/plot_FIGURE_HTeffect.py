@@ -42,7 +42,7 @@ varnames = 'U'
 #            r'\textbf{FIC}',r'\textbf{CIT}',r'\textbf{FSUB}',
 #            r'\textbf{FPOL}',r'\textbf{CTLQ}']
 runnames = [r'\textbf{FIT}',r'\textbf{HIT}',r'\textbf{FICT}',
-            r'\textbf{FIC}',r'\textbf{CIT}',r'\textbf{FSUB}',
+            r'\textbf{FIC}',r'\textbf{HIC}',r'\textbf{FSUB}',
             r'\textbf{FPOL}']
 qbophase = ['pos','non','neg']
 

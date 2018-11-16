@@ -223,6 +223,7 @@ for i in range(6):
         plt.xlim([0,360])
         plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
         plt.minorticks_off()
+        plt.xlabel(r'\textbf{Longitude ($^\circ$)}',color='k',fontsize=8)
     elif i==4:
         plt.ylim([1000,10])
         plt.xticks(np.arange(0,361,60),xxlabels,fontsize=6)
@@ -236,6 +237,7 @@ for i in range(6):
         plt.xlim([0,360])
         plt.yticks([])
         plt.minorticks_off()
+        plt.xlabel(r'\textbf{Longitude ($^\circ$)}',color='k',fontsize=8)
     elif i==0:
         plt.ylim([1000,10])
         plt.xticks([])

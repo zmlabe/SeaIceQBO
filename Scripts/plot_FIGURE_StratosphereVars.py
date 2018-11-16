@@ -43,6 +43,7 @@ runnames = [r'HIT',r'FIT',r'FICT']
 experiments = [r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}',r'\textbf{FICT--HIT}']
 qbophase = ['pos','non','neg']
 period = 'D'
+letters = ["a","b","c","d","e","f","g","h","i"]
 
 def readVar(varnames,qbophase,period):
     ### Call function for surface temperature data from reach run
@@ -220,12 +221,15 @@ for i in range(4):
     if i < 2:
         qbophaseq = [r'QBO-W',r'QBO-E']
         ax1.annotate(r'\textbf{%s}' % qbophaseq[i],xy=(0,0),xytext=(0.5,1.08),
-                     textcoords='axes fraction',color='dimgray',
+                     textcoords='axes fraction',color='k',
                      fontsize=13,rotation=0,ha='center',va='center')
     if i == 0 or i == 2:
         ax1.annotate(r'\textbf{%s}' % varnames[i],xy=(0,0),xytext=(-0.1,0.5),
                      textcoords='axes fraction',color='k',
                      fontsize=20,rotation=90,ha='center',va='center')
+    ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),
+        xytext=(0.92,0.9),xycoords='axes fraction',
+        color='dimgrey',fontsize=7)
         
 ###########################################################################
     if i == 1:

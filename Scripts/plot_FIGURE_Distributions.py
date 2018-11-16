@@ -239,8 +239,8 @@ l = plt.legend(shadow=False,fontsize=12,loc='upper left',
 for text in l.get_texts():
     text.set_color('dimgrey')
 
-plt.ylabel(r'\textbf{Density}',color='dimgrey',fontsize=12)  
-plt.xlabel(r'\textbf{1000 hPa Temperature [$^{\circ}$C]}',color='dimgrey',fontsize=12)
+plt.ylabel(r'\textbf{Density}',color='k',fontsize=12)  
+plt.xlabel(r'\textbf{1000 hPa Temperature [$^{\circ}$C]}',color='k',fontsize=12)
 
 ax = plt.subplot(122)
 adjust_spines(ax, ['left', 'bottom'])
@@ -253,11 +253,14 @@ ax.spines['bottom'].set_linewidth(2)
 ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 ax.set_yticks([])
 
+plt.axvline(np.median(slp[1]),color='dimgrey',dashes=(1,0.3),linewidth=1.5,
+            zorder=1)
+
 pos = [1,2,3.5,4.5]
 vp = plt.violinplot(slp,pos,showmeans=False,showmedians=True,vert=False,
                     widths=0.6)
 
-plt.xlabel(r'\textbf{Sea Level Pressure [hPa]}',color='dimgrey',fontsize=12)
+plt.xlabel(r'\textbf{Sea Level Pressure [hPa]}',color='k',fontsize=12)
 plt.xticks(np.arange(1010,1061,15),list(map(str,np.arange(1010,1061,15))),
            fontsize=10) 
 plt.xlim([1010,1055])
@@ -281,11 +284,18 @@ vp['bodies'][3].set_facecolor('darkblue')
 vp['bodies'][0].set_hatch('\\\\')
 vp['bodies'][1].set_hatch('\\\\')
 
-ax.annotate(r'\textbf{HIT}',xy=(1030,3),xytext=(1.14,0.77),
+ax.annotate(r'\textbf{[b]}',xy=(1030,3),xytext=(0.98,1.0),
+             textcoords='axes fraction',color='dimgray',
+             fontsize=15,rotation=0,ha='center',va='center')
+ax.annotate(r'\textbf{[a]}',xy=(1030,3),xytext=(-1.14,1.0),
+             textcoords='axes fraction',color='dimgray',
+             fontsize=15,rotation=0,ha='center',va='center')
+
+ax.annotate(r'\textbf{Historical}',xy=(1030,3),xytext=(1.14,0.77),
              textcoords='axes fraction',color='dimgray',
              fontsize=27,rotation=270,ha='center',va='center')
 
-ax.annotate(r'\textbf{FICT}',xy=(1030,3),xytext=(1.14,0.21),
+ax.annotate(r'\textbf{Future}',xy=(1030,3),xytext=(1.14,0.215),
              textcoords='axes fraction',color='dimgray',
              fontsize=27,rotation=270,ha='center',va='center')
 
