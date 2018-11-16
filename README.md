@@ -20,7 +20,7 @@ Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates th
 
 
 ## Publications
-+ **Labe, Z.M.**, G. Magnusdottir, and Y. Peings, 2018. Atmospheric Response to Linking the Quasi-Biennial Oscillation and Projected Arctic Sea-Ice Loss in Early Winter, *drafting paper*
++ **Labe, Z.M.**, G. Magnusdottir, and Y. Peings, 2018. Linking the Quasi-Biennial Oscillation to the Atmospheric Response to Projected Arctic Sea-Ice Loss in Early Winter, *drafting paper*
 
 
 ## Conferences
