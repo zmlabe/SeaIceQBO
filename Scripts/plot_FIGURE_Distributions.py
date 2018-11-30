@@ -175,8 +175,8 @@ def readVariablesTemps(varnames,period,location):
     return diffruns,lat,lon,lev
 
 ### Read Data
-#temps,lat,lon,lev = readVariablesTemps('T1000',period,'Siberia')
-#slp,lat,lon,lev = readVariablesSLP('SLP',period,'Siberia')
+temps,lat,lon,lev = readVariablesTemps('T1000',period,'Siberia')
+slp,lat,lon,lev = readVariablesSLP('SLP',period,'Siberia')
 
 ###############################################################################
 ###############################################################################

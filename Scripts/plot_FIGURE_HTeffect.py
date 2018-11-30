@@ -286,7 +286,12 @@ tctlq,pctlq = sts.ttest_ind(var_wfctlqneg.ravel(),var_wctlqpos.ravel(),equal_var
 #dataq = [difffit,diffhit,difffict,difffic,diffcit,difffsub,difffpol,diffctlq]
 dataq = [difffit,diffhit,difffict,difffic,diffcit,difffsub,difffpol]
 
-print('\nFIT pvalue = %s\n' % pfit)
+ks = sts.ks_2samp(diffhit.ravel(),difffict.ravel())
+print('\nHIT and FICT KS-Test = %s\n' % ks[1])
+
+tdiffhit,pdifffict = sts.ttest_ind(diffhit.ravel(),difffict.ravel(),equal_var=True) 
+
+print('FIT pvalue = %s\n' % pfit)
 print('HIT pvalue = %s\n' % phit)
 print('FICT pvalue = %s\n' % pfict)
 print('FIC pvalue = %s\n' % pfic)

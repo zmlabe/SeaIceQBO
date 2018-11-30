@@ -162,9 +162,10 @@ var_mofictpos = var_mo[1][pos_fict].squeeze()
 var_mofictnon = var_mo[1][non_fict].squeeze()
 var_mofictneg = var_mo[1][neg_fict].squeeze()
 
-vardiff = np.nanmean(var_mofictneg[:,3,:,:],axis=0) - np.nanmean(var_mohitpos[:,3,:,:],axis=0)
-varpos = np.nanmean(var_mofictpos[:,3,:,:],axis=0)
-varneg = np.nanmean(var_mofictneg[:,3,:,:],axis=0)
+vardiff = np.nanmean(np.nanmean(var_mofictneg[:,2:4,:,:],axis=1),axis=0) - \
+          np.nanmean(np.nanmean(var_mohitpos[:,2:4,:,:],axis=0),axis=0)
+varpos = np.nanmean(np.nanmean(var_mofictpos[:,2:4,:,:],axis=0),axis=0)
+varneg = np.nanmean(np.nanmean(var_mofictneg[:,2:4,:,:],axis=0),axis=0)
 
 ############################################################################
 ############################################################################
