@@ -195,9 +195,9 @@ for i in range(6):
         barlim = np.arange(-2,2.1,1)
     time = np.arange(212)
     if i < 3:
-        climlimit = np.arange(-80,81,5)
+        climlimit = np.arange(-80,81,2.5)
     elif i >= 3:
-        climlimit = np.arange(0,81,5.1)
+        climlimit = np.arange(0,81,2.1)
     
     cs = plt.contourf(time,lat,varn,limit,extend='both')
     if i == 0 or i==1 or i==3 or i==4:
