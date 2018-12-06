@@ -219,7 +219,7 @@ pos_ctlq = np.genfromtxt(filenamefctlqp,unpack=True,usecols=[0],dtype='int')
 neg_ctlq = np.genfromtxt(filenamefctlqn,unpack=True,usecols=[0],dtype='int')
 
 ### Concatonate runs with selected level
-levq = np.where(lev == 30)[0] # selected at 30 hPa
+levq = np.where(lev == 10)[0] # selected at 30 hPa
 var_mo = [tashit[:,:,levq],tasfit[:,:,levq],tasfict[:,:,levq],
           tasfic[:,:,levq],tascit[:,:,levq],tasfsub[:,:,levq],tasfpol[:,:,levq],
           tasctlq[:,:,levq]]
@@ -356,11 +356,11 @@ for i in range(len(dataq)):
     x = np.random.normal(1+i,0.04,size=len(y))
     plt.scatter(x,y,color='royalblue',zorder=5,s=8,edgecolor='royalblue',alpha=0.8)
 
-plt.ylabel(r'\textbf{U30 [m/s]}',color='dimgrey',fontsize=12)
+plt.ylabel(r'\textbf{U10 [m/s]}',color='dimgrey',fontsize=12)
 
-plt.yticks(np.arange(-20,21,5),list(map(str,np.arange(-20,21,5))))
+plt.yticks(np.arange(-30,31,5),list(map(str,np.arange(-30,31,5))))
 plt.xticks(np.arange(1,8,1),runnames,color='dimgrey',fontsize=13) 
-plt.ylim([-18,18])
+plt.ylim([-30,30])
 
 plt.annotate(r'$\bf{\bullet\bullet}$',xy=(3,0),xytext=(0.179,0.03),
              textcoords='figure fraction',color='k',
@@ -384,4 +384,4 @@ plt.annotate(r'$\bf{\bullet\bullet}$',xy=(3,0),xytext=(0.842,0.03),
              textcoords='figure fraction',color='k',
              fontsize=14,rotation=0,ha='center',va='center')
 
-plt.savefig(directoryfigure + 'distributions_H-Teffect.png',dpi=900)
+plt.savefig(directoryfigure + 'distributions_H-Teffect_U10_%s.png' % monthqq,dpi=900)
