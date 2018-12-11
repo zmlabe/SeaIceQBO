@@ -77,9 +77,9 @@ def readWAF(varnames,runnames,experiments,qbophase):
     
     ### Call functions for variable profile data for polar cap
     lat,lon,time,lev,varhit = DO.readMeanExperiAll('%s' % varnames,
-                                                'HIT','profile')
+                                                'HIT','profilesiberia')
     lat,lon,time,lev,varfict = DO.readMeanExperiAll('%s' % varnames,
-                                                'FICT','profile')
+                                                'FICT','profilesiberia')
     
     ### Create 2d array of latitude and longitude
     lon2,lat2 = np.meshgrid(lon,lat)
@@ -124,9 +124,6 @@ def readWAF(varnames,runnames,experiments,qbophase):
     var_mohitpos = var_mo[0][pos_hit,:]
     var_mofictpos = var_mo[1][pos_fict,:]
     
-    var_mohitnon = var_mo[0][non_hit,:]
-    var_mofictnon = var_mo[1][non_fict,:]
-    
     var_mohitneg = var_mo[0][neg_hit,:]
     var_mofictneg = var_mo[1][neg_fict,:]
     
@@ -150,8 +147,8 @@ def readWAF(varnames,runnames,experiments,qbophase):
     return diffruns,pruns,lev
 
 ### Read in data
-diffwafz,pwafz,lev = readWAF('WAFZ',runnames,experiments,qbophase)
-diffwafy,pwafy,lev = readWAF('WAFY',runnames,experiments,qbophase)
+diffwafz,pwafz,lev = readWAF('WAFZs',runnames,experiments,qbophase)
+diffwafy,pwafy,lev = readWAF('WAFYs',runnames,experiments,qbophase)
 
 ### Assign to lists for plotting
 diffruns = np.append(diffwafz,diffwafy,axis=0)
@@ -282,9 +279,9 @@ cbar.outline.set_edgecolor('dimgrey')
 plt.subplots_adjust(wspace=0.22)
 
 if MASK == True:
-    plt.savefig(directoryfigure + 'allExperiments_WAF_MASK_daily_FICTHIT.png',
+    plt.savefig(directoryfigure + 'allExperiments_WAF_MASK_daily_FICTHIT_Siberia.png',
                 dpi=300)
 else:
-    plt.savefig(directoryfigure + 'allExperiments_WAF_daily_FICTHIT.png',
+    plt.savefig(directoryfigure + 'allExperiments_WAF_daily_FICTHIT_Siberia.png',
         dpi=300)
 print('Completed: Script done!')                                
