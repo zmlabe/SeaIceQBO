@@ -57,13 +57,45 @@ def readExperi(directory,varid,experi,level):
     
     ### Read in Data
     if level == 'surface': # 3d variables
-        data = Dataset(filename,'r')
-        time = data.variables['time'][:]
-        lev = 'surface'
-        lat = data.variables['latitude'][:]
-        lon = data.variables['longitude'][:]
-        varq = data.variables['%s' % varid][:]
-        data.close()
+        if any([varid=='DEPF',varid=='EPY',varid=='EPZ',
+            varid=='WAFZ850',varid=='WAFZ150',
+            varid=='WAFY850',varid=='WAFY150',varid=='WAFZ',varid=='WAFY']):
+        ### Read in Data
+            if level == 'surface': # 3d variables
+                data = Dataset(filename,'r')
+                varq = data.variables['%s' % varid][:]
+                data.close()
+                
+                dataq = Dataset(totaldirectory + 'T2M_1800-1941.nc')
+                time = dataq.variables['time'][:]
+                lev = 'surface'
+                lat = dataq.variables['latitude'][:]
+                lon = dataq.variables['longitude'][:]
+                dataq.close()
+            elif level == 'profile': # 4d variables
+                if varid == 'WAFZ' or varid == 'WAFY':
+                    data = Dataset(filename,'r')
+                    varq = data.variables['%s' % varid][:,:,:,:]
+                    data.close()
+                else:
+                    data = Dataset(filename,'r')
+                    varq = data.variables['%s' % varid][:,:,:,0]
+                    data.close()
+    
+                dataq = Dataset(totaldirectory + 'TEMP_1800-1941.nc')
+                time = dataq.variables['time'][:]
+                lev = dataq.variables['level'][:]
+                lat = dataq.variables['latitude'][:]
+                lon = dataq.variables['longitude'][:]
+                dataq.close()
+        else:
+            data = Dataset(filename,'r')
+            time = data.variables['time'][:]
+            lev = 'surface'
+            lat = data.variables['latitude'][:]
+            lon = data.variables['longitude'][:]
+            varq = data.variables['%s' % varid][:]
+            data.close()
     elif level == 'profile': # 4d variables
         data = Dataset(filename,'r')
         time = data.variables['time'][:]
@@ -102,8 +134,8 @@ def readExperi(directory,varid,experi,level):
 ### Test function -- no need to use    
 #directory = '/seley/zlabe/simu/'
 ##varid = 'T2M'
-#varid = 'TEMP'
-#experi = 'NOQBO'
-#level = 'profile'
+#varid = 'WAFZ850'
+#experi = 'CTLN'
+#level = 'surface'
 #    
 #lat,lon,time,lev,var = readExperi(directory,varid,experi,level)
