@@ -118,7 +118,8 @@ for v in range(len(varnames)):
     tas_mofictneg = tas_mo[1][neg_fict,:,:]
     
     ### Take at 60N 
-    latq = np.where((lat>59) & (lat<61))[0]
+#    latq = np.where((lat>59) & (lat<61))[0]
+    latq = np.where((lat>49) & (lat<51))[0]
     
     ### Compute comparisons for fictHIT - taken ensemble average at 60N (index 79)
     ### +QBO
@@ -256,4 +257,4 @@ for i in range(6):
     
     plt.subplots_adjust(wspace=0.05)
 
-plt.savefig(directoryfigure + 'WaveInterferenceProfile_%s.png' % period,dpi=900)
+plt.savefig(directoryfigure + 'WaveInterferenceProfile_%s_50N.png' % period,dpi=900)

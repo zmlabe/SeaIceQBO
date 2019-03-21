@@ -79,6 +79,9 @@ def readMeanExperiAll(varid,experi,level):
     elif level == 'profilesiberia': # 2d variable
         var = np.empty((ENS,212,17))
         var2 = np.empty((ENS,212,17))
+    elif level == 'profileregional': # 2d variable
+        var = np.empty((ENS,212,17))
+        var2 = np.empty((ENS,212,17))
 
     ###########################################################################
     ###########################################################################
@@ -100,7 +103,7 @@ def readMeanExperiAll(varid,experi,level):
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
         elif varid == 'U200' or varid == 'U300' or varid == 'U700':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
-        elif varid == 'SLP':
+        elif varid == 'SLP' or varid == 'U10':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
         elif level == 'profile2':
             filename = totaldirectory + varid + '_%s.nc' % (i+1)
@@ -116,6 +119,15 @@ def readMeanExperiAll(varid,experi,level):
         elif varid == 'WAFZs':
             varidn = 'WAFZ'
             filename = totaldirectory + varidn + '_%s_' % (i+1) + 'mean_Siberia.nc'
+        elif varid == 'GEOP_a':
+            varidn = 'GEOP'
+            filename = totaldirectory + varidn + '_%s_' % (i+1) + 'atlantic.nc'
+        elif varid == 'GEOP_s':
+            varidn = 'GEOP'
+            filename = totaldirectory + varidn + '_%s_' % (i+1) + 'siberia.nc'
+        elif varid == 'GEOP_p':
+            varidn = 'GEOP'
+            filename = totaldirectory + varidn + '_%s_' % (i+1) + 'pacific.nc'
         
         ### Read in Data
         if varid == 'MHF100':
@@ -170,6 +182,14 @@ def readMeanExperiAll(varid,experi,level):
             lon = data.variables['longitude'][:]
             var[i,:,:] = data.variables['%s' % varidn][:]
             data.close()
+        elif level == 'profileregional': # 4d variables
+            data = Dataset(filename,'r')
+            time = data.variables['time'][:]
+            lev = data.variables['level'][:]
+            lat = data.variables['latitude'][:]
+            lon = data.variables['longitude'][:]
+            var[i,:,:] = data.variables['%s' % varidn][:]
+            data.close()  
             
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
@@ -195,7 +215,7 @@ def readMeanExperiAll(varid,experi,level):
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
         elif varid == 'U200' or varid == 'U300' or varid == 'U700':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
-        elif varid == 'SLP':
+        elif varid == 'SLP' or varid == 'U10':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
         elif level == 'profile2':
             filename2 = totaldirectory2 + varid + '_%s.nc' % (i+101)
@@ -211,6 +231,15 @@ def readMeanExperiAll(varid,experi,level):
         elif varid == 'WAFZs':
             varidn = 'WAFZ'
             filename2 = totaldirectory2 + varidn + '_%s_' % (i+101) + 'mean_Siberia.nc'
+        elif varid == 'GEOP_a':
+            varidn = 'GEOP'
+            filename2 = totaldirectory2 + varidn + '_%s_' % (i+101) + 'atlantic.nc'
+        elif varid == 'GEOP_s':
+            varidn = 'GEOP'
+            filename2 = totaldirectory2 + varidn + '_%s_' % (i+101) + 'siberia.nc'
+        elif varid == 'GEOP_p':
+            varidn = 'GEOP'
+            filename2 = totaldirectory2 + varidn + '_%s_' % (i+101) + 'pacific.nc'
         
         ### Read in Data
         if varid == 'MHF100':
@@ -238,7 +267,7 @@ def readMeanExperiAll(varid,experi,level):
             var2[i,:,:] = data2.variables['%s' % varid][:]
             data2.close()   
         elif level == 'profile2': # 4d variables
-            data2 = Dataset(filename,'r')
+            data2 = Dataset(filename2,'r')
             time2 = data2.variables['time'][:]
             lev2 = data2.variables['level'][:]
             lat2 = data2.variables['latitude'][:]
@@ -246,7 +275,7 @@ def readMeanExperiAll(varid,experi,level):
             var2[i,:,:] = data2.variables['%s' % varid][:,7,:,:]
             data2.close() 
         elif level == 'profile3': # 4d variables
-            data2 = Dataset(filename,'r')
+            data2 = Dataset(filename2,'r')
             time2 = data2.variables['time'][:]
             lev2 = data2.variables['level'][:]
             lat2 = data2.variables['latitude'][:]
@@ -260,7 +289,15 @@ def readMeanExperiAll(varid,experi,level):
             lat2 = data2.variables['latitude'][:]
             lon2 = data2.variables['longitude'][:]
             var2[i,:,:] = data2.variables['%s' % varidn][:]
-            data2.close()   
+            data2.close() 
+        elif level == 'profileregional': # 4d variables
+            data2 = Dataset(filename2,'r')
+            time2 = data2.variables['time'][:]
+            lev2 = data2.variables['level'][:]
+            lat2 = data2.variables['latitude'][:]
+            lon2 = data2.variables['longitude'][:]
+            var2[i,:,:] = data2.variables['%s' % varidn][:]
+            data2.close()
         else:
             print(ValueError('Wrong height - (surface or profile!)!'))    
         print('Completed: Read data for *%s%s* : %s!' % (experi[:4],
@@ -277,7 +314,7 @@ def readMeanExperiAll(varid,experi,level):
     return lat,lon,time,lev,varall
         
 ### Test function -- no need to use    
-#varid = 'MHF100'
-#experi = 'HIT'
-#level = 'none'  
+#varid = 'GEOP_a'
+#experi = 'FICT'
+#level = 'profileregional'  
 #lat,lon,time,lev,var = readMeanExperiAll(varid,experi,level)

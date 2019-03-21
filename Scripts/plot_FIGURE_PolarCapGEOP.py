@@ -152,7 +152,7 @@ for v in range(len(varnames)):
         plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
         plt.yticks(zscale,map(str,zscale),ha='right',fontsize=6)
         plt.minorticks_off()
-        plt.xlim([30,120])
+        plt.xlim([30,210])
         plt.ylim([1000,10])
         
         if varnames[v] == 'GEOP':
@@ -162,7 +162,7 @@ for v in range(len(varnames)):
         ### Add experiment text to subplot
         qbophaseq = [r'QBO-W',r'QBO-E']
         ax1.text(0.5,1.05,r'\textbf{%s}' % qbophaseq[i],
-                 ha='center',va='center',color='dimgray',fontsize=17,
+                 ha='center',va='center',color='dimgrey',fontsize=17,
                  transform=ax1.transAxes)
         
         if i == 0:
@@ -173,7 +173,7 @@ for v in range(len(varnames)):
                         extend='max',extendfrac=0.07,drawedges=False)
 
     if varnames[v] == 'GEOP':
-        cbar.set_label(r'\textbf{m}',fontsize=11,color='dimgray')
+        cbar.set_label(r'\textbf{m}',fontsize=11,color='k')
         
     cbar.set_ticks(barlim)
     cbar.set_ticklabels(list(map(str,barlim))) 
@@ -183,5 +183,5 @@ for v in range(len(varnames)):
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.21,top=0.9)
 
-    plt.savefig(directoryfigure + 'Response_GEOP_PolarCap_OND.png',dpi=900)
+    plt.savefig(directoryfigure + 'Response_GEOP_PolarCap.png',dpi=900)
     print('Completed: Script done!')                                

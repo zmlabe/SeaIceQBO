@@ -1,10 +1,10 @@
 """
-Plot manuscript figure for WAFz and relative change in refractive index
+Plot manuscript figure for WAFz and change in zonal wind
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 2 November 2018
+    Date   : 20 March 2019
 """
 
 ### Import modules
@@ -43,7 +43,7 @@ period = 'ND'
 varnames = ['WAFZ']
 
 ### Call function for WAFz data for each run
-def readWAFz(varnames,qbophase):
+def readWAFz(varnames,qbophase,period):
     lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[0],'HIT',
                                                'profile')
     lat,lon,time,lev,tasfict = MO.readExperiAll('%s' % varnames[0],'FICT',
@@ -139,20 +139,104 @@ def readWAFz(varnames,qbophase):
     pruns_mo = [pvalue_FICTHITneg,pvalue_FICTHITpos,pvalue_FICTHITneg]
     return diffruns_mo,pruns_mo,lat,lon,lev
 
+def readU(varnames,qbophase,period):
+    lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[0],'HIT',
+                                               'profile')
+    lat,lon,time,lev,tasfict = MO.readExperiAll('%s' % varnames[0],'FICT',
+                                                'profile')
+    
+    ### Create 2d array of latitude and longitude
+    lon2,lat2 = np.meshgrid(lon,lat)
+    
+    ### Read in QBO phases 
+    filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+    filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+    filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
+    filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
+    pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+101)
+    neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+101)    
+    
+    filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+    filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+    filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
+    filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
+    pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+101)
+    neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
+                        np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+101)    
+    ### Concatonate runs
+    runs = [tashit,tasfict]
+    
+    ### Separate per periods (ON,DJ,FM)
+    if period == 'ON': 
+        tas_mo = np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = np.nanmean(runs[i][:,9:11,:,:,:],axis=1) 
+    elif period == 'DJ':     
+        tas_mo = np.empty((3,tashit.shape[0]-1,tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i],tas_mo[i] = UT.calcDecJan(runs[i],runs[i],lat,
+                                                lon,'profile',1) 
+    elif period == 'FM':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = np.nanmean(runs[i][:,1:3,:,:,:],axis=1)
+    elif period == 'DJF':
+        tas_mo= np.empty((3,tashit.shape[0]-1,tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i],tas_mo[i] = UT.calcDecJanFeb(runs[i],runs[i],lat,
+                                                  lon,'profile',1)   
+    elif period == 'M':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,2,:,:,:]
+    elif period == 'D':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,-1,:,:,:]
+    elif period == 'N':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = runs[i][:,-2,:,:,:]
+    elif period == 'ND':
+        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
+        for i in range(len(runs)):
+            tas_mo[i] = np.nanmean(runs[i][:,-2:,:,:,:],axis=1)
+    else:
+        ValueError('Wrong period selected! (ON,DJ,FM)')
+        
+    ### Composite by QBO phase    
+    tas_mohitposq = tas_mo[0][pos_hit,:,:]
+    tas_mofictposq = tas_mo[1][pos_fict,:,:]
+    
+    tas_mohitnegq = tas_mo[0][neg_hit,:,:]
+    tas_mofictnegq = tas_mo[1][neg_fict,:,:]
+    
+    ### Take zonal average
+    tas_mohitpos = np.nanmean(tas_mohitposq,axis=3)
+    tas_mofictpos = np.nanmean(tas_mofictposq,axis=3)
+    
+    tas_mohitneg = np.nanmean(tas_mohitnegq,axis=3)
+    tas_mofictneg = np.nanmean(tas_mofictnegq,axis=3)
+    
+    ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)
+    ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)
+    diffruns_mo = [ficthitneg,ficthitpos,ficthitneg-ficthitpos]
+    
+    ### Calculate significance 
+    stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(tas_mohitpos,
+                                                         tas_mofictpos)
+    stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(tas_mohitneg,
+                                                         tas_mofictneg)
+    
+    pruns_mo = [pvalue_FICTHITneg,pvalue_FICTHITpos,pvalue_FICTHITneg]
+    return diffruns_mo,pruns_mo,lat,lon,lev
+
 ### Retrieve WAFz
-diffruns_mo,pruns_mo,lat,lon,lev = readWAFz(varnames,qbophase)
-
-### Retrieve wave indices
-wavehitposq,wavehitnegq,wavefictposq,wavefictnegq = RW.callWaveIndex()
-
-### Compute ND mean
-wavehitpos = np.nanmean(wavehitposq[:,2:4,:,:],axis=1)
-wavehitneg = np.nanmean(wavehitnegq[:,2:4,:,:],axis=1)
-wavefictpos = np.nanmean(wavefictposq[:,2:4,:,:],axis=1)
-wavefictneg = np.nanmean(wavefictnegq[:,2:4,:,:],axis=1)
-
-### Compute ensemble means
-wavediff = (np.nanmean(wavefictneg,axis=0) - np.nanmean(wavehitpos,axis=0))/np.nanmean(wavehitpos,axis=0)*100
+diffruns_mo,pruns_mo,lat,lon,lev = readWAFz(varnames,qbophase,period)
+u_mo,u_p,lat,lon,lev = readU(['U'],qbophase,period)
 
 ###########################################################################
 ###########################################################################
@@ -196,8 +280,8 @@ for i in range(len(diffruns_mo)):
     if any([i==0,i==1]):
         plt.contourf(lat,lev,pruns,colors='None',hatches=['////'],
                      linewidth=5)   
-#    if i==2:
-#        plt.contour(lat,lev,wavediff,np.arange(-90,91,10),colors='k',linewidths=0.7)
+
+    plt.contour(lat,lev,u_mo[i],np.arange(-90,91,0.25),colors='dimgrey',linewidths=0.7)
     
     plt.gca().invert_yaxis()
     plt.yscale('log',nonposy='clip')
@@ -229,7 +313,7 @@ cbar_ax = fig.add_axes([0.312,0.1,0.4,0.03])
 cbar = fig.colorbar(cs,cax=cbar_ax,orientation='horizontal',
                     extend='max',extendfrac=0.07,drawedges=False)
 
-cbar.set_label(r'\textbf{Normalized WAFz}',fontsize=11,color='dimgray',labelpad=1)
+cbar.set_label(r'\textbf{Normalized WAFz}',fontsize=10,color='k',labelpad=1)
     
 cbar.set_ticks(barlim)
 cbar.set_ticklabels(list(map(str,barlim))) 
@@ -239,6 +323,6 @@ cbar.outline.set_edgecolor('dimgrey')
 plt.subplots_adjust(wspace=0.24)
 plt.subplots_adjust(bottom=0.21)
 
-plt.savefig(directoryfigure + 'WAFz_QBO_%s_WaveGuide.png' % period,dpi=300)
+plt.savefig(directoryfigure + 'WAFz_QBO_%s_WAFzU.png' % period,dpi=900)
 print('Completed: Script done!')
 
