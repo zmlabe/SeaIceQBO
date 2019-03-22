@@ -15,6 +15,7 @@ import read_DailyOutput_AllMembers as DO
 import calc_Utilities as UT
 import scipy.stats as sts
 from netCDF4 import Dataset
+import cmocean
 
 ### Define directories
 directorydata = '/surtsey/zlabe/simu/'
@@ -226,7 +227,7 @@ def readMHF100():
     
     return diffruns
 
-def calcLinearTrend(data,length):
+def calcSmooth(data,length):
     """
     Calculates moving average for n number of months
     
@@ -260,43 +261,112 @@ def calcLinearTrend(data,length):
     return ave
 
 ### Call functions
-diffmhf = readMHF100()
-diffslp = readVariables('SLP')
-difftemp = readVariables('T1000')
-diffu10 = readU10('U10')
-smooth = True
-smoothq = 10
-    
-## Calculate MHF anomalies for neg
-mhfneg = (np.nanmean(diffmhf[1],axis=0) - np.nanmean(diffmhf[3],axis=0))/ \
-                    np.nanstd(diffmhf[3],axis=0)
-slpneg = (np.nanmean(diffslp[1],axis=0) - np.nanmean(diffslp[3],axis=0))/ \
-                    np.nanstd(diffslp[3],axis=0) 
-tempneg = (np.nanmean(difftemp[1],axis=0) - np.nanmean(difftemp[3],axis=0))/ \
-                    np.nanstd(difftemp[3],axis=0)                     
-u10neg = (np.nanmean(diffu10[1],axis=0) - np.nanmean(diffu10[3],axis=0))/ \
-                    np.nanstd(diffu10[3],axis=0)     
-    
-#### Calculate MHF anomalies for pos
-mhfpos = (np.nanmean(diffmhf[0],axis=0) - np.nanmean(diffmhf[2],axis=0))/ \
-                    np.nanstd(diffmhf[2],axis=0)
-slppos = (np.nanmean(diffslp[0],axis=0) - np.nanmean(diffslp[2],axis=0))/ \
-                    np.nanstd(diffslp[2],axis=0) 
-temppos = (np.nanmean(difftemp[0],axis=0) - np.nanmean(difftemp[2],axis=0))/ \
-                    np.nanstd(difftemp[2],axis=0)                     
-u10pos = (np.nanmean(diffu10[0],axis=0) - np.nanmean(diffu10[2],axis=0))/ \
-                    np.nanstd(diffu10[2],axis=0)  
-                    
-### Calculate smoothing                    
-if smooth == True:
-    mhfneg = calcLinearTrend(mhfneg,smoothq)
-    slpneg = calcLinearTrend(slpneg,smoothq)
-    tempneg = calcLinearTrend(tempneg,smoothq)
-    u10neg = calcLinearTrend(u10neg,smoothq)
-    mhfpos = calcLinearTrend(mhfpos,smoothq)
-    slppos = calcLinearTrend(slppos,smoothq)
-    temppos = calcLinearTrend(temppos,smoothq)
-    u10pos = calcLinearTrend(u10pos,smoothq)
+#diffmhf = readMHF100()
+#diffslp = readVariables('SLP')
+#difftemp = readVariables('T1000')
+#diffu10 = readU10('U10')
+#smooth = True
+#smoothq = 10
+#
+#### Calculate smoothing                    
+#if smooth == True:
+#    fictmhfpos = np.empty((diffmhf[0].shape))
+#    fictmhfneg = np.empty((diffmhf[1].shape))
+#    fictslppos = np.empty((diffmhf[0].shape))
+#    fictslpneg = np.empty((diffmhf[1].shape))
+#    ficttemppos = np.empty((diffmhf[0].shape))
+#    ficttempneg = np.empty((diffmhf[1].shape))
+#    fictu10pos = np.empty((diffmhf[0].shape))
+#    fictu10neg = np.empty((diffmhf[1].shape))
+#    hitmhfpos = np.empty((diffmhf[0].shape))
+#    hitmhfneg = np.empty((diffmhf[1].shape))
+#    hitslppos = np.empty((diffmhf[0].shape))
+#    hitslpneg = np.empty((diffmhf[1].shape))
+#    hittemppos = np.empty((diffmhf[0].shape))
+#    hittempneg = np.empty((diffmhf[1].shape))
+#    hitu10pos = np.empty((diffmhf[0].shape))
+#    hitu10neg = np.empty((diffmhf[1].shape))
+#    for i in range(diffmhf[0].shape[0]):
+#        fictmhfpos[i,:] = calcSmooth(diffmhf[0][i,:],smoothq)
+#        hitmhfpos[i,:] = calcSmooth(diffmhf[2][i,:],smoothq)
+#        
+#        fictslppos[i,:] = calcSmooth(diffslp[0][i,:],smoothq)
+#        hitslppos[i,:] = calcSmooth(diffslp[2][i,:],smoothq)
+#        
+#        ficttemppos[i,:] = calcSmooth(difftemp[0][i,:],smoothq)
+#        hittemppos[i,:] = calcSmooth(difftemp[2][i,:],smoothq)
+#        
+#        fictu10pos[i,:] = calcSmooth(diffu10[0][i,:],smoothq)
+#        hitu10pos[i,:] = calcSmooth(diffu10[2][i,:],smoothq)
+#    for i in range(diffmhf[1].shape[0]):
+#        fictmhfneg[i,:] = calcSmooth(diffmhf[1][i,:],smoothq)
+#        hitmhfneg[i,:] = calcSmooth(diffmhf[3][i,:],smoothq)
+#        
+#        fictslpneg[i,:] = calcSmooth(diffslp[1][i,:],smoothq)
+#        hitslpneg[i,:] = calcSmooth(diffslp[3][i,:],smoothq)
+#        
+#        ficttempneg[i,:] = calcSmooth(difftemp[1][i,:],smoothq)
+#        hittempneg[i,:] = calcSmooth(difftemp[3][i,:],smoothq)
+#        
+#        fictu10neg[i,:] = calcSmooth(diffu10[1][i,:],smoothq)
+#        hitu10neg[i,:] = calcSmooth(diffu10[3][i,:],smoothq)
+#    
+### Calculate MHF anomalies for neg
+#mhfneg = (np.nanmean(fictmhfneg,axis=0) - np.nanmean(hitmhfneg,axis=0))/ \
+#                    np.nanstd(hitmhfneg,axis=0)
+#slpneg = (np.nanmean(fictslpneg,axis=0) - np.nanmean(hitslpneg,axis=0))/ \
+#                    np.nanstd(hitslpneg,axis=0) 
+#tempneg = (np.nanmean(ficttempneg,axis=0) - np.nanmean(hittempneg,axis=0))/ \
+#                    np.nanstd(hittempneg,axis=0)                     
+#u10neg = (np.nanmean(fictu10neg,axis=0) - np.nanmean(hitu10neg,axis=0))/ \
+#                    np.nanstd(hitu10neg,axis=0)     
+#    
+##### Calculate MHF anomalies for pos
+#mhfpos = (np.nanmean(fictmhfpos,axis=0) - np.nanmean(hitmhfpos,axis=0))/ \
+#                    np.nanstd(hitmhfpos,axis=0)
+#slppos = (np.nanmean(fictslppos,axis=0) - np.nanmean(hitslppos,axis=0))/ \
+#                    np.nanstd(hitslppos,axis=0) 
+#temppos = (np.nanmean(ficttemppos,axis=0) - np.nanmean(hittemppos,axis=0))/ \
+#                    np.nanstd(hittemppos,axis=0)                     
+#u10pos = (np.nanmean(fictu10pos,axis=0) - np.nanmean(hitu10pos,axis=0))/ \
+#                    np.nanstd(hitu10pos,axis=0)   
+#                    
+### Calculate statistical significance
+stat,pmhfneg = UT.calc_indttest(fictmhfneg,hitmhfneg)
+stat,pmhfpos = UT.calc_indttest(fictmhfpos,hitmhfpos)
+pmhfneg[np.isnan(pmhfneg)] = 0.0
+pmhfpos[np.isnan(pmhfpos)] = 0.0
+pvalsmhfneg = mhfneg * pmhfneg
+pvalsmhfneg[pvalsmhfneg == 0.0] = np.nan
+pvalsmhfpos = mhfpos * pmhfpos
+pvalsmhfpos[pvalsmhfpos == 0.0] = np.nan
+
+stat,pslpneg = UT.calc_indttest(fictslpneg,hitslpneg)
+stat,pslppos = UT.calc_indttest(fictslppos,hitslppos)
+pslpneg[np.isnan(pslpneg)] = 0.0
+pslppos[np.isnan(pslppos)] = 0.0
+pvalsslpneg = slpneg * pslpneg
+pvalsslpneg[pvalsslpneg == 0.0] = np.nan
+pvalsslppos = slppos * pslppos
+pvalsslppos[pvalsslppos == 0.0] = np.nan
+
+stat,ptempneg = UT.calc_indttest(ficttempneg,hittempneg)
+stat,ptemppos = UT.calc_indttest(ficttemppos,hittemppos)
+ptempneg[np.isnan(ptempneg)] = 0.0
+ptemppos[np.isnan(ptemppos)] = 0.0
+pvalstempneg = tempneg * ptempneg
+pvalstempneg[pvalstempneg == 0.0] = np.nan
+pvalstemppos = temppos * ptemppos
+pvalstemppos[pvalstemppos == 0.0] = np.nan
+
+stat,pu10neg = UT.calc_indttest(fictu10neg,hitu10neg)
+stat,pu10pos = UT.calc_indttest(fictu10pos,hitu10pos)
+pu10neg[np.isnan(pu10neg)] = 0.0
+pu10pos[np.isnan(pu10pos)] = 0.0
+pvalsu10neg = u10neg * pu10neg
+pvalsu10neg[pvalsu10neg == 0.0] = np.nan
+pvalsu10pos = u10pos * pu10pos
+pvalsu10pos[pvalsu10pos == 0.0] = np.nan
  
 ##############################################################################
 ##############################################################################
@@ -335,26 +405,36 @@ ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 
 plt.axhline(0,linestyle=':',linewidth=2,color='dimgrey',dashes=(1,0.3))
 
-plt.plot(mhfneg,color='darkgreen',label=r'\textbf{MHF100}',linewidth=2)
-plt.plot(slpneg,color='darkred',label=r'\textbf{SLP}',linewidth=2)
-plt.plot(tempneg,color='darkblue',label=r'\textbf{T1000}',linewidth=2)
-plt.plot(u10neg,color='darkorange',label=r'\textbf{U10}',linewidth=2)
+plt.plot(mhfneg,color=cmocean.cm.thermal(0.1),
+         linewidth=1)
+plt.plot(slpneg,color=cmocean.cm.thermal(0.3),
+         linewidth=1)
+plt.plot(tempneg,color=cmocean.cm.thermal(0.61),
+         linewidth=1)
+plt.plot(u10neg,color=cmocean.cm.thermal(0.77),
+         linewidth=1)
+
+plt.plot(pvalsmhfneg,color=cmocean.cm.thermal(0.1),
+         linewidth=3,label=r'\textbf{MHF100}')
+plt.plot(pvalsslpneg,color=cmocean.cm.thermal(0.3),
+         linewidth=3,label=r'\textbf{SLP}')
+plt.plot(pvalstempneg,color=cmocean.cm.thermal(0.61),
+         linewidth=3,label=r'\textbf{T1000}')
+plt.plot(pvalsu10neg,color=cmocean.cm.thermal(0.77),
+         linewidth=3,label=r'\textbf{U10}')
 
 plt.legend(shadow=False,fontsize=9,loc='lower center',
            fancybox=True,frameon=False,ncol=5)
 plt.ylabel(r'\textbf{Normalized Indices}',color='dimgrey',fontsize=13)
 
 plt.yticks(np.arange(-5,6,0.5),list(map(str,np.arange(-5,6,0.5))),fontsize=9)
-plt.ylim([-0.5,0.5])
+plt.ylim([-0.8,0.8])
 
 xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
 plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
 plt.xlim([30,210])
 
-if smooth == True:
-    plt.savefig(directoryfigure + 'SiberianTimeSeries_neg_smooth.png',dpi=300)
-elif smooth == False:
-    plt.savefig(directoryfigure + 'SiberianTimeSeries_neg.png',dpi=300)
+plt.savefig(directoryfigure + 'SiberianTimeSeries_neg_smooth2.png',dpi=300)
 
 ###############################################################################
 
@@ -372,27 +452,36 @@ ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
 
 plt.axhline(0,linestyle=':',linewidth=2,color='dimgrey',dashes=(1,0.3))
 
-plt.plot(mhfpos,color='darkgreen',label=r'\textbf{MHF100}',linewidth=2)
-plt.plot(slppos,color='darkred',label=r'\textbf{SLP}',linewidth=2)
-plt.plot(temppos,color='darkblue',label=r'\textbf{T1000}',linewidth=2)
-plt.plot(u10pos,color='darkorange',label=r'\textbf{U10}',linewidth=2)
+plt.plot(mhfpos,color=cmocean.cm.thermal(0.1),linewidth=1)
+plt.plot(slppos,color=cmocean.cm.thermal(0.3),linewidth=1)
+plt.plot(temppos,color=cmocean.cm.thermal(0.61),linewidth=1)
+plt.plot(u10pos,color=cmocean.cm.thermal(0.77),linewidth=1)
+
+plt.plot(pvalsmhfpos,color=cmocean.cm.thermal(0.1),
+         linewidth=3,label=r'\textbf{MHF100}')
+plt.plot(pvalsslppos,color=cmocean.cm.thermal(0.3),
+         linewidth=3,label=r'\textbf{SLP}')
+plt.plot(pvalstemppos,color=cmocean.cm.thermal(0.61),
+         linewidth=3,label=r'\textbf{T1000}')
+plt.plot(pvalsu10pos,color=cmocean.cm.thermal(0.77),
+         linewidth=3,label=r'\textbf{U10}')
 
 plt.legend(shadow=False,fontsize=9,loc='lower center',
            fancybox=True,frameon=False,ncol=5)
 plt.ylabel(r'\textbf{Normalized Indices}',color='dimgrey',fontsize=13)
 
 plt.yticks(np.arange(-5,6,0.5),list(map(str,np.arange(-5,6,0.5))),fontsize=9)
-plt.ylim([-0.5,0.5])
+plt.ylim([-0.8,0.8])
 
 xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
 plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
 plt.xlim([30,210])
 
-if smooth == True:
-    plt.savefig(directoryfigure + 'SiberianTimeSeries_pos_smooth.png',dpi=300)
-elif smooth == False:
-    plt.savefig(directoryfigure + 'SiberianTimeSeries_pos.png',dpi=300)
+plt.savefig(directoryfigure + 'SiberianTimeSeries_pos_smooth2.png',dpi=300)
 
+###############################################################################
+###############################################################################
+###############################################################################
 ### Calculate correlations
 if smooth == False:
     negcorr,negp = sts.pearsonr(slpneg,tempneg)
@@ -402,3 +491,98 @@ elif smooth == True:
     poscorr,posp = sts.pearsonr(slppos[smoothq-1:],temppos[smoothq-1:])
 print('\nQBO-E---> %s correlation at p-val=%s' % (negcorr,negp)) 
 print('QBO-W---> %s correlation at p-val=%s' % (poscorr,posp)) 
+
+###############################################################################
+###############################################################################
+###############################################################################
+fig = plt.figure()
+ax = plt.subplot(212)
+
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
+
+plt.axhline(0,linestyle=':',linewidth=2,color='dimgrey',dashes=(1,0.3))
+
+plt.plot(mhfneg,color=cmocean.cm.thermal(0.1),
+         linewidth=1)
+plt.plot(slpneg,color=cmocean.cm.thermal(0.3),
+         linewidth=1)
+plt.plot(tempneg,color=cmocean.cm.thermal(0.61),
+         linewidth=1)
+plt.plot(u10neg,color=cmocean.cm.thermal(0.77),
+         linewidth=1)
+
+plt.plot(pvalsmhfneg,color=cmocean.cm.thermal(0.1),
+         linewidth=3,label=r'\textbf{MHF100}')
+plt.plot(pvalsslpneg,color=cmocean.cm.thermal(0.3),
+         linewidth=3,label=r'\textbf{SLP}')
+plt.plot(pvalstempneg,color=cmocean.cm.thermal(0.61),
+         linewidth=3,label=r'\textbf{T1000}')
+plt.plot(pvalsu10neg,color=cmocean.cm.thermal(0.77),
+         linewidth=3,label=r'\textbf{U10}')
+
+l = plt.legend(shadow=False,fontsize=7,loc='lower center',
+           fancybox=True,frameon=False,ncol=4,bbox_to_anchor=(0.5,-0.054),
+           labelspacing=0.4,columnspacing=1.2,handletextpad=0.6)
+
+plt.yticks(np.arange(-0.8,0.9,0.4),list(map(str,
+           np.round(np.arange(-0.8,0.9,0.4),2))),fontsize=6)
+plt.ylim([-0.8,0.8])
+
+xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
+plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
+plt.xlim([30,210])
+
+###############################################################################
+ax = plt.subplot(211)
+
+adjust_spines(ax, ['left', 'bottom'])
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+ax.spines['left'].set_color('dimgrey')
+ax.spines['bottom'].set_color('dimgrey')
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
+
+plt.annotate(r'\textbf{QBO-W}',xy=(30,0),xytext=(0.2,0.85),
+             textcoords='figure fraction',color='k',
+             fontsize=17,rotation=0,ha='center',va='center')
+plt.annotate(r'\textbf{QBO-E}',xy=(30,0),xytext=(0.2,0.44),
+             textcoords='figure fraction',color='k',
+             fontsize=17,rotation=0,ha='center',va='center')
+plt.annotate(r'\textbf{Normalized Indices}',xy=(30,0),xytext=(0.05,0.5),
+             textcoords='figure fraction',color='k',
+             fontsize=10,rotation=90,ha='center',va='center')
+
+plt.axhline(0,linestyle=':',linewidth=2,color='dimgrey',dashes=(1,0.3))
+
+plt.plot(mhfpos,color=cmocean.cm.thermal(0.1),linewidth=1)
+plt.plot(slppos,color=cmocean.cm.thermal(0.3),linewidth=1)
+plt.plot(temppos,color=cmocean.cm.thermal(0.61),linewidth=1)
+plt.plot(u10pos,color=cmocean.cm.thermal(0.77),linewidth=1)
+
+plt.plot(pvalsmhfpos,color=cmocean.cm.thermal(0.1),
+         linewidth=3,label=r'\textbf{MHF100}')
+plt.plot(pvalsslppos,color=cmocean.cm.thermal(0.3),
+         linewidth=3,label=r'\textbf{SLP}')
+plt.plot(pvalstemppos,color=cmocean.cm.thermal(0.61),
+         linewidth=3,label=r'\textbf{T1000}')
+plt.plot(pvalsu10pos,color=cmocean.cm.thermal(0.77),
+         linewidth=3,label=r'\textbf{U10}')
+
+plt.yticks(np.arange(-0.8,0.9,0.4),list(map(str,
+           np.round(np.arange(-0.8,0.9,0.4),2))),fontsize=6)
+plt.ylim([-0.8,0.8])
+
+xlabels = [] 
+plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
+plt.xlim([30,210])
+
+plt.savefig(directoryfigure + 'SiberianTimeSeries_subplot_p95.png',dpi=300)
