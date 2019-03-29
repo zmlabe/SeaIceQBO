@@ -6,9 +6,13 @@
 Zachary Labe - [Research Website](http://sites.uci.edu/zlabe/) - [@ZLabe](https://twitter.com/ZLabe)
 
 ## Description
-Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates the atmospheric response to Arctic sea ice loss. We conducted idealized experiments using WACCM4 to composite the phases of the QBO (westerly, easterly, and neutral) and assess the importance (mechanisms) of the stratosphere-troposphere pathway. The QBO in WACCM4 is prescribed by relaxing equatorial zonal winds between 86 and 4 hPa to observed radiosonde data (28-month period). We conduct a series of large ensemble simulations (7 experiments at 200 years each) to increase the signal-to-noise ratio in the stratosphere.
+Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates the atmospheric response to Arctic sea ice loss. We conducted idealized experiments using WACCM4 to composite the phases of the QBO (westerly, easterly, and neutral) and assess the importance (mechanisms) of the stratosphere-troposphere pathway. The QBO in WACCM4 is prescribed by relaxing equatorial zonal winds between 86 and 4 hPa to observed radiosonde data (28-month period). We conduct a series of large ensemble simulations (200 years each) to increase the signal-to-noise ratio in the stratosphere.
 
 + ```Scripts/```: Main [Python](https://www.python.org/) scripts/functions used in data analysis and plotting
+    + ```Make_Figs''': Scripts to generate figures in the main manuscript and supplementary section
+    + ```Miscellaneous''': Scripts for exploratory data analysis (not important to project results)
+    + ```Data_Analysis''': Additional scripts for manuscript analysis 
++ ```Scripts_NOQBO/```: Main [Python](https://www.python.org/) scripts/functions for an additional experiment prescribed with a constant QBO (weak and variable easterlies)
 + ```requirements.txt```: List of environments and modules associated with the most recent version of this project. A Python [Anaconda3 Distribution](https://docs.continuum.io/anaconda/) was used for our analysis. All AGCM experiments were processed through resources on CISL's [Cheyenne](https://www2.cisl.ucar.edu/resources/computational-systems/cheyenne) supercomputer. Tools including [NCL](https://www.ncl.ucar.edu/), [CDO](https://code.mpimet.mpg.de/projects/cdo), and [NCO](http://nco.sourceforge.net/) were also used for initial data manipulation.
 
 ## Data
@@ -20,7 +24,7 @@ Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates th
 
 
 ## Publications
-+ **Labe, Z.M.**, G. Magnusdottir, and Y. Peings, 2018. Linking the Quasi-Biennial Oscillation to the Atmospheric Response to Projected Arctic Sea-Ice Loss in Early Winter, *drafting paper*
++ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2018. The effect of QBO phase on the atmospheric response to projected Arctic sea-ice loss in early winter, *submitted*
 
 
 ## Conferences
