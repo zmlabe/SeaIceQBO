@@ -159,7 +159,7 @@ diffz500,pz500,climoz500,lat,lon = calcVarResp('Z500',period,qbophase)
 diffz300,pz300,climoz300,latc,lonc = calcVarResp('Z300xwave1',period,qbophase)
 diffz30,pz30,climoz30,lat,lon = calcVarResp('Z30',period,qbophase)
 
-varnamesn = [r'U300',r'U300',r'Z500',r'Z500',r'Wave 1',r'Wave 1',r'Z30',r'Z30']
+varnamesn = [r'Z500',r'Z500',r'U300',r'U300',r'Wave 1',r'Wave 1',r'Z30',r'Z30']
     
 ###########################################################################
 ###########################################################################
@@ -175,11 +175,11 @@ for v in range(8):
     
     ### Retrieve variables and pvalues
     if v < 2: 
-        var = diffu300[v]
-        pvar = pu300[v]
+        var = diffz500[v]
+        pvar = pz500[v]
     elif v >= 2 and v < 4: 
-        var = diffz500[v-2]
-        pvar = pz500[v-2]
+        var = diffu300[v-2]
+        pvar = pu300[v-2]
     elif v >= 4 and v < 6:  
         var = diffz300[v-4]
         pvar = pz300[v-4]

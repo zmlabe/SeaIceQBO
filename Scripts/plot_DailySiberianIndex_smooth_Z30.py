@@ -1,10 +1,10 @@
 """
-Plot manuscript figures for daily indices over Siberia
+Plot manuscript figures for daily indices over Siberia with Z30 instead of U10
 
 Notes
 -----
     Author : Zachary Labe
-    Date   : 20 March 2019
+    Date   : 28 March 2019
 """
 
 ### Import modules
@@ -14,7 +14,6 @@ import datetime
 import read_DailyOutput_AllMembers as DO
 import calc_Utilities as UT
 import scipy.stats as sts
-from netCDF4 import Dataset
 import cmocean
 
 ### Define directories
@@ -40,7 +39,7 @@ years = np.arange(year1,year2+1,1)
 ### Call arguments
 runnames = [r'HIT',r'FICT']
 qbophase = ['pos','non','neg']
-def readU10(varnames):
+def readZ30(varnames):
     lat,lon,time,lev,tashit = DO.readMeanExperiAll('%s' % varnames,
                                                 'HIT','surface')
     lat,lon,time,lev,tasfict = DO.readMeanExperiAll('%s' % varnames,
@@ -78,7 +77,7 @@ def readU10(varnames):
     tas_mofictneg = tas_mo[1][neg_fict,:,:,:]
     
     ### Compute comparisons for months - select region
-    if varnames == 'U10' or varnames == 'Z30':
+    if varnames == 'Z30':
         latq = np.where((lat >=65) & (lat <=90))[0]
         fictpos = tas_mofictpos
         fictneg = tas_mofictneg
@@ -264,7 +263,7 @@ def calcSmooth(data,length):
 diffmhf = readMHF100()
 diffslp = readVariables('SLP')
 difftemp = readVariables('T1000')
-diffu10 = readU10('U10')
+diffu10 = readZ30('Z30')
 smooth = True
 smoothq = 10
 
@@ -391,104 +390,12 @@ def adjust_spines(ax, spines):
     else:
         ax.xaxis.set_ticks([]) 
 
-fig = plt.figure()
-ax = plt.subplot(111)
-
-adjust_spines(ax, ['left', 'bottom'])
-ax.spines['top'].set_color('none')
-ax.spines['right'].set_color('none')
-ax.spines['left'].set_color('dimgrey')
-ax.spines['bottom'].set_color('dimgrey')
-ax.spines['left'].set_linewidth(2)
-ax.spines['bottom'].set_linewidth(2)
-ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
-
-plt.axhline(0,linestyle=':',linewidth=2,color='dimgrey',dashes=(1,0.3))
-
-plt.plot(mhfneg,color=cmocean.cm.thermal(0.1),
-         linewidth=1)
-plt.plot(slpneg,color=cmocean.cm.thermal(0.3),
-         linewidth=1)
-plt.plot(tempneg,color=cmocean.cm.thermal(0.61),
-         linewidth=1)
-plt.plot(u10neg,color=cmocean.cm.thermal(0.77),
-         linewidth=1)
-
-plt.plot(pvalsmhfneg,color=cmocean.cm.thermal(0.1),
-         linewidth=3,label=r'\textbf{MHF100}')
-plt.plot(pvalsslpneg,color=cmocean.cm.thermal(0.3),
-         linewidth=3,label=r'\textbf{SHI}')
-plt.plot(pvalstempneg,color=cmocean.cm.thermal(0.61),
-         linewidth=3,label=r'\textbf{T1000}')
-plt.plot(pvalsu10neg,color=cmocean.cm.thermal(0.77),
-         linewidth=3,label=r'\textbf{U10}')
-
-plt.legend(shadow=False,fontsize=9,loc='lower center',
-           fancybox=True,frameon=False,ncol=5)
-plt.ylabel(r'\textbf{Normalized Indices}',color='dimgrey',fontsize=13)
-
-plt.yticks(np.arange(-5,6,0.5),list(map(str,np.arange(-5,6,0.5))),fontsize=9)
-plt.ylim([-0.8,0.8])
-
-xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
-plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
-plt.xlim([30,210])
-
-plt.savefig(directoryfigure + 'SiberianTimeSeries_neg_smooth2.png',dpi=300)
-
-###############################################################################
-
-fig = plt.figure()
-ax = plt.subplot(111)
-
-adjust_spines(ax, ['left', 'bottom'])
-ax.spines['top'].set_color('none')
-ax.spines['right'].set_color('none')
-ax.spines['left'].set_color('dimgrey')
-ax.spines['bottom'].set_color('dimgrey')
-ax.spines['left'].set_linewidth(2)
-ax.spines['bottom'].set_linewidth(2)
-ax.tick_params('both',length=4,width=2,which='major',color='dimgrey')
-
-plt.axhline(0,linestyle=':',linewidth=2,color='dimgrey',dashes=(1,0.3))
-
-plt.plot(mhfpos,color=cmocean.cm.thermal(0.1),linewidth=1)
-plt.plot(slppos,color=cmocean.cm.thermal(0.3),linewidth=1)
-plt.plot(temppos,color=cmocean.cm.thermal(0.61),linewidth=1)
-plt.plot(u10pos,color=cmocean.cm.thermal(0.77),linewidth=1)
-
-plt.plot(pvalsmhfpos,color=cmocean.cm.thermal(0.1),
-         linewidth=3,label=r'\textbf{MHF100}')
-plt.plot(pvalsslppos,color=cmocean.cm.thermal(0.3),
-         linewidth=3,label=r'\textbf{SHI}')
-plt.plot(pvalstemppos,color=cmocean.cm.thermal(0.61),
-         linewidth=3,label=r'\textbf{T1000}')
-plt.plot(pvalsu10pos,color=cmocean.cm.thermal(0.77),
-         linewidth=3,label=r'\textbf{U10}')
-
-plt.legend(shadow=False,fontsize=9,loc='lower center',
-           fancybox=True,frameon=False,ncol=5)
-plt.ylabel(r'\textbf{Normalized Indices}',color='dimgrey',fontsize=13)
-
-plt.yticks(np.arange(-5,6,0.5),list(map(str,np.arange(-5,6,0.5))),fontsize=9)
-plt.ylim([-0.8,0.8])
-
-xlabels = [r'Sep',r'Oct',r'Nov',r'Dec',r'Jan',r'Feb',r'Mar',r'Apr'] 
-plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
-plt.xlim([30,210])
-
-plt.savefig(directoryfigure + 'SiberianTimeSeries_pos_smooth2.png',dpi=300)
-
 ###############################################################################
 ###############################################################################
 ###############################################################################
 ### Calculate correlations
-if smooth == False:
-    negcorr,negp = sts.pearsonr(slpneg,tempneg)
-    poscorr,posp = sts.pearsonr(slppos,temppos)
-elif smooth == True:
-    negcorr,negp = sts.pearsonr(slpneg[smoothq-1:],tempneg[smoothq-1:])
-    poscorr,posp = sts.pearsonr(slppos[smoothq-1:],temppos[smoothq-1:])
+negcorr,negp = sts.pearsonr(slpneg[smoothq-1:],tempneg[smoothq-1:])
+poscorr,posp = sts.pearsonr(slppos[smoothq-1:],temppos[smoothq-1:])
 print('\nQBO-E---> %s correlation at p-val=%s' % (negcorr,negp)) 
 print('QBO-W---> %s correlation at p-val=%s' % (poscorr,posp)) 
 
@@ -525,7 +432,7 @@ plt.plot(pvalsslpneg,color=cmocean.cm.thermal(0.3),
 plt.plot(pvalstempneg,color=cmocean.cm.thermal(0.61),
          linewidth=3,label=r'\textbf{T1000}')
 plt.plot(pvalsu10neg,color=cmocean.cm.thermal(0.77),
-         linewidth=3,label=r'\textbf{U10}')
+         linewidth=3,label=r'\textbf{Z30}')
 
 l = plt.legend(shadow=False,fontsize=7,loc='lower center',
            fancybox=True,frameon=False,ncol=4,bbox_to_anchor=(0.5,-0.054),
@@ -575,7 +482,7 @@ plt.plot(pvalsslppos,color=cmocean.cm.thermal(0.3),
 plt.plot(pvalstemppos,color=cmocean.cm.thermal(0.61),
          linewidth=3,label=r'\textbf{T1000}')
 plt.plot(pvalsu10pos,color=cmocean.cm.thermal(0.77),
-         linewidth=3,label=r'\textbf{U10}')
+         linewidth=3,label=r'\textbf{Z30}')
 
 plt.yticks(np.arange(-0.8,0.9,0.4),list(map(str,
            np.round(np.arange(-0.8,0.9,0.4),2))),fontsize=6)
@@ -585,4 +492,4 @@ xlabels = []
 plt.xticks(np.arange(0,212,30),xlabels,fontsize=6)
 plt.xlim([30,210])
 
-plt.savefig(directoryfigure + 'SiberianTimeSeries_subplot_p95.png',dpi=300)
+plt.savefig(directoryfigure + 'SiberianTimeSeries_subplot_p90_Z30.png',dpi=300)
