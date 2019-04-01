@@ -1,4 +1,4 @@
-# QBO and Arctic sea ice - perturbation study 
+# QBO and Arctic sea ice - perturbation study [![DOI](https://zenodo.org/badge/126902794.svg)](https://zenodo.org/badge/latestdoi/126902794)
 
 ###### Under construction... ```[Python 3.6]```
 
