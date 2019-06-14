@@ -41,6 +41,42 @@ qbophase = ['pos','non','neg']
 period = 'ND'
 letters = ["a","b","c","d","e","f","g","h","i"]
 
+def calc_indttest_90(varx,vary):
+    """
+    Function calculates statistical difference for 2 independent
+    sample t-test
+
+    Parameters
+    ----------
+    varx : 3d array
+    vary : 3d array
+    
+    Returns
+    -------
+    stat = calculated t-statistic
+    pvalue = two-tailed p-value
+
+    Usage
+    -----
+    stat,pvalue = calc_ttest(varx,vary)
+    """
+    print('\n>>> Using calc_ttest function!')
+    
+    ### Import modules
+    import numpy as np
+    import scipy.stats as sts
+    
+    ### 2-independent sample t-test
+    stat,pvalue = sts.ttest_ind(varx,vary,nan_policy='omit')
+    
+    ### Significant at 90% confidence level
+    pvalue[np.where(pvalue >= 0.1)] = np.nan
+    pvalue[np.where(pvalue < 0.1)] = 1.
+    pvalue[np.isnan(pvalue)] = 0.
+    
+    print('*Completed: Finished calc_ttest function!')
+    return stat,pvalue
+
 ### Call function for WAFz data for each run
 def readWAFz(varnames,qbophase,period):
     lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[0],'HIT',
@@ -127,110 +163,19 @@ def readWAFz(varnames,qbophase,period):
     
     ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)/np.nanstd(tas_mofictpos,axis=0)
     ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)/np.nanstd(tas_mofictneg,axis=0)
-    diffruns_mo = [ficthitpos,ficthitneg]
+    diffpos = (tas_mofictpos - tas_mohitpos)/np.nanstd(tas_mofictpos)
+    diffneg = (tas_mofictneg - tas_mohitneg)/np.nanstd(tas_mofictneg)
+    diffall = ficthitneg - ficthitpos
+    diffruns_mo = [diffall]
     
     ### Calculate significance 
     stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(tas_mohitpos,
                                                          tas_mofictpos)
     stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(tas_mohitneg,
                                                          tas_mofictneg)
+    tat_diff,pvalue_diff = calc_indttest_90(diffneg,diffpos)
     
-    pruns_mo = [pvalue_FICTHITpos,pvalue_FICTHITneg]
-    return diffruns_mo,pruns_mo,lat,lon,lev
-
-def readU(varnames,qbophase,period):
-    lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[0],'HIT',
-                                               'profile')
-    lat,lon,time,lev,tasfict = MO.readExperiAll('%s' % varnames[0],'FICT',
-                                                'profile')
-    
-    ### Create 2d array of latitude and longitude
-    lon2,lat2 = np.meshgrid(lon,lat)
-    
-    ### Read in QBO phases 
-    filenamehitp = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-    filenamehitn = directorydata + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-    filenamehitp2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[0]
-    filenamehitn2 = directorydata2 + 'HIT/monthly/QBO_%s_HIT.txt' % qbophase[2]
-    pos_hit = np.append(np.genfromtxt(filenamehitp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamehitp2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_hit = np.append(np.genfromtxt(filenamehitn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamehitn2,unpack=True,usecols=[0],dtype='int')+101)    
-    
-    filenamefictp = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-    filenamefictn = directorydata + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-    filenamefictp2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[0]
-    filenamefictn2 = directorydata2 + 'FICT/monthly/QBO_%s_FICT.txt' % qbophase[2]
-    pos_fict = np.append(np.genfromtxt(filenamefictp,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictp2,unpack=True,usecols=[0],dtype='int')+101)
-    neg_fict = np.append(np.genfromtxt(filenamefictn,unpack=True,usecols=[0],dtype='int'),
-                        np.genfromtxt(filenamefictn2,unpack=True,usecols=[0],dtype='int')+101)    
-    ### Concatonate runs
-    runs = [tashit,tasfict]
-    
-    ### Separate per periods (ON,DJ,FM)
-    if period == 'ON': 
-        tas_mo = np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i] = np.nanmean(runs[i][:,9:11,:,:,:],axis=1) 
-    elif period == 'DJ':     
-        tas_mo = np.empty((3,tashit.shape[0]-1,tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i],tas_mo[i] = UT.calcDecJan(runs[i],runs[i],lat,
-                                                lon,'profile',1) 
-    elif period == 'FM':
-        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i] = np.nanmean(runs[i][:,1:3,:,:,:],axis=1)
-    elif period == 'DJF':
-        tas_mo= np.empty((3,tashit.shape[0]-1,tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i],tas_mo[i] = UT.calcDecJanFeb(runs[i],runs[i],lat,
-                                                  lon,'profile',1)   
-    elif period == 'M':
-        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i] = runs[i][:,2,:,:,:]
-    elif period == 'D':
-        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i] = runs[i][:,-1,:,:,:]
-    elif period == 'N':
-        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i] = runs[i][:,-2,:,:,:]
-    elif period == 'ND':
-        tas_mo= np.empty((3,tashit.shape[0],tashit.shape[2],tashit.shape[3],tashit.shape[4]))
-        for i in range(len(runs)):
-            tas_mo[i] = np.nanmean(runs[i][:,-2:,:,:,:],axis=1)
-    else:
-        ValueError('Wrong period selected! (ON,DJ,FM)')
-        
-    ### Composite by QBO phase    
-    tas_mohitposq = tas_mo[0][pos_hit,:,:]
-    tas_mofictposq = tas_mo[1][pos_fict,:,:]
-    
-    tas_mohitnegq = tas_mo[0][neg_hit,:,:]
-    tas_mofictnegq = tas_mo[1][neg_fict,:,:]
-    
-    ### Take zonal average
-    tas_mohitpos = np.nanmean(tas_mohitposq,axis=3)
-    tas_mofictpos = np.nanmean(tas_mofictposq,axis=3)
-    
-    tas_mohitneg = np.nanmean(tas_mohitnegq,axis=3)
-    tas_mofictneg = np.nanmean(tas_mofictnegq,axis=3)
-    
-    ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)
-    ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)
-    diffruns_mo = [ficthitpos,ficthitneg]
-    
-    ### Calculate significance 
-    stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(tas_mohitpos,
-                                                         tas_mofictpos)
-    stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(tas_mohitneg,
-                                                         tas_mofictneg)
-    
-    pruns_mo = [pvalue_FICTHITpos,pvalue_FICTHITneg]
+    pruns_mo = [pvalue_diff]
     return diffruns_mo,pruns_mo,lat,lon,lev
 
 ### Call functions for variable profile data for polar cap
@@ -275,21 +220,24 @@ def readPolarCap(varnames,qbophase):
         ### Compute comparisons for months - taken ensemble average
         ficthitpos = np.nanmean(var_mofictpos - var_mohitpos,axis=0)
         ficthitneg = np.nanmean(var_mofictneg - var_mohitneg,axis=0)
+        diffpos = var_mofictpos - var_mohitpos
+        diffneg = var_mofictneg - var_mohitneg
+        diffall = np.nanmean(diffneg,axis=0) - np.nanmean(diffpos,axis=0)
         
-        diffruns = [ficthitpos,ficthitneg]
+        diffruns = [diffall]
         
         ### Calculate significance
-        stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(var_mo[1][pos_fict,:],
-                                                             var_mo[0][pos_hit,:])
-        stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(var_mo[1][neg_fict,:],
-                                                             var_mo[0][neg_hit,:])
+#        stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(var_mo[1][pos_fict,:],
+#                                                             var_mo[0][pos_hit,:])
+#        stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(var_mo[1][neg_fict,:],
+#                                                             var_mo[0][neg_hit,:])
+        stat_diff,pvalue_diff = calc_indttest_90(diffneg,diffpos)
     
-        pruns = [pvalue_FICTHITpos,pvalue_FICTHITneg]
+        pruns = [pvalue_diff]
         return diffruns,pruns
         
 ### Read data
 #diffruns_mo,pruns_mo,lat,lon,lev = readWAFz(['WAFZ'],qbophase,period)
-#u_mo,u_p,lat,lon,lev = readU(['U'],qbophase,period)
 #diffrungeop,prunsgeop = readPolarCap(['GEOP'],qbophase)
 
 ###########################################################################
@@ -302,21 +250,21 @@ plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']})
 ### Set limits for contours and colorbars
 limit = np.arange(-0.5,0.51,0.025)
 barlim = np.arange(-0.5,0.6,0.5)
-limitg = np.arange(-150,150.1,5)
-barlimg = np.arange(-150,151,75)
+limitg = np.arange(-200,200.1,5)
+barlimg = np.arange(-200,201,100)
 timeq = np.arange(0,212,1)
 timeqq,levqq = np.meshgrid(timeq,lev) 
 zscale = np.array([1000,700,500,300,200,
                     100,50,30,10])
 latq,levq = np.meshgrid(lat,lev)
 
-fig = plt.figure()
-for i in range(4):
-    ax1 = plt.subplot(2,2,i+1)
+fig = plt.figure(figsize=(5,5))
+for i in range(2):
+    ax1 = plt.subplot(2,1,i+1)
     
-    if i >= 2:
-        var = diffruns_mo[i-2]
-        pruns = pruns_mo[i-2]
+    if i == 1:
+        var = diffruns_mo[i-1]
+        pruns = pruns_mo[i-1]
     
         ax1.spines['top'].set_color('dimgrey')
         ax1.spines['right'].set_color('dimgrey')
@@ -333,11 +281,7 @@ for i in range(4):
         ax1.xaxis.set_ticks_position('bottom')
         ax1.yaxis.set_ticks_position('left')
                 
-        cs = plt.contourf(lat,lev,var,limit,extend='both')
-    
-        plt.contourf(lat,lev,pruns,colors='None',hatches=['////'],
-                     linewidth=5)       
-        plt.contour(lat,lev,u_mo[i-2],np.arange(-90,91,0.25),colors='dimgrey',linewidths=0.7)
+        cs = plt.contourf(lat,lev,var*pruns,limit,extend='both')     
         
         plt.gca().invert_yaxis()
         plt.yscale('log',nonposy='clip')
@@ -351,7 +295,7 @@ for i in range(4):
             
         cmap = cmocean.cm.balance          
         cs.set_cmap(cmap) 
-    elif i < 2:
+    elif i == 0:
         var = diffrungeop[i]
         pvar = prunsgeop[i]
         
@@ -370,9 +314,7 @@ for i in range(4):
         ax1.xaxis.set_ticks_position('bottom')
         ax1.yaxis.set_ticks_position('left')        
         
-        csg = plt.contourf(timeq,lev,var.transpose(),limitg,extend='both')
-        plt.contourf(timeqq,levqq,pvar.transpose(),colors='None',
-                     hatches=['////'])                  
+        csg = plt.contourf(timeq,lev,var.transpose()*pvar.transpose(),limitg,extend='both')              
         
         plt.gca().invert_yaxis()
         plt.yscale('log',nonposy='clip')
@@ -388,15 +330,15 @@ for i in range(4):
         csg.set_cmap(cmap) 
 
     ### Add experiment text to subplot
-    if i < 2:
-        qbophaseq = [r'QBO-W',r'QBO-E']
+    if i == 0:
+        qbophaseq = [r'QBO-E minus QBO-W']
         ax1.text(0.5,1.07,r'\textbf{%s}' % qbophaseq[i],
                  ha='center',va='center',color='dimgray',fontsize=13,
                  transform=ax1.transAxes)
-    if i == 0 or i == 2:
+    if i == 0 or i == 1:
         plt.ylabel(r'\textbf{Pressure (hPa)}',color='k',fontsize=7,
                      labelpad=1)
-    if i == 2 or i==3:
+    if i == 1:
         plt.xlabel(r'\textbf{Latitude ($^\circ$N)}',color='k',fontsize=7,
                              labelpad=1)
     ax1.annotate(r'\textbf{[%s]}' % letters[i],xy=(0,0),
@@ -424,6 +366,6 @@ cbar.outline.set_edgecolor('dimgrey')
 plt.tight_layout()    
 fig.subplots_adjust(hspace=0.18,wspace=0.23,right=0.86)
 
-plt.savefig(directoryfigure + 'Fig2.png',dpi=900)
+plt.savefig(directoryfigure + 'Fig2_Statistics.png',dpi=900)
 print('Completed: Script done!')
 

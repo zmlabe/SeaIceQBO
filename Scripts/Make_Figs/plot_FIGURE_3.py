@@ -164,11 +164,11 @@ def readVariablesTemps(varnames,period,location):
     ### Compute comparisons for months - select region
     if varnames == 'T1000':
         lonq = np.where((lon >=70) & (lon <=140))[0]
-        ficthitpos = tas_mofictpos[:,:,:,lonq]
-        ficthitneg = tas_mofictneg[:,:,:,lonq]
+        ficthitpos = tas_mofictpos[:,:,:,lonq] - tas_mohitpos[:,:,:,lonq]
+        ficthitneg = tas_mofictneg[:,:,:,lonq] - tas_mohitneg[:,:,:,lonq]
         latq = np.where((lat >=35) & (lat <=60))[0]
-        ficthitpos = ficthitpos[:,:,latq]
-        ficthitneg = ficthitneg[:,:,latq]
+        ficthitpos = ficthitpos[:,:,latq,:]
+        ficthitneg = ficthitneg[:,:,latq,:]
         lat2sq = lat2[latq,:]
         lat2s = lat2sq[:,lonq]
         ficthitpos = UT.calc_weightedAve(ficthitpos,lat2s)
@@ -272,7 +272,7 @@ cbar_ax = fig.add_axes([0.5,0.58,0.02,0.3])
 cbar = fig.colorbar(cs,cax=cbar_ax,orientation='vertical',
                     extend='max',extendfrac=0.07,drawedges=False)
 
-cbar.set_label(r'\textbf{Cold Days Intensity}',fontsize=8,color='k',rotation=0,
+cbar.set_label(r'\textbf{$\Delta$Cold Days Intensity}',fontsize=8,color='k',rotation=0,
                va='center',ha='center',y=-0.1,labelpad=-16)
 
 cbar.set_ticks(barlim)
@@ -285,7 +285,7 @@ cbar.outline.set_edgecolor('dimgrey')
 ###############################################################################
 ax = plt.subplot(grid[1,:1])
 
-num_bins = np.arange(-20,5,0.5)
+num_bins = np.arange(-20,10.1,0.5)
 
 adjust_spines(ax, ['left', 'bottom'])
 ax.spines['top'].set_color('none')
@@ -310,8 +310,8 @@ plt.yticks(np.arange(0,0.25,0.02),list(map(str,np.arange(0,0.25,0.02))),
            fontsize=6)
 plt.xticks(np.arange(-50,1061,5),list(map(str,np.arange(-50,1061,5))),
            fontsize=6) 
-plt.xlim([-20,5])
-plt.ylim([0,0.14])
+plt.xlim([-15,10])
+plt.ylim([0,0.12])
 
 l = plt.legend(shadow=False,fontsize=7,loc='upper left',
            fancybox=True,frameon=False,ncol=1,bbox_to_anchor=(0.72,1),
@@ -320,7 +320,7 @@ for text in l.get_texts():
     text.set_color('k')
 
 plt.ylabel(r'\textbf{Density}',color='k',fontsize=8)  
-plt.xlabel(r'\textbf{1000 hPa Temperature [$^{\circ}$C]}',color='k',fontsize=8)
+plt.xlabel(r'\textbf{$\Delta$T1000 [$^{\circ}$C]}',color='k',fontsize=8)
 
 ax = plt.subplot(grid[1,1:])
 adjust_spines(ax, ['left', 'bottom'])
@@ -400,14 +400,18 @@ t,pvaluedist = sts.ks_2samp(temps[1].ravel(),temps[0].ravel())
 print('\n \n' + 'Distribution p_value=' + str(pvaluedist))
 
 ### Calculate statistical text for violin plots
-tpos,pvalpos = sts.ttest_ind(slp[0].ravel(),slp[2].ravel(),equal_var=True) 
-tneg,pvalneg = sts.ttest_ind(slp[1].ravel(),slp[3].ravel(),equal_var=True) 
+t,pvalpos = sts.ttest_ind(slp[0].ravel(),slp[2].ravel(),equal_var=True) 
+t,pvalneg = sts.ttest_ind(slp[1].ravel(),slp[3].ravel(),equal_var=True) 
 
 print('\n' + 'QBO-W FICT-HIT p_value=' + str(pvalpos))
 print('QBO-E FICT-HIT p_value=' + str(pvalneg))
 
-tpos,pvalfict = sts.ttest_ind(slp[0].ravel(),slp[1].ravel(),equal_var=True) 
-tneg,pvalhit = sts.ttest_ind(slp[2].ravel(),slp[3].ravel(),equal_var=True) 
+t,pvalfict = sts.ttest_ind(slp[0].ravel(),slp[1].ravel(),equal_var=True) 
+t,pvalhit = sts.ttest_ind(slp[2].ravel(),slp[3].ravel(),equal_var=True) 
 
 print('\n' + 'QBO-E & QBO-W FICT p_value=' + str(pvalfict))
 print('QBO-E & QBO-W HIT p_value=' + str(pvalhit))
+
+t,pvalanoms = sts.ttest_ind(slp[1].ravel()-slp[3].ravel(),
+                            slp[0].ravel()-slp[2].ravel(),equal_var=True) 
+print('\n' + 'Anomaly differences p_value=' + str(pvalanoms))

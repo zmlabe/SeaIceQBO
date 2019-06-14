@@ -45,6 +45,43 @@ experiments = [r'\textbf{$\Delta$SIT}',r'\textbf{$\Delta$SIT}',
 qbophase = ['pos','non','neg']
 period = 'D'
 letters = ["a","b","c","d","e","f","g","h","i"]
+
+def calc_indttest_90(varx,vary):
+    """
+    Function calculates statistical difference for 2 independent
+    sample t-test
+
+    Parameters
+    ----------
+    varx : 3d array
+    vary : 3d array
+    
+    Returns
+    -------
+    stat = calculated t-statistic
+    pvalue = two-tailed p-value
+
+    Usage
+    -----
+    stat,pvalue = calc_ttest(varx,vary)
+    """
+    print('\n>>> Using calc_ttest function!')
+    
+    ### Import modules
+    import numpy as np
+    import scipy.stats as sts
+    
+    ### 2-independent sample t-test
+    stat,pvalue = sts.ttest_ind(varx,vary,nan_policy='omit')
+    
+    ### Significant at 90% confidence level
+    pvalue[np.where(pvalue >= 0.1)] = np.nan
+    pvalue[np.where(pvalue < 0.1)] = 1.
+    pvalue[np.isnan(pvalue)] = 0.
+    
+    print('*Completed: Finished calc_ttest function!')
+    return stat,pvalue
+
 for v in range(len(varnames)):
     ### Call function for surface temperature data from reach run
     lat,lon,time,lev,tashit = MO.readExperiAll('%s' % varnames[v],'HIT',
@@ -142,29 +179,38 @@ for v in range(len(varnames)):
     climofitneg = np.nanmean(tas_mofitneg,axis=0)
     climohitneg = np.nanmean(tas_mohitneg,axis=0)
     climofictneg = np.nanmean(tas_mofictneg,axis=0)
-    climo = [climohitpos,climohitneg,climohitpos,climohitneg]
+    climo = [climohitpos,climohitneg,climohitneg,
+             climohitpos,climohitneg,climohitneg]
     
     ### Compute comparisons for months - taken ensemble average
     fithitpos = np.nanmean(tas_mofitpos - tas_mohitpos,axis=0)
     fithitneg = np.nanmean(tas_mofitneg - tas_mohitneg,axis=0)
+    diffposfit = tas_mofitpos - tas_mohitpos
+    diffnegfit = tas_mofitneg - tas_mohitneg
+    diffallfit = np.nanmean(diffnegfit,axis=0) - np.nanmean(diffposfit,axis=0)
     
     ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)
     ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)
-    diffruns_mo = [fithitpos,fithitneg,ficthitpos,ficthitneg]
+    diffposfict = tas_mofictpos - tas_mohitpos
+    diffnegfict = tas_mofictneg - tas_mohitneg
+    diffallfict = np.nanmean(diffnegfict,axis=0) - np.nanmean(diffposfict,axis=0)
+    diffruns_mo = [fithitpos,fithitneg,diffallfit,ficthitpos,ficthitneg,diffallfict]
     
     ### Calculate significance for FM
     stat_FITHITpos,pvalue_FITHITpos = UT.calc_indttest(tas_mo[1][pos_fit,:,:],
                                                        tas_mo[0][pos_hit,:,:])
     stat_FITHITneg,pvalue_FITHITneg = UT.calc_indttest(tas_mo[1][neg_fit,:,:],
                                                tas_mo[0][neg_hit,:,:])
+    stat_fitdiff,pvalue_fitdiff = calc_indttest_90(diffnegfit,diffposfit)
     
     stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(tas_mo[2][pos_fict,:,:],
                                                        tas_mo[0][pos_hit,:,:])
     stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(tas_mo[2][neg_fict,:,:],
                                                tas_mo[0][neg_hit,:,:])
+    stat_fictdiff,pvalue_fictdiff = calc_indttest_90(diffnegfict,diffposfict)
 
-    pruns_mo = [pvalue_FITHITpos,pvalue_FITHITneg,
-                pvalue_FICTHITpos,pvalue_FICTHITneg]
+    pruns_mo = [pvalue_FITHITpos,pvalue_FITHITneg,pvalue_fitdiff,
+                pvalue_FICTHITpos,pvalue_FICTHITneg,pvalue_fictdiff]
     
     ###########################################################################
     ###########################################################################
@@ -219,7 +265,7 @@ for v in range(len(varnames)):
         var = diffruns_mo[i]
         pvar = pruns_mo[i]
         
-        ax1 = plt.subplot(2,2,i+1)
+        ax1 = plt.subplot(2,3,i+1)
         m = Basemap(projection='ortho',lon_0=0,lat_0=89,resolution='l',
                     area_thresh=10000.)
         
@@ -235,9 +281,13 @@ for v in range(len(varnames)):
                   
         m.drawmapboundary(fill_color='white',color='dimgray',linewidth=0.7)
         
-        cs = m.contourf(x,y,var,limit,extend='both')
-        cs1 = m.contourf(x,y,pvar,colors='None',hatches=['....'],
-                         linewidths=0.4)
+        if any([i==2,i==5]):
+            cs = m.contourf(x,y,var*pvar,limit,extend='both')
+        else:
+            cs = m.contourf(x,y,var,limit,extend='both')
+        if any([i==0,i==1,i==3,i==4]):
+            cs1 = m.contourf(x,y,pvar,colors='None',hatches=['....'],
+                             linewidths=0.4)
         if varnames[v] == 'Z30': # the interval is 250 m 
             cs2 = m.contour(x,y,climoq,np.arange(21900,23500,250),
                             colors='k',linewidths=1.5,zorder=10)
@@ -279,12 +329,12 @@ for v in range(len(varnames)):
             cs.set_cmap(cmap)
                     
         ### Add experiment text to subplot
-        if i < 2:
-            qbophaseq = [r'QBO-W',r'QBO-E']
+        if i < 3:
+            qbophaseq = [r'QBO-W',r'QBO-E',r'E--W']
             ax1.annotate(r'\textbf{%s}' % qbophaseq[i],xy=(0,0),xytext=(0.5,1.08),
                          textcoords='axes fraction',color='dimgray',
                          fontsize=13,rotation=0,ha='center',va='center')
-        if i == 0 or i == 2:
+        if i == 0 or i == 3:
             ax1.annotate(r'%s' % experiments[i],xy=(0,0),xytext=(-0.1,0.5),
                          textcoords='axes fraction',color='k',
                          fontsize=18,rotation=90,ha='center',va='center')
@@ -325,9 +375,9 @@ for v in range(len(varnames)):
     cbar.ax.tick_params(axis='x', size=.01,labelsize=7)
     cbar.outline.set_edgecolor('dimgrey')
     
-    plt.subplots_adjust(wspace=-0.4,hspace=0.001,bottom=0.15)
+    plt.subplots_adjust(wspace=-0.15,hspace=0.001,bottom=0.15)
     
-    plt.savefig(directoryfigure + 'QBOExperiments_%s_%s.png' % (period,
+    plt.savefig(directoryfigure + 'QBOExperiments_%s_%s_Mask.png' % (period,
                                                                   varnames[v]),
                                                                   dpi=900)
 

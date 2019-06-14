@@ -40,10 +40,46 @@ years = np.arange(year1,year2+1,1)
 
 ### Call arguments
 experimentsn = [r'\textbf{$\Delta$NET}']
-qbophaseq = [r'QBO-W',r'QBO-E']
+qbophaseq = [r'QBO-W',r'QBO-E',r'E--W']
 qbophase = ['pos','non','neg']
-letters = ["a","b","c","d","e","f","g","h","i"]
-period = 'D'
+letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m"]
+period = 'DJF'
+
+def calc_indttest_90(varx,vary):
+    """
+    Function calculates statistical difference for 2 independent
+    sample t-test
+
+    Parameters
+    ----------
+    varx : 3d array
+    vary : 3d array
+    
+    Returns
+    -------
+    stat = calculated t-statistic
+    pvalue = two-tailed p-value
+
+    Usage
+    -----
+    stat,pvalue = calc_ttest(varx,vary)
+    """
+    print('\n>>> Using calc_ttest function!')
+    
+    ### Import modules
+    import numpy as np
+    import scipy.stats as sts
+    
+    ### 2-independent sample t-test
+    stat,pvalue = sts.ttest_ind(varx,vary,nan_policy='omit')
+    
+    ### Significant at 90% confidence level
+    pvalue[np.where(pvalue >= 0.1)] = np.nan
+    pvalue[np.where(pvalue < 0.1)] = 1.
+    pvalue[np.isnan(pvalue)] = 0.
+    
+    print('*Completed: Finished calc_ttest function!')
+    return stat,pvalue
 
 def calcVarResp(varnames,period,qbophase):
     ### Call function for surface temperature data from reach run
@@ -133,13 +169,16 @@ def calcVarResp(varnames,period,qbophase):
     ### Compute climatology    
     climohitpos = np.nanmean(tas_mohitpos,axis=0)
     climohitneg = np.nanmean(tas_mohitneg,axis=0)
-    climo = [climohitpos,climohitneg]
+    climo = [climohitpos,climohitneg,climohitneg]
     
     ### Compute comparisons for months - taken ensemble average
     ficthitpos = np.nanmean(tas_mofictpos - tas_mohitpos,axis=0)
     ficthitneg = np.nanmean(tas_mofictneg - tas_mohitneg,axis=0)
+    diffpos = tas_mofictpos - tas_mohitpos
+    diffneg = tas_mofictneg - tas_mohitneg
+    diffall = np.nanmean(diffneg,axis=0) - np.nanmean(diffpos,axis=0)
     
-    diffruns = [ficthitpos,ficthitneg]
+    diffruns = [ficthitpos,ficthitneg,diffall]
     
     ### Calculate significance for ND
     stat_FICTHITpos,pvalue_FICTHITpos = UT.calc_indttest(tas_mo[1][pos_fict,:,:],
@@ -148,8 +187,9 @@ def calcVarResp(varnames,period,qbophase):
                                                    tas_mo[0][non_hit,:,:])
     stat_FICTHITneg,pvalue_FICTHITneg = UT.calc_indttest(tas_mo[1][neg_fict,:,:],
                                                tas_mo[0][neg_hit,:,:])
+    stat_diff,pvalue_diff = calc_indttest_90(diffneg,diffpos)
 
-    pruns = [pvalue_FICTHITpos,pvalue_FICTHITneg]
+    pruns = [pvalue_FICTHITpos,pvalue_FICTHITneg,pvalue_diff]
     
     return diffruns,pruns,climo,lat,lon
 
@@ -159,7 +199,8 @@ diffz500,pz500,climoz500,lat,lon = calcVarResp('Z500',period,qbophase)
 diffz300,pz300,climoz300,latc,lonc = calcVarResp('Z300xwave1',period,qbophase)
 diffz30,pz30,climoz30,lat,lon = calcVarResp('Z30',period,qbophase)
 
-varnamesn = [r'Z500',r'Z500',r'U300',r'U300',r'Wave 1',r'Wave 1',r'Z30',r'Z30']
+varnamesn = [r'Z500',r'Z500',r'Z500',r'U300',r'U300',r'U300',
+             r'Wave 1',r'Wave 1',r'Wave 1',r'Z30',r'Z30',r'Z30']
     
 ###########################################################################
 ###########################################################################
@@ -167,27 +208,28 @@ varnamesn = [r'Z500',r'Z500',r'U300',r'U300',r'Wave 1',r'Wave 1',r'Z30',r'Z30']
 ### Plot variable data for DJF
 plt.rc('text',usetex=True)
 plt.rc('font',**{'family':'sans-serif','sans-serif':['Avant Garde']}) 
+plt.rcParams['hatch.color'] = 'k'
 
 fig = plt.figure()
 
-for v in range(8):
-    ax = plt.subplot(4,2,v+1)
+for v in range(12):
+    ax = plt.subplot(4,3,v+1)
     
     ### Retrieve variables and pvalues
-    if v < 2: 
+    if v < 3: 
         var = diffz500[v]
         pvar = pz500[v]
-    elif v >= 2 and v < 4: 
-        var = diffu300[v-2]
-        pvar = pu300[v-2]
-    elif v >= 4 and v < 6:  
-        var = diffz300[v-4]
-        pvar = pz300[v-4]
-        climos = climoz300[v-4]
-    elif v >= 6 and v < 8:  
-        var = diffz30[v-6]
-        pvar = pz30[v-6]
-        climos = climoz30[v-6]
+    elif v >= 3 and v < 6: 
+        var = diffu300[v-3]
+        pvar = pu300[v-3]
+    elif v >= 6 and v < 9:  
+        var = diffz300[v-6]
+        pvar = pz300[v-6]
+        climos = climoz300[v-6]
+    elif v >= 9 and v < 12:  
+        var = diffz30[v-9]
+        pvar = pz30[v-9]
+        climos = climoz30[v-9]
     
     ### Set limits for contours and colorbars
     if varnamesn[v] == 'U300':
@@ -217,23 +259,34 @@ for v in range(8):
                   
         m.drawmapboundary(fill_color='white',color='dimgrey',linewidth=0.7)
         
-        cs = m.contourf(x,y,var,limit,extend='both')
-        cs1 = m.contourf(x,y,pvar,colors='None',hatches=['....'])
+        if any([v==2,v==5,v==8,v==11]):
+            cs = m.contourf(x,y,var*pvar,limit,extend='both')
+        else:
+            cs = m.contourf(x,y,var,limit,extend='both')
+        
+        if any([v==0,v==1,v==3,v==4,v==6,v==7,v==9,v==10]):
+            cs1 = m.contourf(x,y,pvar,colors='None',hatches=['....'])    
         
         if varnamesn[v] == 'Z30':
-            climoq,lons_cyclic = addcyclic(climos, lon)
-            climoq,lons_cyclic = shiftgrid(180.,climoq,lons_cyclic,start=False)
-            cs2 = m.contour(x,y,climoq,np.arange(21900,23500,250),
-                colors='k',linewidths=1.2,zorder=10)
+            if v < 11:
+                climoq,lons_cyclic = addcyclic(climos, lon)
+                climoq,lons_cyclic = shiftgrid(180.,climoq,lons_cyclic,start=False)
+                cs2 = m.contour(x,y,climoq,np.arange(21900,23500,250),
+                    colors='k',linewidths=1.2,zorder=10)
 
     elif varnamesn[v] == 'Wave 1': # the interval is 250 m       
         lon2c, lat2c = np.meshgrid(lonc,latc)            
         m.drawmapboundary(fill_color='white',color='dimgrey',linewidth=0.7)
         
-        cs = m.contourf(lon2c,lat2c,var,limit,extend='both',latlon=True)
-        cs1 = m.contourf(lon2c,lat2c,pvar,colors='None',hatches=['....'],latlon=True)
-        cs2 = m.contour(lon2c,lat2c,climos,np.arange(-200,201,50),colors='k',
-                        linewidths=1.2,zorder=10,latlon=True)
+        if v==8:
+            cs = m.contourf(lon2c,lat2c,var*pvar,limit,extend='both',latlon=True)
+        else:
+            cs = m.contourf(lon2c,lat2c,var,limit,extend='both',latlon=True)
+        if v < 8:
+            cs2 = m.contour(lon2c,lat2c,climos,np.arange(-200,201,50),colors='k',
+                            linewidths=1.2,zorder=10,latlon=True)
+            cs1 = m.contourf(lon2c,lat2c,pvar,colors='None',hatches=['....'],
+                     latlon=True)
 
     m.drawcoastlines(color='dimgrey',linewidth=0.6)
     
@@ -251,11 +304,11 @@ for v in range(8):
         cs.set_cmap(cmap)  
             
     ### Add experiment text to subplot
-    if any([v == 0,v == 2,v == 4,v==6]):
+    if any([v == 0,v == 3,v == 6,v == 9]):
         ax.annotate(r'\textbf{%s}' % varnamesn[v],xy=(0,0),xytext=(-0.18,0.5),
                      textcoords='axes fraction',color='k',
                      fontsize=14,rotation=90,ha='center',va='center')
-    if any([v == 0,v == 1]):
+    if any([v == 0,v == 1,v == 2]):
         ax.annotate(r'\textbf{%s}' % qbophaseq[v],xy=(0,0),xytext=(0.5,1.12),
                      textcoords='axes fraction',color='dimgrey',
                      fontsize=13,rotation=0,ha='center',va='center')
@@ -267,8 +320,8 @@ for v in range(8):
     ax.set_aspect('equal')
             
     ###########################################################################
-    if v == 1:
-        cbar_ax = fig.add_axes([0.70,0.72,0.013,0.18])                
+    if v == 2:
+        cbar_ax = fig.add_axes([0.77,0.72,0.013,0.18])                
         cbar = fig.colorbar(cs,cax=cbar_ax,orientation='vertical',
                             extend='both',extendfrac=0.07,drawedges=False)    
         if varnamesn[v] == 'U300':
@@ -286,8 +339,8 @@ for v in range(8):
         cbar.outline.set_edgecolor('dimgrey')
         cbar.outline.set_linewidth(0.5)
         
-    elif v == 3:
-        cbar_ax = fig.add_axes([0.70,0.51,0.013,0.18])                
+    elif v == 5:
+        cbar_ax = fig.add_axes([0.77,0.51,0.013,0.18])                
         cbar = fig.colorbar(cs,cax=cbar_ax,orientation='vertical',
                             extend='both',extendfrac=0.07,drawedges=False)    
         if varnamesn[v] == 'U300':
@@ -305,8 +358,8 @@ for v in range(8):
         cbar.outline.set_edgecolor('dimgrey')
         cbar.outline.set_linewidth(0.5)
         
-    elif v == 5:
-        cbar_ax = fig.add_axes([0.70,0.29,0.013,0.182])                
+    elif v == 8:
+        cbar_ax = fig.add_axes([0.77,0.29,0.013,0.182])                
         cbar = fig.colorbar(cs,cax=cbar_ax,orientation='vertical',
                             extend='both',extendfrac=0.07,drawedges=False)    
         if varnamesn[v] == 'U300':
@@ -324,8 +377,8 @@ for v in range(8):
         cbar.outline.set_edgecolor('dimgrey')
         cbar.outline.set_linewidth(0.5)
         
-    elif v == 7:
-        cbar_ax = fig.add_axes([0.70,0.07,0.013,0.18])                
+    elif v == 11:
+        cbar_ax = fig.add_axes([0.77,0.07,0.013,0.18])                
         cbar = fig.colorbar(cs,cax=cbar_ax,orientation='vertical',
                             extend='both',extendfrac=0.07,drawedges=False)    
         if varnamesn[v] == 'U300':
@@ -346,7 +399,7 @@ for v in range(8):
 plt.tight_layout()    
 fig.subplots_adjust(wspace=-0.75,hspace=0)
     
-plt.savefig(directoryfigure + 'LargeScaleVars.png',dpi=900)
+plt.savefig(directoryfigure + 'LargeScaleVars_Mask.png',dpi=900)
 
 print('Completed: Script done!')
 
