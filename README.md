@@ -24,7 +24,7 @@ Here we show that the phase of the Quasi-Biennial Oscillation (QBO) modulates th
 
 
 ## Publications
-+ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2019. The effect of QBO phase on the atmospheric response to projected Arctic sea-ice loss in early winter, , *Geophysical Research Letters*, DOI:10.1029/2018GL078158 [[HTML]](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2019GL083095)[[BibTeX]](https://sites.uci.edu/zlabe/files/2019/06/LabeSeaIceQBO_2019_BibTeX.pdf)[[SUMMARY]](https://sites.uci.edu/zlabe/qbo-and-arctic-sea-ice/)
++ **Labe, Z.M.**, Y. Peings, and G. Magnusdottir, 2019. The effect of QBO phase on the atmospheric response to projected Arctic sea-ice loss in early winter, *Geophysical Research Letters*, DOI:10.1029/2018GL078158 [[HTML]](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2019GL083095)[[BibTeX]](https://sites.uci.edu/zlabe/files/2019/06/LabeSeaIceQBO_2019_BibTeX.pdf)[[SUMMARY]](https://sites.uci.edu/zlabe/qbo-and-arctic-sea-ice/)
 
 
 ## Conferences
